@@ -1,6 +1,5 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server';
-import { ShopNav } from '@/components/layout/ShopNav';
-import { ShopFooter } from '@/components/layout/ShopFooter';
+import { ShopShell } from './ShopShell';
 import type { Category } from '@/types/database';
 
 export default async function ShopLayout({ children }: { children: React.ReactNode }) {
@@ -16,13 +15,5 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
 
   const cats = (categories as Pick<Category, 'id' | 'name' | 'slug'>[]) || [];
 
-  return (
-    <div className="min-h-screen flex flex-col bg-surface">
-      <ShopNav categories={cats} />
-      <main className="flex-1">
-        {children}
-      </main>
-      <ShopFooter categories={cats} />
-    </div>
-  );
+  return <ShopShell categories={cats}>{children}</ShopShell>;
 }

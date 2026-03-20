@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
+import { useCart } from '@/lib/cart';
 import { site } from '@/config/site';
 import { cn } from '@/lib/utils';
 import { Menu, X, ShoppingCart, User, ChevronDown } from 'lucide-react';
@@ -17,6 +18,7 @@ export function ShopNav({ categories }: ShopNavProps) {
   const [catOpen, setCatOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { cartCount } = useCart();
   useEffect(() => {
     async function checkAuth() {
       const supabase = createClient();
@@ -97,9 +99,11 @@ export function ShopNav({ categories }: ShopNavProps) {
               aria-label="Cos de cumparaturi"
             >
               <ShoppingCart size={22} />
-              <span className="absolute -top-0.5 -right-0.5 bg-accent text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-accent text-white text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full">
+                  {cartCount > 99 ? '99+' : cartCount}
+                </span>
+              )}
             </Link>
             <Link
               href={isLoggedIn ? '/dashboard' : '/login'}

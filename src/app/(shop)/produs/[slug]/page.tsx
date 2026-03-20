@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { ProductGallery } from '@/components/ui/ProductGallery';
 import { ProductCard } from '@/components/ui/ProductCard';
-import { Button } from '@/components/ui/Button';
+import { AddToCartButton } from '@/components/ui/AddToCartButton';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
-import { ChevronRight, Download, ShoppingCart, CheckCircle, XCircle } from 'lucide-react';
+import { ChevronRight, Download, CheckCircle, XCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Product, Category, ProductSpec } from '@/types/database';
 
@@ -140,14 +140,10 @@ export default async function ProdusPage({ params }: Props) {
             <p className="text-xs text-gray-400 mb-6">SKU: {p.sku}</p>
           )}
 
-          {/* Add to cart — placeholder disabled, functional in Step 5 */}
-          <Button size="lg" disabled className="w-full sm:w-auto mb-6">
-            <ShoppingCart size={18} className="mr-2" />
-            {inStock ? 'Adauga in cos' : 'Indisponibil'}
-          </Button>
-          {inStock && (
-            <p className="text-xs text-gray-400 mb-6">Cosul de cumparaturi va fi disponibil in curand.</p>
-          )}
+          {/* Add to cart */}
+          <div className="mb-6">
+            <AddToCartButton productId={p.id} stock={p.stock} productName={p.name} />
+          </div>
 
           {/* Datasheet */}
           {p.datasheet_url && (
