@@ -8,6 +8,8 @@ import { createClient } from '@/lib/supabase';
 import { site } from '@/config/site';
 import {
   LayoutDashboard,
+  FolderTree,
+  Package,
   LogOut,
   Menu,
   X,
@@ -17,6 +19,8 @@ import { useState } from 'react';
 
 const links = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/categorii', label: 'Categorii', icon: FolderTree },
+  { href: '/admin/produse', label: 'Produse', icon: Package },
 ];
 
 export function AdminNav() {
