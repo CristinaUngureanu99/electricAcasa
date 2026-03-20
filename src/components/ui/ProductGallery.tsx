@@ -1,0 +1,53 @@
+'use client';
+
+import { useState } from 'react';
+import { getStorageUrl } from '@/lib/utils';
+import { Image as ImageIcon } from 'lucide-react';
+
+interface ProductGalleryProps {
+  images: string[];
+  productName: string;
+}
+
+export function ProductGallery({ images, productName }: ProductGalleryProps) {
+  const [selected, setSelected] = useState(0);
+
+  if (images.length === 0) {
+    return (
+      <div className="aspect-square bg-gray-50 rounded-2xl flex items-center justify-center">
+        <ImageIcon size={64} className="text-gray-300" />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden mb-3">
+        <img
+          src={getStorageUrl('product-images', images[selected])}
+          alt={productName}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      {images.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto">
+          {images.map((path, i) => (
+            <button
+              key={path}
+              onClick={() => setSelected(i)}
+              className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                i === selected ? 'border-primary' : 'border-transparent hover:border-gray-300'
+              }`}
+            >
+              <img
+                src={getStorageUrl('product-images', path)}
+                alt={`${productName} ${i + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

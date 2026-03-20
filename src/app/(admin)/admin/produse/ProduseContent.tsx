@@ -101,14 +101,13 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     );
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const columns: any[] = [
+  type Row = Record<string, unknown>;
+  const p = (r: Row) => r as unknown as Product;
+  const columns: { key: string; label: string; render?: (item: Row) => React.ReactNode }[] = [
     {
       key: 'image',
       label: '',
-      render: (p: Product) => {
-        const thumb = p.images[0];
-        return thumb ? (
+      render: (r) => { const prod = p(r); const thumb = prod.images[0]; return thumb ? (
           <img src={getStorageUrl('product-images', thumb)} alt="" className="w-10 h-10 rounded object-cover" />
         ) : (
           <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
@@ -120,66 +119,66 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     {
       key: 'name',
       label: 'Produs',
-      render: (p: Product) => (
+      render: (r) => { const prod = p(r); return (
         <div>
-          <p className="font-medium">{p.name}</p>
-          {p.brand_name && <p className="text-xs text-gray-500">{p.brand_name}</p>}
+          <p className="font-medium">{prod.name}</p>
+          {prod.brand_name && <p className="text-xs text-gray-500">{prod.brand_name}</p>}
         </div>
-      ),
+      ); },
     },
     { key: 'sku', label: 'SKU' },
     {
       key: 'price',
       label: 'Pret',
-      render: (p: Product) => (
+      render: (r) => { const prod = p(r); return (
         <div>
-          {p.sale_price !== null && p.sale_price < p.price ? (
+          {prod.sale_price !== null && prod.sale_price < prod.price ? (
             <>
-              <p className="font-medium text-red-600">{formatPrice(p.sale_price)}</p>
-              <p className="text-xs text-gray-400 line-through">{formatPrice(p.price)}</p>
+              <p className="font-medium text-red-600">{formatPrice(prod.sale_price)}</p>
+              <p className="text-xs text-gray-400 line-through">{formatPrice(prod.price)}</p>
             </>
           ) : (
-            <p className="font-medium">{formatPrice(p.price)}</p>
+            <p className="font-medium">{formatPrice(prod.price)}</p>
           )}
         </div>
-      ),
+      ); },
     },
     {
       key: 'stock',
       label: 'Stoc',
-      render: (p: Product) => (
-        <span className={p.stock === 0 ? 'text-red-600 font-medium' : ''}>
-          {p.stock}
+      render: (r) => { const prod = p(r); return (
+        <span className={prod.stock === 0 ? 'text-red-600 font-medium' : ''}>
+          {prod.stock}
         </span>
-      ),
+      ); },
     },
     {
       key: 'category_id',
       label: 'Categorie',
-      render: (p: Product) => getCategoryName(p.category_id),
+      render: (r) => getCategoryName(p(r).category_id),
     },
     {
       key: 'is_active',
       label: 'Status',
-      render: (p: Product) => (
-        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${p.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-          {p.is_active ? 'Activ' : 'Inactiv'}
+      render: (r) => { const prod = p(r); return (
+        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${prod.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+          {prod.is_active ? 'Activ' : 'Inactiv'}
         </span>
-      ),
+      ); },
     },
     {
       key: 'actions',
       label: '',
-      render: (p: Product) => (
+      render: (r) => { const prod = p(r); return (
         <div className="flex gap-1">
-          <Link href={`/admin/produse/${p.id}`} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700" title="Editeaza">
+          <Link href={`/admin/produse/${prod.id}`} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700" title="Editeaza">
             <Pencil size={16} />
           </Link>
-          <button onClick={() => setDeleteTarget(p)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600" title="Sterge">
+          <button onClick={() => setDeleteTarget(prod)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600" title="Sterge">
             <Trash2 size={16} />
           </button>
         </div>
-      ),
+      ); },
     },
   ];
 
@@ -204,7 +203,7 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
         <Card>
           <DataTable
             columns={columns}
-            data={filtered as any}
+            data={filtered as unknown as Row[]}
             emptyMessage="Nu exista produse. Adauga primul produs."
           />
         </Card>

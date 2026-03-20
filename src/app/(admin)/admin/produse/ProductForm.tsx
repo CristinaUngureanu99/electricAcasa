@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
-import { generateSlug, getStorageUrl, formatPrice } from '@/lib/utils';
+import { generateSlug, getStorageUrl } from '@/lib/utils';
 import { Trash2, Plus, Upload, FileText, X, Link2 } from 'lucide-react';
 import type { Product, Category, ProductRelation, ProductSpec } from '@/types/database';
 

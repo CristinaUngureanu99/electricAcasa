@@ -255,12 +255,13 @@ export default function CategoriiContent({ initialCategories }: Props) {
     return parent?.name || '\u2014';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const columns: any[] = [
+  type Row = Record<string, unknown>;
+  const c = (r: Row) => r as unknown as Category;
+  const columns: { key: string; label: string; render?: (item: Row) => React.ReactNode }[] = [
     {
       key: 'name',
       label: 'Nume',
-      render: (cat: Category) => (
+      render: (r) => { const cat = c(r); return (
         <div className="flex items-center gap-2">
           {cat.image_url ? (
             <img
@@ -275,28 +276,28 @@ export default function CategoriiContent({ initialCategories }: Props) {
           )}
           <span className="font-medium">{cat.name}</span>
         </div>
-      ),
+      ); },
     },
     { key: 'slug', label: 'Slug' },
     {
       key: 'parent_id',
       label: 'Categorie parinte',
-      render: (cat: Category) => getParentName(cat.parent_id),
+      render: (r) => getParentName(c(r).parent_id),
     },
     { key: 'sort_order', label: 'Ordine' },
     {
       key: 'is_active',
       label: 'Status',
-      render: (cat: Category) => (
+      render: (r) => { const cat = c(r); return (
         <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${cat.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
           {cat.is_active ? 'Activ' : 'Inactiv'}
         </span>
-      ),
+      ); },
     },
     {
       key: 'actions',
       label: '',
-      render: (cat: Category) => (
+      render: (r) => { const cat = c(r); return (
         <div className="flex gap-1">
           <button onClick={() => startEdit(cat)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700" title="Editeaza">
             <Pencil size={16} />
@@ -305,7 +306,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
             <Trash2 size={16} />
           </button>
         </div>
-      ),
+      ); },
     },
   ];
 
@@ -417,7 +418,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
         <Card>
           <DataTable
             columns={columns}
-            data={categories as any}
+            data={categories as unknown as Row[]}
             emptyMessage="Nu exista categorii. Creeaza prima categorie."
           />
         </Card>

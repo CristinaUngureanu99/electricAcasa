@@ -32,8 +32,10 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Redirect unauthenticated users to login (except public pages)
-  const publicPaths = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/terms', '/privacy'];
-  if (!user && !publicPaths.includes(path) && !path.startsWith('/api/')) {
+  const publicExact = ['/', '/login', '/register', '/forgot-password', '/reset-password', '/terms', '/privacy', '/cos'];
+  const publicPrefixes = ['/categorie', '/produs'];
+  const isPublic = publicExact.includes(path) || publicPrefixes.some((p) => path.startsWith(p));
+  if (!user && !isPublic && !path.startsWith('/api/')) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
