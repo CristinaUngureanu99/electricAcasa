@@ -50,15 +50,17 @@ export function AddToCartButton({ productId, stock, productName }: AddToCartButt
       <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden">
         <button
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-          className="px-3 py-2.5 text-gray-600 hover:bg-gray-100 transition-colors"
+          disabled={quantity <= 1}
+          className="px-3 py-2.5 text-gray-600 hover:bg-gray-100 active:bg-gray-200 disabled:opacity-30 disabled:active:bg-transparent transition-colors"
           aria-label="Scade cantitatea"
         >
           <Minus size={16} />
         </button>
-        <span className="px-4 py-2.5 text-sm font-medium min-w-[3rem] text-center">{quantity}</span>
+        <span className="px-4 py-2.5 text-sm font-medium min-w-[3rem] text-center tabular-nums">{quantity}</span>
         <button
           onClick={() => setQuantity((q) => Math.min(stock, q + 1))}
-          className="px-3 py-2.5 text-gray-600 hover:bg-gray-100 transition-colors"
+          disabled={quantity >= stock}
+          className="px-3 py-2.5 text-gray-600 hover:bg-gray-100 active:bg-gray-200 disabled:opacity-30 disabled:active:bg-transparent transition-colors"
           aria-label="Creste cantitatea"
         >
           <Plus size={16} />

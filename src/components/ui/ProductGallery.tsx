@@ -24,9 +24,10 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
     <div>
       <div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden mb-3">
         <img
+          key={selected}
           src={getStorageUrl('product-images', images[selected])}
           alt={productName}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover animate-[fadeIn_0.2s_ease-out]"
         />
       </div>
       {images.length > 1 && (

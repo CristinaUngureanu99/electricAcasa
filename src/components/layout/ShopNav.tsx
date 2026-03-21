@@ -75,7 +75,7 @@ export function ShopNav({ categories }: ShopNavProps) {
               {catOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setCatOpen(false)} />
-                  <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                  <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 animate-[fadeIn_0.15s_ease-out]">
                     {categories.map((cat) => (
                       <Link
                         key={cat.id}
@@ -151,7 +151,7 @@ export function ShopNav({ categories }: ShopNavProps) {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white pb-4 px-4">
+          <div className="md:hidden border-t border-gray-100 bg-white pb-4 px-4 animate-[fadeIn_0.15s_ease-out]">
             <div className="py-3">
               <Link
                 href="/catalog"

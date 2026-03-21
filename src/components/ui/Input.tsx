@@ -24,7 +24,7 @@ export function Input({ label, error, suffix, className, ...props }: InputProps)
         <input
           id={inputId}
           className={cn(
-            'w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-navy focus:border-transparent transition-colors',
+            'w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors',
             error && 'border-red-500 focus:ring-red-500',
             suffix && 'pr-14',
             className
