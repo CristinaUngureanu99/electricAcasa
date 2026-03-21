@@ -57,8 +57,14 @@ export function ShopNav({ categories }: ShopNavProps) {
             <span className="text-xl md:text-2xl font-bold text-white">electricAcasa<span className="text-white/70 font-normal text-sm">.ro</span></span>
           </Link>
 
-          {/* Desktop: Categories + links */}
+          {/* Desktop: Catalog + Categories */}
           <div className="hidden md:flex items-center gap-6">
+            <Link
+              href="/catalog"
+              className="text-sm font-medium text-white/90 hover:text-white transition-colors"
+            >
+              Catalog
+            </Link>
             <div className="relative">
               <button
                 onClick={() => setCatOpen(!catOpen)}
@@ -129,7 +135,13 @@ export function ShopNav({ categories }: ShopNavProps) {
         {menuOpen && (
           <div className="md:hidden border-t border-gray-100 bg-white pb-4 px-4">
             <div className="py-3">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Categorii</p>
+              <Link
+                href="/catalog"
+                className="block py-2 text-sm font-semibold text-primary"
+              >
+                Catalog complet
+              </Link>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-3">Categorii</p>
               {categories.map((cat) => (
                 <Link
                   key={cat.id}

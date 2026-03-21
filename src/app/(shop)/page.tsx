@@ -42,7 +42,7 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
-              href="#categorii"
+              href="/catalog"
               className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors"
             >
               Vezi catalogul <ArrowRight size={18} />
