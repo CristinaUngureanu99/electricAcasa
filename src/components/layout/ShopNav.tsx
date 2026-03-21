@@ -57,7 +57,7 @@ export function ShopNav({ categories }: ShopNavProps) {
             <span className="text-xl md:text-2xl font-bold text-white">electricAcasa<span className="text-white/70 font-normal text-sm">.ro</span></span>
           </Link>
 
-          {/* Desktop: Catalog + Categories */}
+          {/* Desktop: Catalog + Categories + Pachet */}
           <div className="hidden md:flex items-center gap-6">
             <Link
               href="/catalog"
@@ -93,6 +93,12 @@ export function ShopNav({ categories }: ShopNavProps) {
                 </>
               )}
             </div>
+            <Link
+              href="/generator-pachet"
+              className="text-sm font-medium text-white/90 hover:text-white transition-colors"
+            >
+              Pachet personalizat
+            </Link>
           </div>
 
           {/* Search placeholder — hidden until implemented */}
@@ -140,6 +146,12 @@ export function ShopNav({ categories }: ShopNavProps) {
                 className="block py-2 text-sm font-semibold text-primary"
               >
                 Catalog complet
+              </Link>
+              <Link
+                href="/generator-pachet"
+                className="block py-2 text-sm font-semibold text-primary"
+              >
+                Pachet personalizat
               </Link>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-3">Categorii</p>
               {categories.map((cat) => (
