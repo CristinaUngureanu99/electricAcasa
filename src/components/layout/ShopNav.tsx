@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { useCart } from '@/lib/cart';
 
@@ -19,6 +20,13 @@ export function ShopNav({ categories }: ShopNavProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { cartCount } = useCart();
+  const pathname = usePathname();
+
+  // Close dropdowns on route change
+  useEffect(() => {
+    setCatOpen(false);
+    setMenuOpen(false);
+  }, [pathname]);
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }: { data: { user: unknown } }) => {
@@ -66,6 +74,7 @@ export function ShopNav({ categories }: ShopNavProps) {
                       <Link
                         key={cat.id}
                         href={`/categorie/${cat.slug}`}
+                        onClick={() => setCatOpen(false)}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                       >
                         {cat.name}
