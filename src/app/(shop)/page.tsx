@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { getStorageUrl } from '@/lib/utils';
-import { ArrowRight, Image as ImageIcon, Truck, ShieldCheck, Headphones, Zap } from 'lucide-react';
+import { ArrowRight, Image as ImageIcon, Truck, FileText, Package, Zap } from 'lucide-react';
 import type { Product, Category } from '@/types/database';
 
 export default async function HomePage() {
@@ -35,11 +35,11 @@ export default async function HomePage() {
           <div>
             <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-3">electricAcasa.ro</p>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
-              Materiale electrice<br />
-              <span className="text-primary">de calitate</span> pentru casa ta
+              Aparataj, iluminat si<br />
+              <span className="text-primary">protectii electrice</span>
             </h1>
             <p className="text-lg text-gray-600 mb-8 max-w-lg">
-              Instalatii electrice, iluminat, aparataj si automatizari — toate de la branduri de incredere, livrate rapid la tine acasa.
+              Alege usor din catalog, compara specificatii, descarca fise tehnice si comanda cu livrare in toata Romania.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
@@ -56,13 +56,31 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="hidden lg:block">
-            <div className="bg-gradient-to-br from-primary/5 via-accent/10 to-primary-light/5 rounded-3xl p-10 text-center">
-              <Zap size={80} className="mx-auto text-primary/30 mb-4" />
-              <p className="text-lg font-semibold text-gray-700">Solutii electrice complete</p>
-              <p className="text-sm text-gray-500 mt-1">De la proiectare la instalare</p>
-            </div>
+          {categories.length > 0 && (
+          <div className="hidden lg:grid grid-cols-2 gap-3">
+            {categories.slice(0, 4).map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/categorie/${cat.slug}`}
+                className="group flex items-center gap-3 bg-white rounded-xl border border-gray-100 p-4 hover:border-primary/30 hover:shadow-sm transition-all"
+              >
+                <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  {cat.image_url ? (
+                    <img src={getStorageUrl('product-images', cat.image_url)} alt="" className="w-8 h-8 rounded object-cover" />
+                  ) : (
+                    <Zap size={20} className="text-primary" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors">{cat.name}</p>
+                  {cat.description && (
+                    <p className="text-xs text-gray-500 line-clamp-1">{cat.description}</p>
+                  )}
+                </div>
+              </Link>
+            ))}
           </div>
+          )}
         </div>
       </section>
 
@@ -72,29 +90,11 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <div className="flex items-start gap-3">
               <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Truck size={20} className="text-primary" />
+                <FileText size={20} className="text-primary" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">Livrare rapida</p>
-                <p className="text-xs text-gray-500 mt-0.5">In toata Romania</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <ShieldCheck size={20} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">Produse garantate</p>
-                <p className="text-xs text-gray-500 mt-0.5">Branduri de incredere</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Headphones size={20} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">Suport dedicat</p>
-                <p className="text-xs text-gray-500 mt-0.5">Consiliere tehnica gratuita</p>
+                <p className="text-sm font-semibold text-gray-900">Fise tehnice</p>
+                <p className="text-xs text-gray-500 mt-0.5">Descarcabile pe fiecare produs</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -102,8 +102,26 @@ export default async function HomePage() {
                 <Zap size={20} className="text-primary" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">Preturi corecte</p>
-                <p className="text-xs text-gray-500 mt-0.5">Fara adaosuri ascunse</p>
+                <p className="text-sm font-semibold text-gray-900">Produse compatibile</p>
+                <p className="text-xs text-gray-500 mt-0.5">Recomandarile potrivite automat</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Package size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Pachet personalizat</p>
+                <p className="text-xs text-gray-500 mt-0.5">Consultanta gratuita pentru proiect</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Truck size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Livrare nationala</p>
+                <p className="text-xs text-gray-500 mt-0.5">Rapid, in toata Romania</p>
               </div>
             </div>
           </div>
@@ -141,7 +159,11 @@ export default async function HomePage() {
                   <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
                     {cat.name}
                   </h3>
-                  <p className="text-xs text-gray-400 mt-1">Vezi produsele →</p>
+                  {cat.description ? (
+                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">{cat.description}</p>
+                  ) : (
+                    <p className="text-xs text-gray-400 mt-1">Vezi produsele →</p>
+                  )}
                 </div>
               </Link>
             ))}
@@ -172,8 +194,8 @@ export default async function HomePage() {
         <section className="max-w-7xl mx-auto px-4 pb-16 md:pb-20">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Produse noi</h2>
-              <p className="text-gray-500 mt-2">Ultimele adaugiri in catalog</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Produse recomandate</h2>
+              <p className="text-gray-500 mt-2">Selectii populare din catalogul nostru</p>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">

@@ -15,6 +15,7 @@ export interface Category {
   id: string;
   name: string;
   slug: string;
+  description: string;
   parent_id: string | null;
   image_url: string | null;
   sort_order: number;

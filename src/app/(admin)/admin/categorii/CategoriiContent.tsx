@@ -22,6 +22,7 @@ interface CategoryForm {
   id: string;
   name: string;
   slug: string;
+  description: string;
   parent_id: string;
   image_url: string;
   sort_order: number;
@@ -32,6 +33,7 @@ const emptyForm = (): CategoryForm => ({
   id: crypto.randomUUID(),
   name: '',
   slug: '',
+  description: '',
   parent_id: '',
   image_url: '',
   sort_order: 0,
@@ -71,6 +73,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
       id: cat.id,
       name: cat.name,
       slug: cat.slug,
+      description: cat.description || '',
       parent_id: cat.parent_id || '',
       image_url: cat.image_url || '',
       sort_order: cat.sort_order,
@@ -173,6 +176,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
       const record = {
         name: form.name.trim(),
         slug,
+        description: form.description.trim(),
         parent_id: form.parent_id || null,
         image_url: imagePath || null,
         sort_order: form.sort_order,
@@ -350,6 +354,18 @@ export default function CategoriiContent({ initialCategories }: Props) {
                 onChange={(e) => setForm((f) => f ? { ...f, slug: e.target.value } : f)}
                 placeholder="auto-generat din nume"
               />
+              <div className="w-full col-span-full">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Descriere scurta</label>
+                <textarea
+                  value={form.description}
+                  onChange={(e) => setForm((f) => f ? { ...f, description: e.target.value } : f)}
+                  rows={2}
+                  maxLength={200}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-y"
+                  placeholder="ex: Prize, intrerupatoare, rame decorative"
+                />
+                <p className="text-xs text-gray-400 mt-1">Apare pe homepage sub numele categoriei</p>
+              </div>
               <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Categorie parinte</label>
                 <select
