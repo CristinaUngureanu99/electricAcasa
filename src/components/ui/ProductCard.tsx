@@ -43,9 +43,9 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
       <div className="p-4">
         {product.brand_name && (
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">{product.brand_name}</p>
+          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1 group-hover:text-gray-500 transition-colors">{product.brand_name}</p>
         )}
-        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-primary transition-all">
           {product.name}
         </h3>
         <div className="flex items-baseline gap-2">

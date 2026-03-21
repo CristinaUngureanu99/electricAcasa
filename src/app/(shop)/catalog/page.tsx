@@ -203,7 +203,7 @@ export default async function CatalogPage({ searchParams }: Props) {
                     key={cat.id}
                     href={buildUrl({ categorie: categoryFilter === cat.id ? undefined : cat.id })}
                     className={`block text-sm px-2 py-1 rounded-lg transition-colors ${
-                      categoryFilter === cat.id ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-50'
+                      categoryFilter === cat.id ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'
                     }`}
                   >
                     {cat.name}
@@ -222,7 +222,7 @@ export default async function CatalogPage({ searchParams }: Props) {
                       key={brand}
                       href={buildUrl({ brand: brandFilter === brand ? undefined : brand })}
                       className={`block text-sm px-2 py-1 rounded-lg transition-colors ${
-                        brandFilter === brand ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-50'
+                        brandFilter === brand ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'
                       }`}
                     >
                       {brand}
@@ -270,7 +270,7 @@ export default async function CatalogPage({ searchParams }: Props) {
               <Link
                 href={buildUrl({ stoc: inStockOnly ? undefined : '1' })}
                 className={`text-sm px-2 py-1 rounded-lg block transition-colors ${
-                  inStockOnly ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-50'
+                  inStockOnly ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'
                 }`}
               >
                 Doar in stoc
@@ -278,7 +278,7 @@ export default async function CatalogPage({ searchParams }: Props) {
               <Link
                 href={buildUrl({ discount: hasDiscount ? undefined : '1' })}
                 className={`text-sm px-2 py-1 rounded-lg block transition-colors ${
-                  hasDiscount ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-gray-50'
+                  hasDiscount ? 'bg-primary/10 text-primary font-medium' : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'
                 }`}
               >
                 Cu reducere
@@ -314,7 +314,7 @@ export default async function CatalogPage({ searchParams }: Props) {
                     key={opt.key}
                     href={buildUrl({ sort: opt.key, page: undefined })}
                     className={`text-xs px-2.5 py-1.5 rounded-lg transition-colors ${
-                      sort === opt.key ? 'bg-primary text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-primary'
+                      sort === opt.key ? 'bg-primary text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-primary hover:text-primary'
                     }`}
                   >
                     {opt.label}

@@ -81,9 +81,9 @@ export function ShopNav({ categories }: ShopNavProps) {
                         key={cat.id}
                         href={`/categorie/${cat.slug}`}
                         onClick={() => setCatOpen(false)}
-                        className="flex items-center gap-2 mx-1.5 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-primary/5 hover:text-primary transition-colors"
+                        className="group/item flex items-center gap-2.5 mx-1.5 px-3 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-primary/5 hover:text-gray-900 transition-all"
                       >
-                        <span className="w-1 h-4 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
+                        <span className="w-1 h-4 rounded-full bg-gray-200 group-hover/item:bg-primary transition-colors" />
                         {cat.name}
                       </Link>
                     ))}

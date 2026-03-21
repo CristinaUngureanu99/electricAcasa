@@ -41,7 +41,7 @@ export function DataTable<T extends Record<string, unknown>>({
         </thead>
         <tbody>
           {data.map((item) => (
-            <tr key={String(item[keyField])} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+            <tr key={String(item[keyField])} className="border-b border-gray-100 hover:bg-primary/[0.02] transition-colors">
               {columns.map((col) => (
                 <td key={col.key} className="py-3 px-4 text-gray-900">
                   {col.render ? col.render(item) : String(item[col.key] ?? '')}

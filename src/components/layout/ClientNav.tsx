@@ -107,7 +107,7 @@ export function ClientNav() {
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
                   isActive
                     ? link.activeClass
-                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+                    : 'text-gray-500 hover:bg-primary/5 hover:text-gray-900'
                 )}
               >
                 <link.icon size={20} />

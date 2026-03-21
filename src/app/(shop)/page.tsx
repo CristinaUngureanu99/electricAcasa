@@ -129,13 +129,13 @@ export default async function HomePage() {
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
+                  <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-all">
                     {cat.name}
                   </h3>
                   {cat.description ? (
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">{cat.description}</p>
+                    <p className="text-xs text-gray-500 mt-1 line-clamp-2 group-hover:text-gray-600 transition-colors">{cat.description}</p>
                   ) : (
-                    <p className="text-xs text-gray-400 mt-1">Vezi produsele →</p>
+                    <p className="text-xs text-gray-400 mt-1 group-hover:text-primary/60 transition-colors">Vezi produsele →</p>
                   )}
                 </div>
               </Link>

@@ -231,7 +231,7 @@ export default function CheckoutPage() {
                     <p className="text-xs text-gray-400">Plata cu card nu este configurata inca</p>
                   </div>
                 </div>
-                <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors ${paymentMethod === 'ramburs' ? 'border-primary bg-primary/5' : 'border-gray-200'}`}>
+                <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'ramburs' ? 'border-primary bg-primary/5 shadow-sm shadow-primary/10' : 'border-gray-200 hover:border-gray-300'}`}>
                   <input type="radio" name="payment" value="ramburs" checked={paymentMethod === 'ramburs'} onChange={() => setPaymentMethod('ramburs')} className="sr-only" />
                   <Banknote size={20} className={paymentMethod === 'ramburs' ? 'text-primary' : 'text-gray-400'} />
                   <div>
