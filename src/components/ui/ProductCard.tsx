@@ -16,14 +16,14 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/produs/${product.slug}`}
-      className="group block bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover-lift"
+      className="group block bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
     >
-      <div className="aspect-square relative bg-gray-50">
+      <div className="aspect-square relative bg-gray-50 overflow-hidden">
         {thumb ? (
           <img
             src={getStorageUrl('product-images', thumb)}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

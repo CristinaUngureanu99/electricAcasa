@@ -113,14 +113,14 @@ export default async function HomePage() {
               <Link
                 key={cat.id}
                 href={`/categorie/${cat.slug}`}
-                className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover-lift"
+                className="group bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
               >
-                <div className="aspect-[4/3] bg-gray-50">
+                <div className="aspect-[4/3] bg-gray-50 overflow-hidden">
                   {cat.image_url ? (
                     <img
                       src={getStorageUrl('product-images', cat.image_url)}
                       alt={cat.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">

@@ -61,28 +61,29 @@ export function ShopNav({ categories }: ShopNavProps) {
           <div className="hidden md:flex items-center gap-6">
             <Link
               href="/catalog"
-              className="text-sm font-medium text-white/90 hover:text-white transition-colors"
+              className="nav-link text-sm font-medium text-white/90 hover:text-white"
             >
               Catalog
             </Link>
             <div className="relative">
               <button
                 onClick={() => setCatOpen(!catOpen)}
-                className="flex items-center gap-1 text-sm font-medium text-white/90 hover:text-white transition-colors"
+                className="nav-link flex items-center gap-1 text-sm font-medium text-white/90 hover:text-white"
               >
                 Categorii <ChevronDown size={16} className={cn('transition-transform', catOpen && 'rotate-180')} />
               </button>
               {catOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setCatOpen(false)} />
-                  <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50 animate-[fadeIn_0.15s_ease-out]">
+                  <div className="absolute top-full left-0 mt-2 w-60 bg-white rounded-xl shadow-xl shadow-black/8 border border-gray-100 py-1.5 z-50 animate-[fadeIn_0.15s_ease-out]">
                     {categories.map((cat) => (
                       <Link
                         key={cat.id}
                         href={`/categorie/${cat.slug}`}
                         onClick={() => setCatOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                        className="flex items-center gap-2 mx-1.5 px-3 py-2 text-sm text-gray-700 rounded-lg hover:bg-primary/5 hover:text-primary transition-colors"
                       >
+                        <span className="w-1 h-4 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
                         {cat.name}
                       </Link>
                     ))}
@@ -95,7 +96,7 @@ export function ShopNav({ categories }: ShopNavProps) {
             </div>
             <Link
               href="/generator-pachet"
-              className="text-sm font-medium text-white/90 hover:text-white transition-colors"
+              className="nav-link text-sm font-medium text-white/90 hover:text-white"
             >
               Pachet personalizat
             </Link>
@@ -120,7 +121,7 @@ export function ShopNav({ categories }: ShopNavProps) {
           <div className="flex items-center gap-3">
             <Link
               href="/cos"
-              className="relative p-2 rounded-xl text-white/90 hover:bg-white/15 hover:text-white transition-colors"
+              className="relative p-2 rounded-xl text-white/90 hover:bg-white/15 hover:text-white hover:scale-105 transition-all"
               aria-label="Cos de cumparaturi"
             >
               <ShoppingCart size={22} />
@@ -132,7 +133,7 @@ export function ShopNav({ categories }: ShopNavProps) {
             </Link>
             <Link
               href={isLoggedIn ? '/dashboard' : '/login'}
-              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 hover:text-white transition-colors"
+              className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 hover:text-white transition-all"
             >
               <User size={18} />
               {isLoggedIn ? 'Contul meu' : 'Autentificare'}
