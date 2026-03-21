@@ -31,56 +31,29 @@ export default async function HomePage() {
     <>
       {/* Hero — 2 columns on desktop */}
       <section className="max-w-7xl mx-auto px-4 pt-10 pb-14 md:pt-16 md:pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-3">electricAcasa.ro</p>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
-              Aparataj, iluminat si<br />
-              <span className="text-primary">protectii electrice</span>
-            </h1>
-            <p className="text-lg text-gray-600 mb-8 max-w-lg">
-              Alege usor din catalog, compara specificatii, descarca fise tehnice si comanda cu livrare in toata Romania.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="#categorii"
-                className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors"
-              >
-                Vezi catalogul <ArrowRight size={18} />
-              </Link>
-              <Link
-                href="/generator-pachet"
-                className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-colors"
-              >
-                Solicita pachet personalizat
-              </Link>
-            </div>
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-3">electricAcasa.ro</p>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
+            Aparataj, iluminat si<br />
+            <span className="text-primary">protectii electrice</span>
+          </h1>
+          <p className="text-lg text-gray-600 mb-8">
+            Alege usor din catalog, compara specificatii, descarca fise tehnice si comanda cu livrare in toata Romania.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="#categorii"
+              className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors"
+            >
+              Vezi catalogul <ArrowRight size={18} />
+            </Link>
+            <Link
+              href="/generator-pachet"
+              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-colors"
+            >
+              Solicita pachet personalizat
+            </Link>
           </div>
-          {categories.length > 0 && (
-          <div className="hidden lg:grid grid-cols-2 gap-3">
-            {categories.slice(0, 4).map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/categorie/${cat.slug}`}
-                className="group flex items-center gap-3 bg-white rounded-xl border border-gray-100 p-4 hover:border-primary/30 hover:shadow-sm transition-all"
-              >
-                <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                  {cat.image_url ? (
-                    <img src={getStorageUrl('product-images', cat.image_url)} alt="" className="w-8 h-8 rounded object-cover" />
-                  ) : (
-                    <Zap size={20} className="text-primary" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors">{cat.name}</p>
-                  {cat.description && (
-                    <p className="text-xs text-gray-500 line-clamp-1">{cat.description}</p>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-          )}
         </div>
       </section>
 

@@ -36,12 +36,14 @@ export default async function CategoriePage({ params, searchParams }: Props) {
   const supabase = await createServerSupabaseClient();
 
   // Fetch category
-  const { data: category } = await supabase
+  const { data: category, error: categoryError } = await supabase
     .from('categories')
     .select('*')
     .eq('slug', slug)
     .eq('is_active', true)
     .single();
+
+  console.log('[CATEGORY DEBUG]', { slug, category: category?.name ?? null, error: categoryError?.message ?? null });
 
   if (!category) notFound();
   const cat = category as Category;
