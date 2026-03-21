@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { site } from '@/config/site';
 import { createClient, resetAuthState } from '@/lib/supabase';
 import { Input } from '@/components/ui/Input';
@@ -70,7 +69,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-10">
           <Link href="/">
-            <Image src="/logo.png" alt={site.logoAlt} width={260} height={104} className="h-28 w-auto mx-auto" />
+            <span className="text-3xl font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-lg">.ro</span></span>
           </Link>
         </div>
 

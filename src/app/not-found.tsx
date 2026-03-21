@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { site } from '@/config/site';
 
 export default function NotFound() {
   return (
@@ -8,13 +6,7 @@ export default function NotFound() {
       <div className="relative z-10 w-full max-w-lg mx-auto px-6">
         <div className="bg-white rounded-3xl p-10 md:p-14 text-center shadow-xl shadow-gray-200/50">
           {/* Logo */}
-          <Image
-            src="/logo.png"
-            alt={site.logoAlt}
-            width={160}
-            height={64}
-            className="h-10 w-auto mx-auto mb-8 opacity-60"
-          />
+          <p className="text-xl font-bold text-primary/60 mb-8">electricAcasa.ro</p>
 
           {/* 404 number */}
           <p className="text-8xl md:text-9xl font-black text-gray-900 leading-none mb-4">

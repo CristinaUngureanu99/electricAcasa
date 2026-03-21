@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase';
-import { site } from '@/config/site';
+
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -61,7 +61,7 @@ export function ClientNav() {
       {/* Mobile header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 px-4 py-2 flex items-center justify-between">
         <Link href="/">
-          <Image src="/logo.png" alt={site.logoAlt} width={120} height={48} className="h-9 w-auto" />
+          <span className="text-lg font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-xs">.ro</span></span>
         </Link>
         <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-gray-900" aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -83,7 +83,7 @@ export function ClientNav() {
       >
         <div className="p-5 border-b border-gray-50">
           <Link href="/" onClick={() => setMenuOpen(false)}>
-            <Image src="/logo.png" alt={site.logoAlt} width={180} height={72} className="h-14 w-auto" />
+            <span className="text-xl font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-sm">.ro</span></span>
           </Link>
         </div>
 

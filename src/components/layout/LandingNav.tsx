@@ -12,18 +12,22 @@ export default function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    async function check() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }: { data: { user: unknown } }) => {
       setIsLoggedIn(!!user);
-    }
-    check();
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: { user?: unknown } | null) => {
+      setIsLoggedIn(!!session?.user);
+    });
 
     function onScroll() {
       setScrolled(window.scrollY > 60);
     }
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
   return (
@@ -55,7 +59,7 @@ export default function LandingNav() {
                     : 'bg-white text-gray-900 hover:bg-gray-100'
                 }`}
               >
-                My Account
+                Contul meu
               </Link>
             ) : (
               <>
@@ -65,7 +69,7 @@ export default function LandingNav() {
                     scrolled ? 'text-gray-900 hover:text-gray-600' : 'text-white/60 hover:text-white'
                   }`}
                 >
-                  Log In
+                  Autentificare
                 </Link>
                 <Link
                   href="/register"
@@ -75,7 +79,7 @@ export default function LandingNav() {
                       : 'bg-white text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  Sign Up
+                  Inregistrare
                 </Link>
               </>
             )}

@@ -19,7 +19,7 @@ export default function CheckoutPage() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'ramburs'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'ramburs'>('ramburs');
 
   // Address fields
   const [name, setName] = useState('');
@@ -207,14 +207,16 @@ export default function CheckoutPage() {
             <Card>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Metoda de plata</h2>
               <div className="space-y-3">
-                <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors ${paymentMethod === 'card' ? 'border-primary bg-primary/5' : 'border-gray-200'}`}>
-                  <input type="radio" name="payment" value="card" checked={paymentMethod === 'card'} onChange={() => setPaymentMethod('card')} className="sr-only" />
-                  <CreditCard size={20} className={paymentMethod === 'card' ? 'text-primary' : 'text-gray-400'} />
+                <div
+                  className="flex items-center gap-3 p-4 rounded-xl border-2 border-gray-200 opacity-50 cursor-not-allowed"
+                  title="Plata cu card nu este configurata inca"
+                >
+                  <CreditCard size={20} className="text-gray-300" />
                   <div>
-                    <p className="font-medium text-gray-900">Card bancar</p>
-                    <p className="text-xs text-gray-500">Plata securizata prin Stripe</p>
+                    <p className="font-medium text-gray-400">Card bancar</p>
+                    <p className="text-xs text-gray-400">Plata cu card nu este configurata inca</p>
                   </div>
-                </label>
+                </div>
                 <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-colors ${paymentMethod === 'ramburs' ? 'border-primary bg-primary/5' : 'border-gray-200'}`}>
                   <input type="radio" name="payment" value="ramburs" checked={paymentMethod === 'ramburs'} onChange={() => setPaymentMethod('ramburs')} className="sr-only" />
                   <Banknote size={20} className={paymentMethod === 'ramburs' ? 'text-primary' : 'text-gray-400'} />

@@ -66,26 +66,28 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Link href="/admin/comenzi" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-white mb-4">
-        <ChevronLeft size={16} /> Inapoi la comenzi
-      </Link>
+    <div className="max-w-4xl mx-auto space-y-5">
+      <div>
+        <Link href="/admin/comenzi" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-white mb-4">
+          <ChevronLeft size={16} /> Inapoi la comenzi
+        </Link>
 
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Comanda EA-{order.order_number}</h1>
-          <p className="text-sm text-gray-400 mt-1">{formatDate(order.created_at)}</p>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Comanda EA-{order.order_number}</h1>
+            <p className="text-sm text-gray-400 mt-1">{formatDate(order.created_at)}</p>
+          </div>
+          <Badge variant={statusVariants[order.status as OrderStatus]}>
+            {statusLabels[order.status as OrderStatus]}
+          </Badge>
         </div>
-        <Badge variant={statusVariants[order.status as OrderStatus]}>
-          {statusLabels[order.status as OrderStatus]}
-        </Badge>
       </div>
 
       {/* Status actions */}
       {nextStatuses.length > 0 && (
         <Card>
           <h2 className="font-semibold text-gray-900 mb-3">Schimba status</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             {nextStatuses.map((ns) => (
               <Button
                 key={ns.value}
@@ -103,8 +105,8 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
 
       {/* Client */}
       <Card>
-        <h2 className="font-semibold text-gray-900 mb-2">Client</h2>
-        <div className="text-sm text-gray-600 space-y-0.5">
+        <h2 className="font-semibold text-gray-900 mb-3">Client</h2>
+        <div className="text-sm text-gray-600 space-y-1">
           <p className="font-medium">{client.full_name || client.email}</p>
           <p>{client.email}</p>
           {client.phone && <p>{client.phone}</p>}
@@ -113,29 +115,38 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
 
       {/* Products */}
       <Card>
-        <h2 className="font-semibold text-gray-900 mb-3">Produse</h2>
+        <h2 className="font-semibold text-gray-900 mb-4">Produse</h2>
         <div className="divide-y divide-gray-100">
           {items.map((item) => (
-            <div key={item.id} className="flex justify-between py-2">
+            <div key={item.id} className="flex justify-between py-3">
               <div>
                 <p className="text-sm font-medium text-gray-900">{item.product_name}</p>
-                <p className="text-xs text-gray-500">{item.quantity} x {formatPrice(item.unit_price)}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{item.quantity} x {formatPrice(item.unit_price)}</p>
               </div>
               <p className="text-sm font-semibold text-gray-900">{formatPrice(item.unit_price * item.quantity)}</p>
             </div>
           ))}
         </div>
-        <div className="border-t border-gray-100 pt-3 mt-3 space-y-1 text-sm">
-          <div className="flex justify-between"><span className="text-gray-500">Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
-          <div className="flex justify-between"><span className="text-gray-500">Transport</span><span>{order.shipping_cost === 0 ? 'Gratuit' : formatPrice(order.shipping_cost)}</span></div>
-          <div className="flex justify-between font-bold text-gray-900 pt-2 border-t border-gray-100"><span>Total</span><span>{formatPrice(order.total)}</span></div>
+        <div className="border-t border-gray-100 pt-4 mt-4 space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span className="text-gray-500">Subtotal</span>
+            <span>{formatPrice(order.subtotal)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-500">Transport</span>
+            <span>{order.shipping_cost === 0 ? 'Gratuit' : formatPrice(order.shipping_cost)}</span>
+          </div>
+          <div className="flex justify-between font-bold text-gray-900 pt-3 border-t border-gray-100">
+            <span>Total</span>
+            <span>{formatPrice(order.total)}</span>
+          </div>
         </div>
       </Card>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-5">
         <Card>
-          <h2 className="font-semibold text-gray-900 mb-2">Adresa livrare</h2>
-          <div className="text-sm text-gray-600 space-y-0.5">
+          <h2 className="font-semibold text-gray-900 mb-3">Adresa livrare</h2>
+          <div className="text-sm text-gray-600 space-y-1">
             <p className="font-medium">{shipping.name}</p>
             <p>{shipping.street}</p>
             <p>{shipping.city}, {shipping.county} {shipping.postal_code}</p>
@@ -143,8 +154,8 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
           </div>
         </Card>
         <Card>
-          <h2 className="font-semibold text-gray-900 mb-2">Plata</h2>
-          <div className="text-sm text-gray-600 space-y-1">
+          <h2 className="font-semibold text-gray-900 mb-3">Plata</h2>
+          <div className="text-sm text-gray-600 space-y-1.5">
             <p>Metoda: <span className="font-medium">{order.payment_method === 'card' ? 'Card' : 'Ramburs'}</span></p>
             <p>Status: <span className="font-medium">{order.payment_status === 'paid' ? 'Platita' : 'In asteptare'}</span></p>
           </div>
@@ -153,7 +164,7 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
 
       {order.notes && (
         <Card>
-          <h2 className="font-semibold text-gray-900 mb-2">Note</h2>
+          <h2 className="font-semibold text-gray-900 mb-3">Note</h2>
           <p className="text-sm text-gray-600">{order.notes}</p>
         </Card>
       )}

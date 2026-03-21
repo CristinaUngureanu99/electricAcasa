@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { site } from '@/config/site';
 import { useRouter } from 'next/navigation';
 import { createClient, resetAuthState } from '@/lib/supabase';
 import { Input } from '@/components/ui/Input';
@@ -18,6 +16,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,7 +44,7 @@ export default function RegisterPage() {
       resetAuthState();
       const supabase = createClient();
 
-      const { error: authError } = await supabase.auth.signUp({
+      const { data, error: authError } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
@@ -53,6 +52,7 @@ export default function RegisterPage() {
             full_name: fullName.trim(),
             phone,
           },
+          emailRedirectTo: `${window.location.origin}/api/auth/callback`,
         },
       });
 
@@ -62,17 +62,23 @@ export default function RegisterPage() {
         return;
       }
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        setError('Înregistrarea a eșuat. Te rugăm să încerci din nou.');
+      if (data.session) {
+        if (data.user) {
+          await supabase.from('profiles').update({ phone, full_name: fullName }).eq('id', data.user.id);
+        }
+        router.push('/dashboard');
+        router.refresh();
+        return;
+      }
+
+      if (data.user) {
+        setEmailSent(true);
         setLoading(false);
         return;
       }
 
-      await supabase.from('profiles').update({ phone, full_name: fullName }).eq('id', user.id);
-
-      router.push('/dashboard');
-      router.refresh();
+      setError('Înregistrarea a eșuat. Te rugăm să încerci din nou.');
+      setLoading(false);
     } catch {
       resetAuthState();
       setError('Eroare de conexiune. Te rugăm încearcă din nou.');
@@ -86,13 +92,31 @@ export default function RegisterPage() {
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-10">
           <Link href="/">
-            <Image src="/logo.png" alt={site.logoAlt} width={260} height={104} className="h-28 w-auto mx-auto" />
+            <span className="text-3xl font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-lg">.ro</span></span>
           </Link>
         </div>
 
         <div className="bg-white rounded-3xl shadow-xl shadow-navy/5 p-8">
+          {emailSent ? (
+            <div className="text-center space-y-4">
+              <div className="mx-auto w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center">
+                <svg className="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-navy">Verifică-ți emailul</h2>
+              <p className="text-gray-500 text-sm">
+                Am trimis un link de confirmare la <span className="font-semibold text-navy">{email}</span>.
+                Accesează linkul din email pentru a-ți activa contul.
+              </p>
+              <Link href="/login" className="inline-block text-accent font-semibold hover:underline text-sm mt-2">
+                Mergi la pagina de login
+              </Link>
+            </div>
+          ) : (
+          <>
           <h2 className="text-2xl font-bold text-navy mb-1">Creează cont</h2>
-          <p className="text-gray-500 text-sm mb-6">Create your account to get started</p>
+          <p className="text-gray-500 text-sm mb-6">Creeaza-ti contul pentru a incepe</p>
 
           <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             <Input
@@ -186,6 +210,8 @@ export default function RegisterPage() {
               Conectează-te
             </Link>
           </p>
+          </>
+          )}
         </div>
       </div>
     </div>

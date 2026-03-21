@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase';
-import { site } from '@/config/site';
+
 import {
   LayoutDashboard,
   FolderTree,
@@ -20,7 +20,7 @@ import {
 import { useState } from 'react';
 
 const links = [
-  { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/dashboard', label: 'Panou de control', icon: LayoutDashboard },
   { href: '/admin/categorii', label: 'Categorii', icon: FolderTree },
   { href: '/admin/produse', label: 'Produse', icon: Package },
   { href: '/admin/comenzi', label: 'Comenzi', icon: ShoppingBag },
@@ -63,10 +63,10 @@ export function AdminNav() {
       >
         <div className="p-4">
           <Link href="/admin/dashboard" onClick={() => setMenuOpen(false)}>
-            <Image src="/logo.png" alt={site.logoAlt} width={160} height={64} className="h-12 w-auto brightness-0 invert" />
+                        <span className="text-lg font-bold text-white">electricAcasa</span>
           </Link>
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-xs text-accent font-semibold tracking-wider uppercase">Admin Panel</span>
+            <span className="text-xs text-accent font-semibold tracking-wider uppercase">Administrare</span>
           </div>
         </div>
 

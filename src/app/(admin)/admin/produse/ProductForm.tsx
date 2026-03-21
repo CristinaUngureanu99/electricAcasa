@@ -368,7 +368,8 @@ export default function ProductForm({ initialProduct, categories, initialRelatio
           accept="image/*"
           multiple
           onChange={(e) => {
-            if (e.target.files) setNewImageFiles((prev) => [...prev, ...Array.from(e.target.files!)]);
+            const files = Array.from(e.target.files || []);
+            if (files.length > 0) setNewImageFiles((prev) => [...prev, ...files]);
             e.target.value = '';
           }}
           className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"

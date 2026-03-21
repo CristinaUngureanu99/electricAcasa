@@ -6,6 +6,7 @@ import { formatPrice, formatDate } from '@/lib/utils';
 import type { Order, OrderItem, OrderStatus, OrderAddress } from '@/types/database';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
+import { CancelOrderButton } from '@/components/ui/CancelOrderButton';
 
 export const metadata = { title: 'Detalii comanda' };
 
@@ -65,6 +66,11 @@ export default async function DetaliiComandaPage({ params }: { params: Promise<{
           {statusLabels[o.status as OrderStatus]}
         </Badge>
       </div>
+
+      {/* Cancel: only ramburs pending/confirmed. Card pending goes through checkout cancel. Card paid needs admin refund. */}
+      {o.payment_method === 'ramburs' && (o.status === 'pending' || o.status === 'confirmed') && (
+        <CancelOrderButton orderId={o.id} />
+      )}
 
       {/* Produse */}
       <Card>

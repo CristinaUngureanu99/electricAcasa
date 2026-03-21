@@ -171,54 +171,56 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const loadCart = useCallback(async (uid: string | null) => {
-    let rawItems: LocalCartItem[];
+    try {
+      let rawItems: LocalCartItem[];
 
-    if (uid) {
-      const guestItems = readLocalCart();
-      if (guestItems.length > 0) {
-        await mergeGuestCart(uid);
+      if (uid) {
+        const guestItems = readLocalCart();
+        if (guestItems.length > 0) {
+          await mergeGuestCart(uid);
+        }
+
+        const supabase = createClient();
+        const { data } = await supabase
+          .from('cart_items')
+          .select('product_id, quantity')
+          .eq('user_id', uid);
+        rawItems = (data || []).map((r: { product_id: string; quantity: number }) => ({
+          productId: r.product_id,
+          quantity: r.quantity,
+        }));
+      } else {
+        rawItems = readLocalCart();
       }
 
-      const supabase = createClient();
-      const { data } = await supabase
-        .from('cart_items')
-        .select('product_id, quantity')
-        .eq('user_id', uid);
-      rawItems = (data || []).map((r: { product_id: string; quantity: number }) => ({
-        productId: r.product_id,
-        quantity: r.quantity,
-      }));
-    } else {
-      rawItems = readLocalCart();
+      const ids = rawItems.map((i) => i.productId);
+      const productMap = await fetchProducts(ids);
+      const cleanedItems = await clampAndClean(rawItems, productMap, !!uid, uid);
+
+      setProducts(productMap);
+      setItems(cleanedItems);
+    } catch (err) {
+      console.error('[Cart] loadCart error:', err);
+    } finally {
+      setLoading(false);
     }
-
-    const ids = rawItems.map((i) => i.productId);
-    const productMap = await fetchProducts(ids);
-    const cleanedItems = await clampAndClean(rawItems, productMap, !!uid, uid);
-
-    setProducts(productMap);
-    setItems(cleanedItems);
-    setLoading(false);
   }, [fetchProducts, clampAndClean, mergeGuestCart]);
 
-  // P2 fix: subscription cleanup returned directly from useEffect
   useEffect(() => {
     const supabase = createClient();
 
-    async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
+    supabase.auth.getUser().then(({ data: { user } }: { data: { user: { id: string } | null } }) => {
       const uid = user?.id || null;
       setUserId(uid);
-      await loadCart(uid);
-    }
-    init();
+      void loadCart(uid);
+    });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: string, session: { user?: { id: string } } | null) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string, session: { user?: { id: string } } | null) => {
       const newUid = session?.user?.id || null;
       setUserId(newUid);
       if (event === 'SIGNED_IN' && newUid) {
         setLoading(true);
-        await loadCart(newUid);
+        setTimeout(() => { void loadCart(newUid); }, 0);
       } else if (event === 'SIGNED_OUT') {
         setItems([]);
         setProducts(new Map());
@@ -235,6 +237,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Add item — returns false on DB failure
   const addItem = useCallback(async (productId: string, quantity = 1): Promise<boolean> => {
+    const existing = items.find((i) => i.productId === productId);
+
     let prod = products.get(productId);
     if (!prod) {
       const fetched = await fetchProducts([productId]);
@@ -245,7 +249,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
     if (!prod || prod.stock <= 0) return false;
 
-    const existing = items.find((i) => i.productId === productId);
     const currentQty = existing ? existing.quantity : 0;
     const newQty = Math.min(currentQty + quantity, prod.stock);
 

@@ -209,7 +209,7 @@ export async function POST(request: Request) {
       const cartCleanupItems = lineItems.map((i) => ({ product_id: i.productId, quantity: i.quantity }));
       const { error: cleanupError } = await supabase.rpc('subtract_cart_items', {
         p_user_id: user.id,
-        p_items: JSON.stringify(cartCleanupItems),
+        p_items: cartCleanupItems,
       });
 
       if (cleanupError) {
@@ -230,7 +230,7 @@ export async function POST(request: Request) {
     const cartCleanupItems = lineItems.map((i) => ({ product_id: i.productId, quantity: i.quantity }));
     const { error: cleanupError } = await supabase.rpc('subtract_cart_items', {
       p_user_id: user.id,
-      p_items: JSON.stringify(cartCleanupItems),
+      p_items: cartCleanupItems,
     });
 
     if (cleanupError) {

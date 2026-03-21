@@ -19,7 +19,7 @@ export default function AdminDashboardPage() {
         const [usersRes, productsRes, ordersRes, requestsRes] = await Promise.all([
           supabase.from('profiles').select('id', { count: 'exact', head: true }),
           supabase.from('products').select('id', { count: 'exact', head: true }),
-          supabase.from('orders').select('total, status'),
+          supabase.from('orders').select('total, status, payment_status'),
           supabase.from('package_requests').select('id', { count: 'exact', head: true }).eq('status', 'new'),
         ]);
 

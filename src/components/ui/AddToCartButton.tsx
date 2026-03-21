@@ -29,14 +29,20 @@ export function AddToCartButton({ productId, stock, productName }: AddToCartButt
 
   async function handleAdd() {
     setAdding(true);
-    const success = await addItem(productId, quantity);
-    if (success) {
-      toast(`${productName} adaugat in cos`, 'success');
-      setQuantity(1);
-    } else {
+    try {
+      const success = await addItem(productId, quantity);
+      if (success) {
+        toast(`${productName} adaugat in cos`, 'success');
+        setQuantity(1);
+      } else {
+        toast('Eroare la adaugarea in cos', 'error');
+      }
+    } catch (err) {
+      console.error('AddToCart error:', err);
       toast('Eroare la adaugarea in cos', 'error');
+    } finally {
+      setAdding(false);
     }
-    setAdding(false);
   }
 
   return (
