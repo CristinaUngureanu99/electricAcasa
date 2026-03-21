@@ -139,13 +139,11 @@ export default function CosPage() {
               </div>
             </div>
 
-            {/* Checkout placeholder */}
-            <Button size="lg" disabled className="w-full mt-6">
-              Spre checkout
-            </Button>
-            <p className="text-xs text-gray-400 text-center mt-2">
-              Checkout-ul va fi disponibil in curand.
-            </p>
+            <Link href="/checkout">
+              <Button size="lg" className="w-full mt-6">
+                Spre checkout
+              </Button>
+            </Link>
 
             <Link href="/" className="block text-sm text-center text-primary hover:underline mt-4">
               Continua cumparaturile
