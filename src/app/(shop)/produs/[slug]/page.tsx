@@ -84,9 +84,9 @@ export default async function ProdusPage({ params }: Props) {
   const specs = (p.specs as ProductSpec[]) || [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-10 md:py-12">
       {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
+      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-8">
         <Link href="/" className="hover:text-primary">Acasa</Link>
         <ChevronRight size={14} />
         {category && (
@@ -99,7 +99,7 @@ export default async function ProdusPage({ params }: Props) {
       </nav>
 
       {/* Product layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 mb-14">
         {/* Gallery */}
         <ProductGallery images={p.images} productName={p.name} />
 
@@ -108,10 +108,10 @@ export default async function ProdusPage({ params }: Props) {
           {p.brand_name && (
             <p className="text-sm text-gray-400 uppercase tracking-wide mb-1">{p.brand_name}</p>
           )}
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{p.name}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-5">{p.name}</h1>
 
           {/* Price */}
-          <div className="flex items-baseline gap-3 mb-4">
+          <div className="flex items-baseline gap-3 mb-5">
             <span className={`text-3xl font-bold ${hasDiscount ? 'text-red-600' : 'text-gray-900'}`}>
               {formatPrice(displayPrice)}
             </span>
@@ -141,7 +141,7 @@ export default async function ProdusPage({ params }: Props) {
           )}
 
           {/* Add to cart */}
-          <div className="mb-6">
+          <div className="mb-8">
             <AddToCartButton productId={p.id} stock={p.stock} productName={p.name} />
           </div>
 
@@ -151,7 +151,7 @@ export default async function ProdusPage({ params }: Props) {
               href={getStorageUrl('datasheets', p.datasheet_url)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/5 text-sm font-medium text-primary hover:bg-primary/10 transition-colors"
             >
               <Download size={16} /> Descarca fisa tehnica (PDF)
             </a>
@@ -161,7 +161,7 @@ export default async function ProdusPage({ params }: Props) {
 
       {/* Description */}
       {p.description && (
-        <section className="mb-12">
+        <section className="mb-14">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Descriere</h2>
           <div className="bg-white rounded-2xl border border-gray-100 p-6">
             <p className="text-gray-700 leading-relaxed whitespace-pre-line">{p.description}</p>
@@ -171,7 +171,7 @@ export default async function ProdusPage({ params }: Props) {
 
       {/* Specs */}
       {specs.length > 0 && (
-        <section className="mb-12">
+        <section className="mb-14">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Specificatii</h2>
           <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <table className="w-full text-sm">
@@ -190,7 +190,7 @@ export default async function ProdusPage({ params }: Props) {
 
       {/* Compatible products */}
       {compatibleProducts.length > 0 && (
-        <section className="mb-12">
+        <section className="mb-14">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Produse compatibile</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {compatibleProducts.map((cp) => (
