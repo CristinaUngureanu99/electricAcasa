@@ -50,7 +50,11 @@ export function ClientNav() {
     checkAdmin();
   }, []);
 
+  const [loggingOut, setLoggingOut] = useState(false);
+
   async function handleLogout() {
+    setLoggingOut(true);
+    setMenuOpen(false);
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push('/login');
@@ -122,10 +126,11 @@ export function ClientNav() {
           )}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-50 hover:text-red-600 w-full transition-colors"
+            disabled={loggingOut}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-50 hover:text-red-600 w-full transition-colors disabled:opacity-50"
           >
             <LogOut size={20} />
-            Deconectare
+            {loggingOut ? 'Se deconecteaza...' : 'Deconectare'}
           </button>
         </div>
       </nav>

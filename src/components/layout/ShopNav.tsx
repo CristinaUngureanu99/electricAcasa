@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase';
 import { useCart } from '@/lib/cart';
 
 import { cn } from '@/lib/utils';
-import { Menu, X, ShoppingCart, User, ChevronDown } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, ChevronDown, Search } from 'lucide-react';
 
 interface ShopNavProps {
   categories: { id: string; name: string; slug: string }[];
@@ -101,8 +101,20 @@ export function ShopNav({ categories }: ShopNavProps) {
             </Link>
           </div>
 
-          {/* Search placeholder — hidden until implemented */}
-          <div className="hidden lg:block flex-1 max-w-xs" />
+          {/* Search */}
+          <div className="hidden lg:block flex-1 max-w-xs">
+            <form action="/catalog" className="relative">
+              <input
+                type="text"
+                name="q"
+                placeholder="Cauta produse..."
+                className="w-full pl-4 pr-10 py-2 rounded-xl border border-white/30 bg-white/15 text-sm text-white placeholder:text-white/50 focus:outline-none focus:bg-white/25 focus:border-white/50 transition-colors"
+              />
+              <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white">
+                <Search size={16} />
+              </button>
+            </form>
+          </div>
 
           {/* Right: Cart + Account */}
           <div className="flex items-center gap-3">
