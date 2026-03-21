@@ -245,7 +245,7 @@ export default function CheckoutPage() {
 
           {/* Right: Summary */}
           <div className="lg:w-80 shrink-0">
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 sticky top-20">
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 lg:sticky lg:top-20">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Sumar comanda</h2>
 
               <div className="space-y-2 mb-4">

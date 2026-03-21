@@ -178,8 +178,8 @@ export default async function ProdusPage({ params }: Props) {
               <tbody>
                 {specs.map((spec, i) => (
                   <tr key={i} className={i % 2 === 0 ? 'bg-gray-50/50' : ''}>
-                    <td className="px-6 py-3 font-medium text-gray-600 w-1/3">{spec.key}</td>
-                    <td className="px-6 py-3 text-gray-900">{spec.value}</td>
+                    <td className="px-4 md:px-6 py-3 font-medium text-gray-600 w-1/3 text-sm">{spec.key}</td>
+                    <td className="px-4 md:px-6 py-3 text-gray-900 text-sm">{spec.value}</td>
                   </tr>
                 ))}
               </tbody>

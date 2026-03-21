@@ -197,8 +197,12 @@ export default async function CategoriePage({ params, searchParams }: Props) {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters sidebar */}
         <aside className="w-full lg:w-64 shrink-0">
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 space-y-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+          <details className="lg:[&>summary]:hidden lg:open bg-white rounded-2xl border border-gray-100 p-4 space-y-5" open>
+            <summary className="lg:hidden flex items-center justify-between cursor-pointer text-sm font-semibold text-gray-900 mb-3 list-none [&::-webkit-details-marker]:hidden">
+              <span className="flex items-center gap-2"><SlidersHorizontal size={16} /> Filtre</span>
+              <span className="text-xs text-primary">Deschide</span>
+            </summary>
+            <div className="hidden lg:flex items-center gap-2 text-sm font-semibold text-gray-900">
               <SlidersHorizontal size={16} /> Filtre
             </div>
 
@@ -273,16 +277,15 @@ export default async function CategoriePage({ params, searchParams }: Props) {
                 Reseteaza filtrele
               </Link>
             )}
-          </div>
+          </details>
         </aside>
 
         {/* Products grid */}
         <div className="flex-1">
           {/* Sort bar */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Sorteaza:</span>
-              <div className="flex gap-1">
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto">
+            <span className="text-sm text-gray-500 shrink-0">Sorteaza:</span>
+            <div className="flex gap-1.5 shrink-0">
                 {[
                   { key: 'newest', label: 'Cele mai noi' },
                   { key: 'price-asc', label: 'Pret crescator' },
@@ -299,7 +302,6 @@ export default async function CategoriePage({ params, searchParams }: Props) {
                     {opt.label}
                   </Link>
                 ))}
-              </div>
             </div>
           </div>
 

@@ -53,7 +53,7 @@ export default async function HomePage() {
           <p className="text-lg text-gray-600 mb-8">
             Alege usor din catalog, compara specificatii, descarca fise tehnice si comanda cu livrare in toata Romania.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/catalog"
               className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors"
