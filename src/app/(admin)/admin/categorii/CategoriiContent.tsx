@@ -11,6 +11,10 @@ import { Card } from '@/components/ui/Card';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
 import { generateSlug, getStorageUrl } from '@/lib/utils';
+import { FilterBar } from '@/components/ui/filters/FilterBar';
+import { FilterSearch } from '@/components/ui/filters/FilterSearch';
+import { FilterSelect } from '@/components/ui/filters/FilterSelect';
+import { FilterReset } from '@/components/ui/filters/FilterReset';
 import { Pencil, Trash2, Plus, X, Image as ImageIcon } from 'lucide-react';
 import type { Category } from '@/types/database';
 
@@ -42,6 +46,9 @@ const emptyForm = (): CategoryForm => ({
 
 export default function CategoriiContent({ initialCategories }: Props) {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [search, setSearch] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [levelFilter, setLevelFilter] = useState('all');
   const [form, setForm] = useState<CategoryForm | null>(null);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -50,6 +57,26 @@ export default function CategoriiContent({ initialCategories }: Props) {
   const [pendingImageDelete, setPendingImageDelete] = useState<string | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+
+  const hasFilters = search !== '' || activeFilter !== 'all' || levelFilter !== 'all';
+
+  const filteredCategories = categories.filter((c) => {
+    if (search) {
+      const q = search.toLowerCase();
+      if (!c.name.toLowerCase().includes(q) && !c.slug.toLowerCase().includes(q)) return false;
+    }
+    if (activeFilter === 'active' && !c.is_active) return false;
+    if (activeFilter === 'inactive' && c.is_active) return false;
+    if (levelFilter === 'top' && c.parent_id !== null) return false;
+    if (levelFilter === 'sub' && c.parent_id === null) return false;
+    return true;
+  });
+
+  function resetFilters() {
+    setSearch('');
+    setActiveFilter('all');
+    setLevelFilter('all');
+  }
 
   async function refresh() {
     const supabase = createClient();
@@ -431,11 +458,30 @@ export default function CategoriiContent({ initialCategories }: Props) {
           </Card>
         )}
 
+        <FilterBar>
+          <FilterSearch value={search} onChange={setSearch} placeholder="Cauta dupa nume sau slug..." />
+          <FilterSelect
+            value={activeFilter}
+            onChange={setActiveFilter}
+            options={[{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }]}
+            allLabel="Toate statusurile"
+          />
+          <FilterSelect
+            value={levelFilter}
+            onChange={setLevelFilter}
+            options={[{ value: 'top', label: 'Top-level' }, { value: 'sub', label: 'Subcategorii' }]}
+            allLabel="Toate nivelurile"
+          />
+          <FilterReset onReset={resetFilters} visible={hasFilters} />
+        </FilterBar>
+
+        {hasFilters && <p className="text-xs text-gray-500">{filteredCategories.length} din {categories.length} categorii</p>}
+
         <Card>
           <DataTable
             columns={columns}
-            data={categories as unknown as Row[]}
-            emptyMessage="Nu exista categorii. Creeaza prima categorie."
+            data={filteredCategories as unknown as Row[]}
+            emptyMessage="Nicio categorie gasita."
           />
         </Card>
       </AdminPageShell>

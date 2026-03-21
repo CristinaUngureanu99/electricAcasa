@@ -10,6 +10,10 @@ import { Badge } from '@/components/ui/Badge';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useToast } from '@/components/ui/Toast';
+import { FilterBar } from '@/components/ui/filters/FilterBar';
+import { FilterSearch } from '@/components/ui/filters/FilterSearch';
+import { FilterSelect } from '@/components/ui/filters/FilterSelect';
+import { FilterReset } from '@/components/ui/filters/FilterReset';
 import { MapPin, Pencil, Trash2, Star, Plus, X } from 'lucide-react';
 import type { Address, AddressType } from '@/types/database';
 
@@ -43,12 +47,30 @@ const emptyForm = (): AddressForm => ({
 
 export default function AdreseContent({ initialAddresses }: Props) {
   const [addresses, setAddresses] = useState<Address[]>(initialAddresses);
+  const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
   const [form, setForm] = useState<AddressForm | null>(null);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Address | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+
+  const hasFilters = search !== '' || typeFilter !== 'all';
+
+  const filteredAddresses = addresses.filter((a) => {
+    if (search) {
+      const q = search.toLowerCase();
+      if (!a.name.toLowerCase().includes(q) && !a.city.toLowerCase().includes(q) && !a.county.toLowerCase().includes(q)) return false;
+    }
+    if (typeFilter !== 'all' && a.type !== typeFilter) return false;
+    return true;
+  });
+
+  function resetFilters() {
+    setSearch('');
+    setTypeFilter('all');
+  }
 
   async function refresh() {
     const supabase = createClient();
@@ -219,6 +241,23 @@ export default function AdreseContent({ initialAddresses }: Props) {
         </Card>
       )}
 
+      {/* Filters */}
+      {addresses.length > 0 && !form && (
+        <>
+          <FilterBar>
+            <FilterSearch value={search} onChange={setSearch} placeholder="Cauta dupa nume, oras, judet..." />
+            <FilterSelect
+              value={typeFilter}
+              onChange={setTypeFilter}
+              options={[{ value: 'shipping', label: 'Livrare' }, { value: 'billing', label: 'Facturare' }]}
+              allLabel="Toate tipurile"
+            />
+            <FilterReset onReset={resetFilters} visible={hasFilters} />
+          </FilterBar>
+          {hasFilters && <p className="text-xs text-gray-500">{filteredAddresses.length} din {addresses.length} adrese</p>}
+        </>
+      )}
+
       {/* List */}
       {addresses.length === 0 && !form ? (
         <EmptyState
@@ -228,7 +267,7 @@ export default function AdreseContent({ initialAddresses }: Props) {
         />
       ) : (
         <div className="space-y-3 mt-4">
-          {addresses.map((addr) => (
+          {filteredAddresses.map((addr) => (
             <Card key={addr.id}>
               <div className="flex items-start justify-between">
                 <div>

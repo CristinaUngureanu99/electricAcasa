@@ -8,6 +8,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { formatDate } from '@/lib/utils';
+import { FilterBar } from '@/components/ui/filters/FilterBar';
+import { FilterSearch } from '@/components/ui/filters/FilterSearch';
+import { FilterSelect } from '@/components/ui/filters/FilterSelect';
+import { FilterReset } from '@/components/ui/filters/FilterReset';
 import { Download, ChevronDown, ChevronUp } from 'lucide-react';
 import type { PackageRequest, PackageRequestStatus } from '@/types/database';
 
@@ -23,8 +27,16 @@ const statusVariants: Record<PackageRequestStatus, 'warning' | 'info' | 'success
 };
 const STATUS_OPTIONS: PackageRequestStatus[] = ['new', 'in_review', 'answered', 'closed'];
 
+const FILTER_OPTIONS = [
+  { value: 'new', label: 'Noua' },
+  { value: 'in_review', label: 'In analiza' },
+  { value: 'answered', label: 'Raspuns' },
+  { value: 'closed', label: 'Inchisa' },
+];
+
 export default function CereriContent({ requests: initialRequests }: Props) {
   const [requests, setRequests] = useState(initialRequests);
+  const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<string>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editStatus, setEditStatus] = useState<PackageRequestStatus>('new');
@@ -32,7 +44,21 @@ export default function CereriContent({ requests: initialRequests }: Props) {
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
 
-  const filtered = filter === 'all' ? requests : requests.filter((r) => r.status === filter);
+  const hasFilters = search !== '' || filter !== 'all';
+
+  const filtered = requests.filter((r) => {
+    if (search) {
+      const q = search.toLowerCase();
+      if (!r.name.toLowerCase().includes(q) && !r.email.toLowerCase().includes(q) && !(r.phone || '').includes(q)) return false;
+    }
+    if (filter !== 'all' && r.status !== filter) return false;
+    return true;
+  });
+
+  function resetFilters() {
+    setSearch('');
+    setFilter('all');
+  }
 
   function expand(req: PackageRequest) {
     if (expandedId === req.id) {
@@ -79,16 +105,13 @@ export default function CereriContent({ requests: initialRequests }: Props) {
 
   return (
     <AdminPageShell title="Cereri pachet" description={`${requests.length} cereri total`}>
-      <div className="flex gap-2 flex-wrap">
-        <button onClick={() => setFilter('all')} className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${filter === 'all' ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}>
-          Toate
-        </button>
-        {STATUS_OPTIONS.map((s) => (
-          <button key={s} onClick={() => setFilter(s)} className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${filter === s ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 border border-gray-200'}`}>
-            {statusLabels[s]}
-          </button>
-        ))}
-      </div>
+      <FilterBar>
+        <FilterSearch value={search} onChange={setSearch} placeholder="Cauta nume, email, telefon..." />
+        <FilterSelect value={filter} onChange={setFilter} options={FILTER_OPTIONS} allLabel="Toate statusurile" />
+        <FilterReset onReset={resetFilters} visible={hasFilters} />
+      </FilterBar>
+
+      {hasFilters && <p className="text-xs text-gray-500">{filtered.length} din {requests.length} cereri</p>}
 
       <div className="space-y-2">
         {filtered.length === 0 ? (
