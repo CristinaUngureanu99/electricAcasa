@@ -38,9 +38,13 @@ export function AdminNav() {
   async function handleLogout() {
     setLoggingOut(true);
     setMenuOpen(false);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push('/login');
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push('/login');
+    } catch {
+      setLoggingOut(false);
+    }
   }
 
   return (

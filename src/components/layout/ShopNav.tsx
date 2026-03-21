@@ -153,6 +153,18 @@ export function ShopNav({ categories }: ShopNavProps) {
         {menuOpen && (
           <div className="md:hidden border-t border-gray-100 bg-white pb-4 px-4 animate-[fadeIn_0.15s_ease-out]">
             <div className="py-3">
+              {/* Mobile search */}
+              <form action="/catalog" className="mb-3">
+                <div className="relative">
+                  <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    name="q"
+                    placeholder="Cauta produse..."
+                    className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                  />
+                </div>
+              </form>
               <Link
                 href="/catalog"
                 className="block py-2 text-sm font-semibold text-primary"
