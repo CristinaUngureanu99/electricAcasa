@@ -22,7 +22,7 @@ export default function CosPage() {
           title="Cosul tau e gol"
           description="Exploreaza catalogul nostru si adauga produse in cos."
           action={
-            <Link href="/">
+            <Link href="/catalog">
               <Button>Continua cumparaturile</Button>
             </Link>
           }

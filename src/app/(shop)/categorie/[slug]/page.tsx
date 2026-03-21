@@ -225,7 +225,10 @@ export default async function CategoriePage({ params, searchParams }: Props) {
             {/* Price filter */}
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Pret (RON)</p>
-              <form className="flex gap-2">
+              <form action={`/categorie/${slug}`} className="flex gap-2">
+                {brandFilter && <input type="hidden" name="brand" value={brandFilter} />}
+                {sp.stoc && <input type="hidden" name="stoc" value={sp.stoc} />}
+                {sp.sort && <input type="hidden" name="sort" value={sp.sort} />}
                 <input
                   type="number"
                   name="min"
@@ -242,7 +245,6 @@ export default async function CategoriePage({ params, searchParams }: Props) {
                 />
                 <button
                   type="submit"
-                  formAction={`/categorie/${slug}`}
                   className="px-3 py-1.5 text-xs font-semibold bg-primary text-white rounded-lg hover:bg-primary-dark"
                 >
                   Ok

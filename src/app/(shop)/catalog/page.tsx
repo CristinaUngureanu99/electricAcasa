@@ -170,7 +170,12 @@ export default async function CatalogPage({ searchParams }: Props) {
             {/* Search */}
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Cauta</p>
-              <form>
+              <form action="/catalog">
+                {categoryFilter && <input type="hidden" name="categorie" value={categoryFilter} />}
+                {brandFilter && <input type="hidden" name="brand" value={brandFilter} />}
+                {sp.stoc && <input type="hidden" name="stoc" value={sp.stoc} />}
+                {sp.discount && <input type="hidden" name="discount" value={sp.discount} />}
+                {sp.sort && <input type="hidden" name="sort" value={sp.sort} />}
                 <input
                   type="text"
                   name="q"
@@ -230,7 +235,13 @@ export default async function CatalogPage({ searchParams }: Props) {
             {/* Price filter */}
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Pret (RON)</p>
-              <form className="flex gap-2">
+              <form action="/catalog" className="flex gap-2">
+                {categoryFilter && <input type="hidden" name="categorie" value={categoryFilter} />}
+                {brandFilter && <input type="hidden" name="brand" value={brandFilter} />}
+                {sp.stoc && <input type="hidden" name="stoc" value={sp.stoc} />}
+                {sp.discount && <input type="hidden" name="discount" value={sp.discount} />}
+                {sp.sort && <input type="hidden" name="sort" value={sp.sort} />}
+                {searchQuery && <input type="hidden" name="q" value={searchQuery} />}
                 <input
                   type="number"
                   name="min"
@@ -247,7 +258,6 @@ export default async function CatalogPage({ searchParams }: Props) {
                 />
                 <button
                   type="submit"
-                  formAction="/catalog"
                   className="px-3 py-1.5 text-xs font-semibold bg-primary text-white rounded-lg hover:bg-primary-dark"
                 >
                   Ok
