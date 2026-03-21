@@ -5,12 +5,16 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
+  ShoppingBag,
+  MapPin,
   User,
 } from 'lucide-react';
 
 const tabs = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, activeColor: 'text-gray-900' },
-  { href: '/profile', label: 'Profile', icon: User, activeColor: 'text-gray-900' },
+  { href: '/comenzi', label: 'Comenzi', icon: ShoppingBag, activeColor: 'text-gray-900' },
+  { href: '/adrese', label: 'Adrese', icon: MapPin, activeColor: 'text-gray-900' },
+  { href: '/profile', label: 'Profil', icon: User, activeColor: 'text-gray-900' },
 ];
 
 export function MobileBottomNav() {

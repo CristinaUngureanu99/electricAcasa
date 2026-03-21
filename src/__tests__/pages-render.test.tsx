@@ -49,15 +49,15 @@ describe('Not Found page', () => {
 });
 
 describe('DashboardContent', () => {
-  it('renders placeholder cards', async () => {
+  it('renders dashboard cards', async () => {
     const { default: DashboardContent } = await import('@/app/(client)/dashboard/DashboardContent');
-    render(<DashboardContent profile={{ id: '1', email: 'test@test.com', full_name: 'Test', phone: null, role: 'user', created_at: '' }} />);
-    expect(screen.getByText(/Your Profile/i)).toBeInTheDocument();
+    render(<DashboardContent profile={{ id: '1', email: 'test@test.com', full_name: 'Test', phone: null, role: 'user', created_at: '' }} recentOrders={[]} addressCount={0} />);
+    expect(screen.getByText(/Profilul tau/i)).toBeInTheDocument();
   });
 
   it('shows user name in greeting', async () => {
     const { default: DashboardContent } = await import('@/app/(client)/dashboard/DashboardContent');
-    render(<DashboardContent profile={{ id: '1', email: 'test@test.com', full_name: 'John Doe', phone: null, role: 'user', created_at: '' }} />);
+    render(<DashboardContent profile={{ id: '1', email: 'test@test.com', full_name: 'John Doe', phone: null, role: 'user', created_at: '' }} recentOrders={[]} addressCount={0} />);
     expect(screen.getByText(/John/)).toBeInTheDocument();
   });
 });

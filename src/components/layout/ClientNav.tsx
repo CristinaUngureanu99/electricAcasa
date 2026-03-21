@@ -8,6 +8,8 @@ import { createClient } from '@/lib/supabase';
 import { site } from '@/config/site';
 import {
   LayoutDashboard,
+  ShoppingBag,
+  MapPin,
   User,
   LogOut,
   Menu,
@@ -18,7 +20,9 @@ import { useState, useEffect } from 'react';
 
 const links = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, activeClass: 'bg-gray-900 text-white' },
-  { href: '/profile', label: 'Profile', icon: User, activeClass: 'bg-gray-900 text-white' },
+  { href: '/comenzi', label: 'Comenzi', icon: ShoppingBag, activeClass: 'bg-gray-900 text-white' },
+  { href: '/adrese', label: 'Adrese', icon: MapPin, activeClass: 'bg-gray-900 text-white' },
+  { href: '/profile', label: 'Profil', icon: User, activeClass: 'bg-gray-900 text-white' },
 ];
 
 export function ClientNav() {
