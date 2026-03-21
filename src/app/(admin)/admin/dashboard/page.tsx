@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
 import { Card } from '@/components/ui/Card';
 import { Users, Package, ShoppingBag, FileText } from 'lucide-react';
@@ -58,25 +59,29 @@ export default function AdminDashboardPage() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-blue-100"><ShoppingBag size={20} className="text-blue-600" /></div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.orders}</p>
-              <p className="text-xs text-gray-500">Comenzi</p>
+        <Link href="/admin/comenzi" className="block">
+          <Card className="hover:ring-2 hover:ring-blue-300 cursor-pointer transition-all">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-blue-100"><ShoppingBag size={20} className="text-blue-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{stats.orders}</p>
+                <p className="text-xs text-gray-500">Comenzi</p>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
 
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-emerald-100"><Package size={20} className="text-emerald-600" /></div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.products}</p>
-              <p className="text-xs text-gray-500">Produse</p>
+        <Link href="/admin/produse" className="block">
+          <Card className="hover:ring-2 hover:ring-emerald-300 cursor-pointer transition-all">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-emerald-100"><Package size={20} className="text-emerald-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{stats.products}</p>
+                <p className="text-xs text-gray-500">Produse</p>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
 
         <Card>
           <div className="flex items-center gap-3">
@@ -88,15 +93,17 @@ export default function AdminDashboardPage() {
           </div>
         </Card>
 
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-purple-100"><FileText size={20} className="text-purple-600" /></div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.pendingRequests}</p>
-              <p className="text-xs text-gray-500">Cereri noi</p>
+        <Link href="/admin/cereri-pachet" className="block">
+          <Card className="hover:ring-2 hover:ring-purple-300 cursor-pointer transition-all">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-purple-100"><FileText size={20} className="text-purple-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{stats.pendingRequests}</p>
+                <p className="text-xs text-gray-500">Cereri noi</p>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
       </div>
 
       <Card>
