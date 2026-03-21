@@ -171,7 +171,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
         }
       }
 
-      const slug = form.slug.trim() || generateSlug(form.name);
+      const slug = generateSlug(form.name);
 
       const record = {
         name: form.name.trim(),
@@ -344,16 +344,16 @@ export default function CategoriiContent({ initialCategories }: Props) {
                 value={form.name}
                 onChange={(e) => {
                   const name = e.target.value;
-                  setForm((f) => f ? { ...f, name, slug: editing ? f.slug : generateSlug(name) } : f);
+                  setForm((f) => f ? { ...f, name, slug: generateSlug(name) } : f);
                 }}
                 placeholder="ex: Aparataj Electric"
               />
-              <Input
-                label="Slug"
-                value={form.slug}
-                onChange={(e) => setForm((f) => f ? { ...f, slug: e.target.value } : f)}
-                placeholder="auto-generat din nume"
-              />
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Slug (URL)</label>
+                <p className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-500">
+                  {form.slug || 'se genereaza din nume'}
+                </p>
+              </div>
               <div className="w-full col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Descriere scurta</label>
                 <textarea
