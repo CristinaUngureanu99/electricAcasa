@@ -12,6 +12,7 @@ import {
   Package,
   ShoppingBag,
   FileText,
+  Users,
   LogOut,
   Menu,
   X,
@@ -25,6 +26,7 @@ const links = [
   { href: '/admin/produse', label: 'Produse', icon: Package },
   { href: '/admin/comenzi', label: 'Comenzi', icon: ShoppingBag },
   { href: '/admin/cereri-pachet', label: 'Cereri pachet', icon: FileText },
+  { href: '/admin/utilizatori', label: 'Utilizatori', icon: Users },
 ];
 
 export function AdminNav() {

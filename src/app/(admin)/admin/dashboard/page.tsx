@@ -83,15 +83,17 @@ export default function AdminDashboardPage() {
           </Card>
         </Link>
 
-        <Card>
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-amber-100"><Users size={20} className="text-amber-600" /></div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.users}</p>
-              <p className="text-xs text-gray-500">Utilizatori</p>
+        <Link href="/admin/utilizatori" className="block">
+          <Card className="hover:ring-2 hover:ring-amber-300 cursor-pointer transition-all">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-amber-100"><Users size={20} className="text-amber-600" /></div>
+              <div>
+                <p className="text-2xl font-bold text-gray-900">{stats.users}</p>
+                <p className="text-xs text-gray-500">Utilizatori</p>
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Link>
 
         <Link href="/admin/cereri-pachet" className="block">
           <Card className="hover:ring-2 hover:ring-purple-300 cursor-pointer transition-all">
