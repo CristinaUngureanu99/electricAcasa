@@ -5,6 +5,10 @@ import Link from 'next/link';
 import { AdminPageShell } from '@/components/ui/AdminPageShell';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { FilterBar } from '@/components/ui/filters/FilterBar';
+import { FilterSearch } from '@/components/ui/filters/FilterSearch';
+import { FilterSelect } from '@/components/ui/filters/FilterSelect';
+import { FilterReset } from '@/components/ui/filters/FilterReset';
 import { formatPrice, formatDate } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import type { OrderStatus } from '@/types/database';
@@ -32,41 +36,70 @@ const statusVariants: Record<OrderStatus, 'warning' | 'info' | 'success' | 'dang
   pending: 'warning', confirmed: 'info', shipped: 'info', delivered: 'success', cancelled: 'danger',
 };
 
-const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+const STATUS_OPTIONS = [
+  { value: 'pending', label: 'In asteptare' },
+  { value: 'confirmed', label: 'Confirmata' },
+  { value: 'shipped', label: 'Expediata' },
+  { value: 'delivered', label: 'Livrata' },
+  { value: 'cancelled', label: 'Anulata' },
+];
+
+const PAYMENT_METHOD_OPTIONS = [
+  { value: 'ramburs', label: 'Ramburs' },
+  { value: 'card', label: 'Card' },
+];
+
+const PAYMENT_STATUS_OPTIONS = [
+  { value: 'pending', label: 'In asteptare' },
+  { value: 'paid', label: 'Platita' },
+  { value: 'failed', label: 'Esuata' },
+  { value: 'refunded', label: 'Rambursata' },
+];
 
 export default function ComenziAdminContent({ orders }: Props) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [methodFilter, setMethodFilter] = useState('all');
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState('all');
+
+  const hasFilters = search !== '' || statusFilter !== 'all' || methodFilter !== 'all' || paymentStatusFilter !== 'all';
 
   const filtered = orders.filter((o) => {
-    const matchesSearch = search === '' ||
-      `EA-${o.order_number}`.toLowerCase().includes(search.toLowerCase()) ||
-      o.client_email.toLowerCase().includes(search.toLowerCase()) ||
-      o.client_name.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || o.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    if (search) {
+      const q = search.toLowerCase();
+      const matchesSearch =
+        `EA-${o.order_number}`.toLowerCase().includes(q) ||
+        o.client_email.toLowerCase().includes(q) ||
+        o.client_name.toLowerCase().includes(q);
+      if (!matchesSearch) return false;
+    }
+    if (statusFilter !== 'all' && o.status !== statusFilter) return false;
+    if (methodFilter !== 'all' && o.payment_method !== methodFilter) return false;
+    if (paymentStatusFilter !== 'all' && o.payment_status !== paymentStatusFilter) return false;
+    return true;
   });
+
+  function resetFilters() {
+    setSearch('');
+    setStatusFilter('all');
+    setMethodFilter('all');
+    setPaymentStatusFilter('all');
+  }
 
   return (
     <AdminPageShell
       title="Comenzi"
       description={`${orders.length} comenzi total`}
-      search={{ value: search, onChange: setSearch, placeholder: 'Cauta dupa nr comanda, email sau nume...' }}
     >
-      {/* Status filter */}
-      <div className="flex gap-2 flex-wrap">
-        {STATUS_OPTIONS.map((s) => (
-          <button
-            key={s}
-            onClick={() => setStatusFilter(s)}
-            className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${
-              statusFilter === s ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-400'
-            }`}
-          >
-            {s === 'all' ? 'Toate' : statusLabels[s as OrderStatus]}
-          </button>
-        ))}
-      </div>
+      <FilterBar>
+        <FilterSearch value={search} onChange={setSearch} placeholder="Cauta nr comanda, email, nume..." />
+        <FilterSelect value={statusFilter} onChange={setStatusFilter} options={STATUS_OPTIONS} allLabel="Toate statusurile" />
+        <FilterSelect value={methodFilter} onChange={setMethodFilter} options={PAYMENT_METHOD_OPTIONS} allLabel="Toate metodele" />
+        <FilterSelect value={paymentStatusFilter} onChange={setPaymentStatusFilter} options={PAYMENT_STATUS_OPTIONS} allLabel="Toate platile" />
+        <FilterReset onReset={resetFilters} visible={hasFilters} />
+      </FilterBar>
+
+      <p className="text-xs text-gray-500">{filtered.length} din {orders.length} comenzi</p>
 
       <div className="space-y-2">
         {filtered.length === 0 ? (
@@ -83,6 +116,7 @@ export default function ComenziAdminContent({ orders }: Props) {
                     </div>
                     <div className="text-sm text-gray-500">
                       {o.client_name || o.client_email} &middot; {formatDate(o.created_at)} &middot; {o.payment_method === 'card' ? 'Card' : 'Ramburs'}
+                      {o.payment_status === 'paid' && <span className="text-green-600 ml-1">&middot; Platita</span>}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

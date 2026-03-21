@@ -68,14 +68,14 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
   return (
     <div className="max-w-4xl mx-auto space-y-5">
       <div>
-        <Link href="/admin/comenzi" className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-white mb-4">
+        <Link href="/admin/comenzi" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary mb-4">
           <ChevronLeft size={16} /> Inapoi la comenzi
         </Link>
 
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-white">Comanda EA-{order.order_number}</h1>
-            <p className="text-sm text-gray-400 mt-1">{formatDate(order.created_at)}</p>
+            <h1 className="text-2xl font-bold text-gray-900">Comanda EA-{order.order_number}</h1>
+            <p className="text-sm text-gray-500 mt-1">{formatDate(order.created_at)}</p>
           </div>
           <Badge variant={statusVariants[order.status as OrderStatus]}>
             {statusLabels[order.status as OrderStatus]}

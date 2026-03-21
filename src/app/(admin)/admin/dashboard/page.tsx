@@ -50,12 +50,12 @@ export default function AdminDashboardPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-white">Panou de control</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Panou de control</h1>
         <p className="text-gray-500 mt-1">Prezentare generala</p>
       </div>
 
       {error && (
-        <div className="bg-red-500/20 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm">{error}</div>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">{error}</div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

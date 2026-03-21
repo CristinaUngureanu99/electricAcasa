@@ -12,6 +12,10 @@ import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
 import { Pencil, Trash2, Plus, Image as ImageIcon } from 'lucide-react';
+import { FilterBar } from '@/components/ui/filters/FilterBar';
+import { FilterSearch } from '@/components/ui/filters/FilterSearch';
+import { FilterSelect } from '@/components/ui/filters/FilterSelect';
+import { FilterReset } from '@/components/ui/filters/FilterReset';
 import type { Product, Category } from '@/types/database';
 
 interface Props {
@@ -22,6 +26,10 @@ interface Props {
 export default function ProduseContent({ initialProducts, categories }: Props) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [stockFilter, setStockFilter] = useState('all');
+  const [discountFilter, setDiscountFilter] = useState('all');
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const { toast } = useToast();
   const router = useRouter();
@@ -92,14 +100,30 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     return cat?.name || '\u2014';
   }
 
+  const hasFilters = search !== '' || categoryFilter !== 'all' || activeFilter !== 'all' || stockFilter !== 'all' || discountFilter !== 'all';
+
   const filtered = products.filter((p) => {
-    const q = search.toLowerCase();
-    return (
-      p.name.toLowerCase().includes(q) ||
-      (p.sku?.toLowerCase() || '').includes(q) ||
-      p.brand_name.toLowerCase().includes(q)
-    );
+    if (search) {
+      const q = search.toLowerCase();
+      if (!p.name.toLowerCase().includes(q) && !(p.sku?.toLowerCase() || '').includes(q) && !p.brand_name.toLowerCase().includes(q)) return false;
+    }
+    if (categoryFilter !== 'all' && p.category_id !== categoryFilter) return false;
+    if (activeFilter === 'active' && !p.is_active) return false;
+    if (activeFilter === 'inactive' && p.is_active) return false;
+    if (stockFilter === 'instock' && p.stock === 0) return false;
+    if (stockFilter === 'nostock' && p.stock > 0) return false;
+    if (discountFilter === 'discount' && (p.sale_price === null || p.sale_price >= p.price)) return false;
+    if (discountFilter === 'nodiscount' && p.sale_price !== null && p.sale_price < p.price) return false;
+    return true;
   });
+
+  function resetFilters() {
+    setSearch('');
+    setCategoryFilter('all');
+    setActiveFilter('all');
+    setStockFilter('all');
+    setDiscountFilter('all');
+  }
 
   type Row = Record<string, unknown>;
   const p = (r: Row) => r as unknown as Product;
@@ -194,12 +218,38 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
             </Button>
           </Link>
         }
-        search={{
-          value: search,
-          onChange: setSearch,
-          placeholder: 'Cauta dupa nume, SKU sau brand...',
-        }}
       >
+        <FilterBar>
+          <FilterSearch value={search} onChange={setSearch} placeholder="Cauta nume, SKU, brand..." />
+          <FilterSelect
+            value={categoryFilter}
+            onChange={setCategoryFilter}
+            options={categories.map((c) => ({ value: c.id, label: c.name }))}
+            allLabel="Toate categoriile"
+          />
+          <FilterSelect
+            value={activeFilter}
+            onChange={setActiveFilter}
+            options={[{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }]}
+            allLabel="Toate statusurile"
+          />
+          <FilterSelect
+            value={stockFilter}
+            onChange={setStockFilter}
+            options={[{ value: 'instock', label: 'In stoc' }, { value: 'nostock', label: 'Stoc 0' }]}
+            allLabel="Tot stocul"
+          />
+          <FilterSelect
+            value={discountFilter}
+            onChange={setDiscountFilter}
+            options={[{ value: 'discount', label: 'Cu discount' }, { value: 'nodiscount', label: 'Fara discount' }]}
+            allLabel="Toate preturile"
+          />
+          <FilterReset onReset={resetFilters} visible={hasFilters} />
+        </FilterBar>
+
+        <p className="text-xs text-gray-500">{filtered.length} din {products.length} produse</p>
+
         <Card>
           <DataTable
             columns={columns}
