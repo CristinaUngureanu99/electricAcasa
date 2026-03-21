@@ -1,41 +1,33 @@
 import { test, expect } from '@playwright/test';
-import { TEST_USER, loginUser } from './helpers';
+import { loginAsUser, addProductToCart, checkoutRamburs } from './helpers';
 
 test.describe('Client order cancellation', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginUser(page, TEST_USER.email, TEST_USER.password);
-  });
+  test('place ramburs order then cancel it', async ({ page }) => {
+    await loginAsUser(page);
+    await addProductToCart(page);
+    const orderNumber = await checkoutRamburs(page);
 
-  test('cancel a ramburs order from order detail', async ({ page }) => {
+    // Go to order detail
     await page.goto('/comenzi');
-
-    // Find a confirmed/pending ramburs order
-    const orderLink = page.locator('a[href^="/comenzi/"]').first();
-    await expect(orderLink).toBeVisible({ timeout: 10_000 });
-    await orderLink.click();
+    await expect(page.getByText(orderNumber)).toBeVisible({ timeout: 10_000 });
+    await page.getByText(orderNumber).click();
     await page.waitForURL(/\/comenzi\/.+/);
 
-    // Check if cancel button exists (only on ramburs pending/confirmed)
+    // Cancel
     const cancelBtn = page.getByRole('button', { name: /anuleaza comanda/i });
-    if (await cancelBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      await cancelBtn.click();
+    await expect(cancelBtn).toBeVisible({ timeout: 5_000 });
+    await cancelBtn.click();
 
-      // Confirm cancellation
-      const confirmBtn = page.getByRole('button', { name: /da, anuleaza/i });
-      await expect(confirmBtn).toBeVisible();
-      await confirmBtn.click();
+    // Confirm
+    const confirmBtn = page.getByRole('button', { name: /da, anuleaza/i });
+    await expect(confirmBtn).toBeVisible();
+    await confirmBtn.click();
 
-      // Verify status changed
-      await expect(page.getByText(/comanda a fost anulata/i)).toBeVisible({ timeout: 5_000 });
-      await expect(page.getByText(/anulata/i)).toBeVisible();
-    }
-  });
+    // Verify
+    await expect(page.getByText(/comanda a fost anulata/i)).toBeVisible({ timeout: 5_000 });
 
-  test('cancelled order shows correct status in list', async ({ page }) => {
-    await page.goto('/comenzi');
-    // Should see at least one order with Anulata badge if previous test ran
-    const badges = page.getByText(/anulata/i);
-    const count = await badges.count();
-    expect(count).toBeGreaterThanOrEqual(0); // Soft check — depends on test data
+    // Reload and verify status persisted
+    await page.reload();
+    await expect(page.getByText(/anulata/i)).toBeVisible({ timeout: 5_000 });
   });
 });

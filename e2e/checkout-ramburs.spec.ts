@@ -1,32 +1,22 @@
 import { test, expect } from '@playwright/test';
-import { TEST_USER, loginUser, addProductToCart, checkoutRamburs } from './helpers';
+import { loginAsUser, addProductToCart, checkoutRamburs } from './helpers';
 
 test.describe('Checkout ramburs end-to-end', () => {
-  test.beforeEach(async ({ page }) => {
-    await loginUser(page, TEST_USER.email, TEST_USER.password);
-  });
-
-  test('add product to cart and complete ramburs checkout', async ({ page }) => {
-    // Add product
+  test('add product, checkout ramburs, verify confirmation', async ({ page }) => {
+    await loginAsUser(page);
     await addProductToCart(page);
 
-    // Go to cart
+    // Verify cart has items
     await page.goto('/cos');
     await expect(page.getByText(/cos de cumparaturi/i)).toBeVisible();
-    const cartItems = page.locator('[class*="rounded-2xl"]').filter({ hasText: /RON/ });
-    await expect(cartItems.first()).toBeVisible();
+    await expect(page.locator('a[href^="/produs/"]').first()).toBeVisible();
 
-    // Checkout
-    await checkoutRamburs(page);
+    // Complete checkout
+    const orderNumber = await checkoutRamburs(page);
+    expect(orderNumber).toMatch(/EA-\d+/);
 
-    // Verify confirmation
-    await expect(page.getByText(/comanda.*confirmata|multumim/i)).toBeVisible({ timeout: 5_000 });
-    await expect(page.getByText(/EA-/)).toBeVisible();
-  });
-
-  test('order appears in client order history', async ({ page }) => {
+    // Verify order appears in client history
     await page.goto('/comenzi');
-    await expect(page.getByText(/EA-/)).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByText(/Confirmata|In asteptare/i)).toBeVisible();
+    await expect(page.getByText(orderNumber)).toBeVisible({ timeout: 10_000 });
   });
 });
