@@ -33,6 +33,7 @@ export default function ProductForm({ initialProduct, categories, initialRelatio
   const [categoryId, setCategoryId] = useState(initialProduct?.category_id || '');
   const [stock, setStock] = useState(initialProduct?.stock?.toString() || '0');
   const [isActive, setIsActive] = useState(initialProduct?.is_active ?? true);
+  const [isFeatured, setIsFeatured] = useState(initialProduct?.is_featured ?? false);
 
   const [images, setImages] = useState<string[]>(initialProduct?.images || []);
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
@@ -160,6 +161,7 @@ export default function ProductForm({ initialProduct, categories, initialRelatio
         category_id: categoryId || null,
         stock: stockNum,
         is_active: isActive,
+        is_featured: isFeatured,
         images: uploadedImages,
         specs,
         datasheet_url: finalDatasheet || null,
@@ -317,15 +319,27 @@ export default function ProductForm({ initialProduct, categories, initialRelatio
               placeholder="Descriere produs..."
             />
           </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="prod-active"
-              checked={isActive}
-              onChange={(e) => setIsActive(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-            />
-            <label htmlFor="prod-active" className="text-sm text-gray-700">Produs activ</label>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="prod-active"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+              />
+              <label htmlFor="prod-active" className="text-sm text-gray-700">Produs activ</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="prod-featured"
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-amber-500 focus:ring-amber-500"
+              />
+              <label htmlFor="prod-featured" className="text-sm text-gray-700">Recomandat pe homepage</label>
+            </div>
           </div>
         </div>
       </Card>

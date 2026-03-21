@@ -8,7 +8,7 @@ import type { Product, Category } from '@/types/database';
 export default async function HomePage() {
   const supabase = getPublicSupabase();
 
-  const [categoriesRes, productsRes] = await Promise.all([
+  const [categoriesRes, featuredRes, recentRes] = await Promise.all([
     supabase
       .from('categories')
       .select('*')
@@ -20,12 +20,25 @@ export default async function HomePage() {
       .from('products')
       .select('*')
       .eq('is_active', true)
+      .eq('is_featured', true)
       .order('created_at', { ascending: false })
       .limit(8),
+    supabase
+      .from('products')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(16),
   ]);
 
   const categories = (categoriesRes.data as Category[]) || [];
-  const products = (productsRes.data as Product[]) || [];
+  const featured = (featuredRes.data as Product[]) || [];
+  const recent = (recentRes.data as Product[]) || [];
+
+  // Featured first, fill remaining slots with recent (no duplicates)
+  const featuredIds = new Set(featured.map((p) => p.id));
+  const filler = recent.filter((p) => !featuredIds.has(p.id));
+  const products = [...featured, ...filler].slice(0, 8);
 
   return (
     <>

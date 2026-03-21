@@ -185,9 +185,16 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
       key: 'is_active',
       label: 'Status',
       render: (r) => { const prod = p(r); return (
-        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${prod.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-          {prod.is_active ? 'Activ' : 'Inactiv'}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${prod.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+            {prod.is_active ? 'Activ' : 'Inactiv'}
+          </span>
+          {prod.is_featured && (
+            <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+              Recomandat
+            </span>
+          )}
+        </div>
       ); },
     },
     {
