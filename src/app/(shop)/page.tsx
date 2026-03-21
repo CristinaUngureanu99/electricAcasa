@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { getStorageUrl } from '@/lib/utils';
-import { ArrowRight, Image as ImageIcon } from 'lucide-react';
+import { ArrowRight, Image as ImageIcon, Truck, ShieldCheck, Headphones, Zap } from 'lucide-react';
 import type { Product, Category } from '@/types/database';
 
 export default async function HomePage() {
@@ -29,37 +29,100 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative bg-gradient-to-br from-primary via-primary-light to-accent text-white">
-        <div className="max-w-7xl mx-auto px-4 py-20 md:py-28">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
-              Materiale electrice de calitate
+      {/* Hero — 2 columns on desktop */}
+      <section className="max-w-7xl mx-auto px-4 pt-10 pb-14 md:pt-16 md:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-3">electricAcasa.ro</p>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
+              Materiale electrice<br />
+              <span className="text-primary">de calitate</span> pentru casa ta
             </h1>
-            <p className="text-lg md:text-xl text-white/80 mb-8">
-              Tot ce ai nevoie pentru instalatii electrice, iluminat, smart home si multe altele. Livrate rapid la tine acasa.
+            <p className="text-lg text-gray-600 mb-8 max-w-lg">
+              Instalatii electrice, iluminat, aparataj si automatizari — toate de la branduri de incredere, livrate rapid la tine acasa.
             </p>
-            <Link
-              href="#categorii"
-              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition-colors"
-            >
-              Vezi catalogul <ArrowRight size={18} />
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="#categorii"
+                className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors"
+              >
+                Vezi catalogul <ArrowRight size={18} />
+              </Link>
+              <Link
+                href="/generator-pachet"
+                className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-colors"
+              >
+                Solicita pachet personalizat
+              </Link>
+            </div>
+          </div>
+          <div className="hidden lg:block">
+            <div className="bg-gradient-to-br from-primary/5 via-accent/10 to-primary-light/5 rounded-3xl p-10 text-center">
+              <Zap size={80} className="mx-auto text-primary/30 mb-4" />
+              <p className="text-lg font-semibold text-gray-700">Solutii electrice complete</p>
+              <p className="text-sm text-gray-500 mt-1">De la proiectare la instalare</p>
+            </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-surface to-transparent" />
+      </section>
+
+      {/* Trust bar */}
+      <section className="border-y border-gray-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Truck size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Livrare rapida</p>
+                <p className="text-xs text-gray-500 mt-0.5">In toata Romania</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <ShieldCheck size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Produse garantate</p>
+                <p className="text-xs text-gray-500 mt-0.5">Branduri de incredere</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Headphones size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Suport dedicat</p>
+                <p className="text-xs text-gray-500 mt-0.5">Consiliere tehnica gratuita</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Zap size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Preturi corecte</p>
+                <p className="text-xs text-gray-500 mt-0.5">Fara adaosuri ascunse</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Categorii */}
       {categories.length > 0 && (
-        <section id="categorii" className="max-w-7xl mx-auto px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Categorii de produse</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <section id="categorii" className="max-w-7xl mx-auto px-4 py-14 md:py-16">
+          <div className="mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Categorii de produse</h2>
+            <p className="text-gray-500 mt-2">Alege categoria potrivita pentru proiectul tau</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/categorie/${cat.slug}`}
-                className="group relative bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover-lift"
+                className="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover-lift"
               >
                 <div className="aspect-[4/3] bg-gray-50">
                   {cat.image_url ? (
@@ -74,10 +137,11 @@ export default async function HomePage() {
                     </div>
                   )}
                 </div>
-                <div className="p-3 text-center">
-                  <h3 className="font-semibold text-gray-900 text-sm group-hover:text-primary transition-colors">
+                <div className="p-4">
+                  <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
                     {cat.name}
                   </h3>
+                  <p className="text-xs text-gray-400 mt-1">Vezi produsele →</p>
                 </div>
               </Link>
             ))}
@@ -85,11 +149,34 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* Generator pachet CTA */}
+      <section className="max-w-7xl mx-auto px-4 pb-14 md:pb-16">
+        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-white">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Ai nevoie de un pachet personalizat?</h2>
+            <p className="text-white/80 mb-6">
+              Spune-ne ce proiect ai si noi iti cream o oferta completa cu toate materialele necesare — rapid si fara bataie de cap.
+            </p>
+            <Link
+              href="/generator-pachet"
+              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition-colors"
+            >
+              Solicita pachet <ArrowRight size={18} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Produse noi */}
       {products.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Produse noi</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <section className="max-w-7xl mx-auto px-4 pb-16 md:pb-20">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Produse noi</h2>
+              <p className="text-gray-500 mt-2">Ultimele adaugiri in catalog</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
