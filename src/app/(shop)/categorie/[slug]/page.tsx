@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { getServiceSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getStorageUrl } from '@/lib/utils';
 import { ChevronRight, Package, SlidersHorizontal } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Product, Category } from '@/types/database';
+
+export const dynamic = 'force-dynamic';
 
 const PAGE_SIZE = 12;
 
@@ -17,7 +19,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createServerSupabaseClient();
+  const supabase = getServiceSupabase();
   const { data: category } = await supabase
     .from('categories')
     .select('name')
@@ -33,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoriePage({ params, searchParams }: Props) {
   const { slug } = await params;
   const sp = await searchParams;
-  const supabase = await createServerSupabaseClient();
+  const supabase = getServiceSupabase();
 
   // Fetch category
   const { data: category, error: categoryError } = await supabase
@@ -43,7 +45,9 @@ export default async function CategoriePage({ params, searchParams }: Props) {
     .eq('is_active', true)
     .single();
 
-  console.log('[CATEGORY DEBUG]', { slug, category: category?.name ?? null, error: categoryError?.message ?? null });
+  if (categoryError && categoryError.code !== 'PGRST116') {
+    throw new Error(`Category query failed: ${categoryError.message}`);
+  }
 
   if (!category) notFound();
   const cat = category as Category;
