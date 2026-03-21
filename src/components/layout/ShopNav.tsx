@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 
-import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useCart } from '@/lib/cart';
 
@@ -20,13 +19,10 @@ export function ShopNav({ categories }: ShopNavProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { cartCount } = useCart();
-  const pathname = usePathname();
-
-  // Close dropdowns on route change
-  useEffect(() => {
+  const closeMenus = useCallback(() => {
     setCatOpen(false);
     setMenuOpen(false);
-  }, [pathname]);
+  }, []);
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }: { data: { user: unknown } }) => {
@@ -53,7 +49,7 @@ export function ShopNav({ categories }: ShopNavProps) {
       )}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="shrink-0">
+          <Link href="/" className="shrink-0" onClick={closeMenus}>
             <span className="text-xl md:text-2xl font-bold text-white">electricAcasa<span className="text-white/70 font-normal text-sm">.ro</span></span>
           </Link>
 
@@ -61,6 +57,7 @@ export function ShopNav({ categories }: ShopNavProps) {
           <div className="hidden md:flex items-center gap-6">
             <Link
               href="/catalog"
+              onClick={closeMenus}
               className="nav-link text-sm font-medium text-white/90 hover:text-white"
             >
               Catalog
@@ -96,6 +93,7 @@ export function ShopNav({ categories }: ShopNavProps) {
             </div>
             <Link
               href="/generator-pachet"
+              onClick={closeMenus}
               className="nav-link text-sm font-medium text-white/90 hover:text-white"
             >
               Pachet personalizat
@@ -121,6 +119,7 @@ export function ShopNav({ categories }: ShopNavProps) {
           <div className="flex items-center gap-3">
             <Link
               href="/cos"
+              onClick={closeMenus}
               className="relative p-2 rounded-xl text-white/90 hover:bg-white/15 hover:text-white hover:scale-105 transition-all"
               aria-label="Cos de cumparaturi"
             >
@@ -133,6 +132,7 @@ export function ShopNav({ categories }: ShopNavProps) {
             </Link>
             <Link
               href={isLoggedIn ? '/dashboard' : '/login'}
+              onClick={closeMenus}
               className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 hover:text-white transition-all"
             >
               <User size={18} />
@@ -168,12 +168,14 @@ export function ShopNav({ categories }: ShopNavProps) {
               </form>
               <Link
                 href="/catalog"
+                onClick={closeMenus}
                 className="flex items-center gap-2 py-2.5 px-2 -mx-2 text-sm font-semibold text-primary rounded-lg hover:bg-primary/5 transition-all"
               >
                 Catalog complet
               </Link>
               <Link
                 href="/generator-pachet"
+                onClick={closeMenus}
                 className="flex items-center gap-2 py-2.5 px-2 -mx-2 text-sm font-semibold text-primary rounded-lg hover:bg-primary/5 transition-all"
               >
                 Pachet personalizat
@@ -183,6 +185,7 @@ export function ShopNav({ categories }: ShopNavProps) {
                 <Link
                   key={cat.id}
                   href={`/categorie/${cat.slug}`}
+                  onClick={closeMenus}
                   className="block py-2 px-2 -mx-2 text-sm text-gray-700 rounded-lg hover:bg-primary/5 hover:text-primary transition-all"
                 >
                   {cat.name}
@@ -195,6 +198,7 @@ export function ShopNav({ categories }: ShopNavProps) {
             <div className="border-t border-gray-100 pt-3">
               <Link
                 href={isLoggedIn ? '/dashboard' : '/login'}
+                onClick={closeMenus}
                 className="flex items-center gap-2 py-2.5 px-2 -mx-2 text-sm text-gray-700 rounded-lg hover:bg-primary/5 hover:text-primary transition-all"
               >
                 <User size={18} />

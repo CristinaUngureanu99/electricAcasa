@@ -1,9 +1,9 @@
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { getPublicSupabase } from '@/lib/supabase-server';
 import { ShopShell } from './ShopShell';
 import type { Category } from '@/types/database';
 
 export default async function ShopLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = getPublicSupabase();
 
   const { data: categories } = await supabase
     .from('categories')

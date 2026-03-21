@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductGallery } from '@/components/ui/ProductGallery';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { AddToCartButton } from '@/components/ui/AddToCartButton';
@@ -15,7 +15,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createServerSupabaseClient();
+  const supabase = getPublicSupabase();
   const { data: product } = await supabase
     .from('products')
     .select('name, description, images')
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProdusPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = await createServerSupabaseClient();
+  const supabase = getPublicSupabase();
 
   // Fetch product
   const { data: product } = await supabase

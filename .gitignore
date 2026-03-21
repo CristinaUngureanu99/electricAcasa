@@ -33,3 +33,6 @@ supabase/.temp/
 
 # extra
 Logo/
+~$*
+.claude/
+next-env.d.ts

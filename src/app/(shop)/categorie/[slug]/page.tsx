@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getServiceSupabase } from '@/lib/supabase-server';
+import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { getStorageUrl } from '@/lib/utils';
@@ -19,7 +19,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = getServiceSupabase();
+  const supabase = getPublicSupabase();
   const { data: category } = await supabase
     .from('categories')
     .select('name')
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoriePage({ params, searchParams }: Props) {
   const { slug } = await params;
   const sp = await searchParams;
-  const supabase = getServiceSupabase();
+  const supabase = getPublicSupabase();
 
   // Fetch category
   const { data: category, error: categoryError } = await supabase

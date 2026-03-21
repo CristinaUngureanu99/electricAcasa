@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getServiceSupabase } from '@/lib/supabase-server';
+import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ChevronRight, Package, SlidersHorizontal } from 'lucide-react';
@@ -21,7 +21,7 @@ interface Props {
 
 export default async function CatalogPage({ searchParams }: Props) {
   const sp = await searchParams;
-  const supabase = getServiceSupabase();
+  const supabase = getPublicSupabase();
 
   // Fetch categories for filter sidebar
   const { data: categoriesData } = await supabase

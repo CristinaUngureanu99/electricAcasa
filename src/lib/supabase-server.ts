@@ -13,6 +13,13 @@ export function getServiceSupabase() {
   );
 }
 
+export function getPublicSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!.trim(),
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!.replace(/\s+/g, '')
+  );
+}
+
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies();
 

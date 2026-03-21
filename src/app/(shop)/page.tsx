@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { getStorageUrl } from '@/lib/utils';
 import { ArrowRight, Image as ImageIcon, Truck, FileText, Package, Zap } from 'lucide-react';
 import type { Product, Category } from '@/types/database';
 
 export default async function HomePage() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = getPublicSupabase();
 
   const [categoriesRes, productsRes] = await Promise.all([
     supabase
