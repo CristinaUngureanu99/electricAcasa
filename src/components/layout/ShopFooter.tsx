@@ -47,6 +47,18 @@ export function ShopFooter({ categories }: ShopFooterProps) {
             </ul>
           </div>
 
+          {/* Servicii */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">Servicii</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/generator-pachet" className="text-sm hover:text-white transition-colors">
+                  Generator pachet
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Contact */}
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>

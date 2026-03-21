@@ -10,6 +10,8 @@ import {
   LayoutDashboard,
   FolderTree,
   Package,
+  ShoppingBag,
+  FileText,
   LogOut,
   Menu,
   X,
@@ -21,6 +23,8 @@ const links = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/categorii', label: 'Categorii', icon: FolderTree },
   { href: '/admin/produse', label: 'Produse', icon: Package },
+  { href: '/admin/comenzi', label: 'Comenzi', icon: ShoppingBag },
+  { href: '/admin/cereri-pachet', label: 'Cereri pachet', icon: FileText },
 ];
 
 export function AdminNav() {
@@ -95,14 +99,14 @@ export function AdminNav() {
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white w-full transition-colors"
           >
             <ArrowLeft size={20} />
-            User View
+            Vizualizare client
           </Link>
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white w-full transition-colors"
           >
             <LogOut size={20} />
-            Log Out
+            Deconectare
           </button>
         </div>
       </nav>
