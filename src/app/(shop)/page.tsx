@@ -26,7 +26,6 @@ export default async function HomePage() {
 
   const categories = (categoriesRes.data as Category[]) || [];
   const products = (productsRes.data as Product[]) || [];
-  const firstCategory = categories[0];
 
   return (
     <>
@@ -41,7 +40,7 @@ export default async function HomePage() {
               Tot ce ai nevoie pentru instalatii electrice, iluminat, smart home si multe altele. Livrate rapid la tine acasa.
             </p>
             <Link
-              href={firstCategory ? `/categorie/${firstCategory.slug}` : '#categorii'}
+              href="#categorii"
               className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition-colors"
             >
               Vezi catalogul <ArrowRight size={18} />

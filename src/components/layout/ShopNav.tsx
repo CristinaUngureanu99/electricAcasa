@@ -80,15 +80,8 @@ export function ShopNav({ categories }: ShopNavProps) {
             </div>
           </div>
 
-          {/* Search — visual only, not functional yet */}
-          <div className="hidden lg:block flex-1 max-w-xs">
-            <input
-              type="text"
-              placeholder="Cauta produse..."
-              disabled
-              className="w-full px-4 py-2 rounded-xl border border-white/30 bg-white/15 text-sm text-white/60 placeholder:text-white/50 cursor-not-allowed"
-            />
-          </div>
+          {/* Search placeholder — hidden until implemented */}
+          <div className="hidden lg:block flex-1 max-w-xs" />
 
           {/* Right: Cart + Account */}
           <div className="flex items-center gap-3">
