@@ -63,7 +63,7 @@ export function AdminNav() {
       >
         <div className="p-4">
           <Link href="/admin/dashboard" onClick={() => setMenuOpen(false)}>
-                        <span className="text-lg font-bold text-white">electricAcasa</span>
+            <span className="text-lg font-bold text-white">electricAcasa</span>
           </Link>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-xs text-accent font-semibold tracking-wider uppercase">Administrare</span>
