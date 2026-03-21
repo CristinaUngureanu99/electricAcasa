@@ -17,24 +17,15 @@ export default function AdminDashboardPage() {
     async function load() {
       try {
         const supabase = createClient();
-        const [usersRes, productsRes, ordersRes, requestsRes] = await Promise.all([
-          supabase.from('profiles').select('id', { count: 'exact', head: true }),
-          supabase.from('products').select('id', { count: 'exact', head: true }),
-          supabase.from('orders').select('total, status, payment_status'),
-          supabase.from('package_requests').select('id', { count: 'exact', head: true }).eq('status', 'new'),
-        ]);
-
-        const orders = ordersRes.data || [];
-        const revenue = orders
-          .filter((o: { status: string; payment_status: string }) => o.payment_status === 'paid')
-          .reduce((sum: number, o: { total: number }) => sum + (o.total || 0), 0);
+        const { data: dbStats } = await supabase.rpc('get_dashboard_stats');
+        const s = dbStats as { users_count: number; products_count: number; orders_count: number; revenue: number; pending_requests: number } | null;
 
         setStats({
-          users: usersRes.count || 0,
-          products: productsRes.count || 0,
-          orders: orders.length,
-          revenue,
-          pendingRequests: requestsRes.count || 0,
+          users: s?.users_count || 0,
+          products: s?.products_count || 0,
+          orders: s?.orders_count || 0,
+          revenue: s?.revenue || 0,
+          pendingRequests: s?.pending_requests || 0,
         });
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Eroare necunoscuta';
