@@ -1,43 +1,57 @@
-# Business App Skeleton
+# electricAcasa.ro
 
-A clean, generic starter for building business web applications. Extracted from a production app, stripped of all business logic, ready to customize.
+E-commerce platform for electrical supplies — switchgear, lighting, circuit protection, cables, smart home, EV charging and HVAC control.
+
+**Live:** [electricacasa.vercel.app](https://electricacasa.vercel.app)
 
 ## Stack
 
 - **Frontend**: Next.js 16 (App Router), React, TypeScript, Tailwind CSS v4
-- **Backend**: Next.js API Routes, Supabase (Postgres + Auth + RLS)
+- **Backend**: Next.js API Routes, Supabase (Postgres + Auth + RLS + Storage)
+- **Payments**: Stripe (card) + Cash on delivery (ramburs)
 - **Email**: Resend (optional)
-- **Testing**: Vitest
-- **Deploy**: Vercel (or any Node.js host)
+- **Testing**: Vitest (unit) + Playwright (E2E)
+- **Deploy**: Vercel
 
-## What's included
+## Features
 
-- Authentication (sign up, login, password reset, email confirmation)
-- User dashboard and profile management (name, phone, password, delete account)
-- Admin panel with role-based access (admin, user)
-- Cookie consent banner
-- Privacy and Terms template pages
-- Responsive layout with sidebar navigation
-- Mobile bottom navigation
-- Rate limiting utility
-- Email sending utility (via Resend)
+### Shop
+- Product catalog with sidebar filters (category, brand, price, stock, discount)
+- Category pages with dedicated filters
+- Product detail with specs, datasheets, compatible products
+- Search from nav bar
+- Shopping cart (localStorage for guests, DB for authenticated users)
+- Checkout: cash on delivery + card (Stripe, when configured)
+- Package generator — guided form for custom project quotes
+
+### Client account
+- Order history with filters
+- Order cancellation (ramburs only)
+- Address management (shipping + billing)
+- Profile editing
+
+### Admin panel
+- Dashboard with aggregated stats (single RPC)
+- Product management (CRUD, images, datasheets, featured flag)
+- Category management (with descriptions, auto-generated slugs)
+- Order management (status transitions, detail view)
+- Package request management (status, admin notes, attachment download)
+- User list with search
 
 ## Setup
 
 ```bash
-# 1. Clone and install
-git clone <repo-url>
-cd BusinessSiteBase
+# Install dependencies
 npm install
 
-# 2. Environment variables
+# Environment variables
+# Copy and fill:
 cp .env.local.example .env.local
-# Fill in Supabase credentials and site URL
 
-# 3. Supabase migration
-# Apply supabase/migrations/001_initial_schema.sql via Supabase Dashboard SQL Editor or CLI
+# Apply Supabase migrations (001-010) via SQL Editor
+# See supabase/migrations/ for the full list
 
-# 4. Run dev server
+# Run dev server
 npm run dev
 ```
 
@@ -46,49 +60,59 @@ npm run dev
 | Variable | Required | Description |
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key |
-| `NEXT_PUBLIC_SITE_URL` | Yes | Your production URL |
-| `RESEND_API_KEY` | No | Resend API key for emails |
-| `EMAIL_FROM` | No | Sender email address |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key (server-side only) |
+| `NEXT_PUBLIC_SITE_URL` | Yes | Public URL (e.g. https://electricacasa.vercel.app) |
+| `STRIPE_SECRET_KEY` | For card payments | Stripe secret key |
+| `STRIPE_WEBHOOK_SECRET` | For card payments | Stripe webhook signing secret |
+| `RESEND_API_KEY` | For emails | Resend API key |
+| `EMAIL_FROM` | No | Sender address (default: electricAcasa) |
 
-## What to customize first
+## Database migrations
 
-1. **`src/config/site.ts`** -- app name, tagline, contact info
-2. **`public/logo.png`** -- your logo
-3. **`supabase/migrations/`** -- add your business tables
-4. **`src/app/globals.css`** -- colors and theme
-5. **`src/app/page.tsx`** -- landing page content
-6. **Business modules** -- add your pages under `src/app/(client)/` and `src/app/(admin)/admin/`
+Apply in order via Supabase SQL Editor:
 
-## Available scripts
+| # | File | Description |
+|---|------|-------------|
+| 001 | `001_initial_schema.sql` | Profiles, auth trigger, RLS |
+| 002 | `002_ecommerce_schema.sql` | Categories, products, orders, cart, addresses, package requests |
+| 003 | `003_storage_buckets.sql` | Storage: product-images, datasheets, package-attachments |
+| 004 | `004_product_relations_admin_select.sql` | Admin select policy for product relations |
+| 005 | `005_stock_and_cancel_rpc.sql` | Stock decrement/increment, cart cleanup, order cancel RPCs |
+| 006 | `006_cancel_confirmed_rpc.sql` | Cancel confirmed orders RPC |
+| 007 | `007_fix_rls_recursion.sql` | Fix RLS recursion with is_admin() SECURITY DEFINER |
+| 008 | `008_category_description.sql` | Category description field |
+| 009 | `009_product_featured.sql` | Product is_featured flag |
+| 010 | `010_dashboard_stats_rpc.sql` | Dashboard aggregated stats RPC |
+
+## Scripts
 
 ```bash
 npm run dev          # Development server
 npm run build        # Production build
 npm run lint         # ESLint
-npm run typecheck    # TypeScript check (tsc --noEmit)
-npm run test         # Vitest
+npm run typecheck    # TypeScript check
+npm run test         # Vitest unit tests
+npx playwright test  # E2E tests (requires env vars)
 ```
 
-## User roles
+## E2E tests
 
-| Role | Access |
-|---|---|
-| `user` | Dashboard, profile |
-| `admin` | Full admin panel + user management |
-
-## When to use this skeleton
-
-**Use it if** your project needs: user accounts, login/register, admin panel, dashboard, profile management, role-based access. Most business apps, SaaS tools, booking platforms, management systems.
-
-**Don't use it if** you're building: a static landing page, a blog, a marketing site without user accounts, or something that doesn't need auth/admin.
-
-## Bootstrap a new project
+Set these env vars before running Playwright:
 
 ```bash
-# Quick setup — updates site.ts, package.json, and manifest
-npm run bootstrap
+E2E_USER_EMAIL=...
+E2E_USER_PASSWORD=...
+E2E_ADMIN_EMAIL=...
+E2E_ADMIN_PASSWORD=...
+npx playwright test
 ```
 
-The script will ask for your app name, URL, and contact email, then update all config files automatically.
+Test suites: auth flow, register, checkout ramburs, order cancellation, admin orders, catalog filters.
+
+## Admin bootstrap
+
+1. Register a normal account
+2. In Supabase SQL Editor: `UPDATE profiles SET role = 'admin' WHERE email = 'your@email.com';`
+3. Logout and login again
+4. Access `/admin/dashboard`
