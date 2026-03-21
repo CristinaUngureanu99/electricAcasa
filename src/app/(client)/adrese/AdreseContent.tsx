@@ -197,7 +197,7 @@ export default function AdreseContent({ initialAddresses }: Props) {
             <h2 className="text-lg font-semibold text-gray-900">
               {editing ? 'Editeaza adresa' : 'Adresa noua'}
             </h2>
-            <button onClick={() => setForm(null)} className="p-1 rounded hover:bg-gray-100">
+            <button onClick={() => setForm(null)} className="p-1 rounded-lg hover:bg-gray-200/60 transition-colors">
               <X size={20} className="text-gray-500" />
             </button>
           </div>
@@ -284,11 +284,11 @@ export default function AdreseContent({ initialAddresses }: Props) {
                 </div>
                 <div className="flex gap-1">
                   {!addr.is_default && (
-                    <button onClick={() => setDefault(addr)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-amber-500" title="Seteaza ca implicita">
+                    <button onClick={() => setDefault(addr)} className="p-1.5 rounded-lg hover:bg-amber-50 text-gray-400 hover:text-amber-500 transition-all" title="Seteaza ca implicita">
                       <Star size={16} />
                     </button>
                   )}
-                  <button onClick={() => startEdit(addr)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-700" title="Editeaza">
+                  <button onClick={() => startEdit(addr)} className="p-1.5 rounded-lg hover:bg-primary/5 text-gray-400 hover:text-primary transition-all" title="Editeaza">
                     <Pencil size={16} />
                   </button>
                   <button onClick={() => setDeleteTarget(addr)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600" title="Sterge">

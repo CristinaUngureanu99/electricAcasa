@@ -69,7 +69,7 @@ export default function DashboardContent({ profile, recentOrders, addressCount }
           {recentOrders.length > 0 && (
             <div className="space-y-2 mb-3">
               {recentOrders.map((o) => (
-                <Link key={o.id} href={`/comenzi/${o.id}`} className="flex items-center justify-between text-sm hover:bg-gray-50 rounded-lg px-2 py-1.5 -mx-2 transition-colors">
+                <Link key={o.id} href={`/comenzi/${o.id}`} className="flex items-center justify-between text-sm hover:bg-primary/[0.03] rounded-lg px-2 py-1.5 -mx-2 transition-all">
                   <div>
                     <span className="font-medium text-gray-900">EA-{o.order_number}</span>
                     <span className="text-gray-400 ml-2">{formatDate(o.created_at)}</span>

@@ -330,7 +330,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
       label: '',
       render: (r) => { const cat = c(r); return (
         <div className="flex gap-1">
-          <button onClick={() => startEdit(cat)} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700" title="Editeaza">
+          <button onClick={() => startEdit(cat)} className="p-1.5 rounded-lg hover:bg-primary/5 text-gray-400 hover:text-primary transition-all" title="Editeaza">
             <Pencil size={16} />
           </button>
           <button onClick={() => setDeleteTarget(cat)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600" title="Sterge">
@@ -360,7 +360,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
               <h2 className="text-lg font-semibold text-gray-900">
                 {editing ? 'Editeaza categorie' : 'Categorie noua'}
               </h2>
-              <button onClick={cancelForm} className="p-1 rounded hover:bg-gray-100">
+              <button onClick={cancelForm} className="p-1 rounded-lg hover:bg-gray-200/60 transition-colors">
                 <X size={20} className="text-gray-500" />
               </button>
             </div>

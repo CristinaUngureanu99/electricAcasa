@@ -51,7 +51,7 @@ export function AddToCartButton({ productId, stock, productName }: AddToCartButt
         <button
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
           disabled={quantity <= 1}
-          className="px-3 py-2.5 text-gray-600 hover:bg-gray-100 active:bg-gray-200 disabled:opacity-30 disabled:active:bg-transparent transition-colors"
+          className="px-3 py-2.5 text-gray-600 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-30 disabled:active:bg-transparent transition-all"
           aria-label="Scade cantitatea"
         >
           <Minus size={16} />
@@ -60,7 +60,7 @@ export function AddToCartButton({ productId, stock, productName }: AddToCartButt
         <button
           onClick={() => setQuantity((q) => Math.min(stock, q + 1))}
           disabled={quantity >= stock}
-          className="px-3 py-2.5 text-gray-600 hover:bg-gray-100 active:bg-gray-200 disabled:opacity-30 disabled:active:bg-transparent transition-colors"
+          className="px-3 py-2.5 text-gray-600 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-30 disabled:active:bg-transparent transition-all"
           aria-label="Creste cantitatea"
         >
           <Plus size={16} />

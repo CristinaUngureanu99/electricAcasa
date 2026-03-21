@@ -56,7 +56,7 @@ export default function LandingNav() {
                 className={`px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-full transition-all hover:-translate-y-0.5 whitespace-nowrap ${
                   scrolled
                     ? 'bg-gray-900 text-white hover:bg-gray-800'
-                    : 'bg-white text-gray-900 hover:bg-gray-100'
+                    : 'bg-white text-gray-900 hover:bg-gray-50 hover:shadow-sm'
                 }`}
               >
                 Contul meu
@@ -76,7 +76,7 @@ export default function LandingNav() {
                   className={`px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-full transition-all hover:-translate-y-0.5 whitespace-nowrap ${
                     scrolled
                       ? 'bg-gray-900 text-white hover:bg-gray-800'
-                      : 'bg-white text-gray-900 hover:bg-gray-100'
+                      : 'bg-white text-gray-900 hover:bg-gray-50 hover:shadow-sm'
                   }`}
                 >
                   Inregistrare

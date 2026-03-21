@@ -154,7 +154,7 @@ export default async function HomePage() {
             </p>
             <Link
               href="/generator-pachet"
-              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl hover:bg-white/90 hover:shadow-md transition-all"
             >
               Solicita pachet <ArrowRight size={18} />
             </Link>

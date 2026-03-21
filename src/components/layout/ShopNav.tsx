@@ -168,22 +168,22 @@ export function ShopNav({ categories }: ShopNavProps) {
               </form>
               <Link
                 href="/catalog"
-                className="block py-2 text-sm font-semibold text-primary"
+                className="flex items-center gap-2 py-2.5 px-2 -mx-2 text-sm font-semibold text-primary rounded-lg hover:bg-primary/5 transition-all"
               >
                 Catalog complet
               </Link>
               <Link
                 href="/generator-pachet"
-                className="block py-2 text-sm font-semibold text-primary"
+                className="flex items-center gap-2 py-2.5 px-2 -mx-2 text-sm font-semibold text-primary rounded-lg hover:bg-primary/5 transition-all"
               >
                 Pachet personalizat
               </Link>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-3">Categorii</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5 mt-4">Categorii</p>
               {categories.map((cat) => (
                 <Link
                   key={cat.id}
                   href={`/categorie/${cat.slug}`}
-                  className="block py-2 text-sm text-gray-700 hover:text-primary"
+                  className="block py-2 px-2 -mx-2 text-sm text-gray-700 rounded-lg hover:bg-primary/5 hover:text-primary transition-all"
                 >
                   {cat.name}
                 </Link>
@@ -195,7 +195,7 @@ export function ShopNav({ categories }: ShopNavProps) {
             <div className="border-t border-gray-100 pt-3">
               <Link
                 href={isLoggedIn ? '/dashboard' : '/login'}
-                className="flex items-center gap-2 py-2 text-sm text-gray-700 hover:text-primary"
+                className="flex items-center gap-2 py-2.5 px-2 -mx-2 text-sm text-gray-700 rounded-lg hover:bg-primary/5 hover:text-primary transition-all"
               >
                 <User size={18} />
                 {isLoggedIn ? 'Contul meu' : 'Autentificare'}

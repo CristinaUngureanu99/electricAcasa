@@ -195,7 +195,7 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
       label: '',
       render: (r) => { const prod = p(r); return (
         <div className="flex gap-1">
-          <Link href={`/admin/produse/${prod.id}`} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700" title="Editeaza">
+          <Link href={`/admin/produse/${prod.id}`} className="p-1.5 rounded-lg hover:bg-primary/5 text-gray-400 hover:text-primary transition-all" title="Editeaza">
             <Pencil size={16} />
           </Link>
           <button onClick={() => setDeleteTarget(prod)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600" title="Sterge">

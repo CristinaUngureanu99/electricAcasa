@@ -23,7 +23,7 @@ export function Button({
     primary: 'bg-accent text-white hover:bg-accent-dark hover:shadow-md hover:shadow-accent/25 focus:ring-accent shadow-sm shadow-accent/20',
     secondary: 'bg-primary/5 text-primary hover:bg-primary/10 focus:ring-primary',
     danger: 'bg-red-600 text-white hover:bg-red-700 hover:shadow-md hover:shadow-red-500/25 focus:ring-red-500',
-    ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-500',
+    ghost: 'bg-transparent text-gray-600 hover:bg-gray-200/60 focus:ring-gray-400',
   };
 
   const sizes = {
