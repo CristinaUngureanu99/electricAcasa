@@ -27,3 +27,9 @@ test-results/
 
 # document original (nu face parte din cod)
 Aplicatie_Cristina.docx
+
+# supabase temp
+supabase/.temp/
+
+# extra
+Logo/

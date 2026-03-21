@@ -5,7 +5,7 @@ import DashboardContent from './DashboardContent';
 import type { Order } from '@/types/database';
 
 export const metadata: Metadata = {
-  title: 'Dashboard',
+  title: 'Contul meu',
 };
 
 export default async function DashboardPage() {

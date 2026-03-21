@@ -19,7 +19,7 @@ import {
 import { useState, useEffect } from 'react';
 
 const links = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, activeClass: 'bg-gray-900 text-white' },
+  { href: '/dashboard', label: 'Acasa', icon: LayoutDashboard, activeClass: 'bg-gray-900 text-white' },
   { href: '/comenzi', label: 'Comenzi', icon: ShoppingBag, activeClass: 'bg-gray-900 text-white' },
   { href: '/adrese', label: 'Adrese', icon: MapPin, activeClass: 'bg-gray-900 text-white' },
   { href: '/profile', label: 'Profil', icon: User, activeClass: 'bg-gray-900 text-white' },
@@ -117,7 +117,7 @@ export function ClientNav() {
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-accent bg-accent/10 hover:bg-accent/20 w-full transition-colors"
             >
               <Shield size={20} />
-              Admin Panel
+              Panou admin
             </Link>
           )}
           <button
@@ -125,7 +125,7 @@ export function ClientNav() {
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-50 hover:text-red-600 w-full transition-colors"
           >
             <LogOut size={20} />
-            Log Out
+            Deconectare
           </button>
         </div>
       </nav>

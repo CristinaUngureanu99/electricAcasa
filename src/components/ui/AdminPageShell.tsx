@@ -27,7 +27,7 @@ export function AdminPageShell({ title, description, action, search, children }:
             type="text"
             value={search.value}
             onChange={(e) => search.onChange(e.target.value)}
-            placeholder={search.placeholder || 'Search...'}
+            placeholder={search.placeholder || 'Cauta...'}
             className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
           />
         </div>

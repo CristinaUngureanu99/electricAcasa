@@ -10,7 +10,7 @@ export function formatDate(date: string | null | undefined): string {
   if (!date) return '\u2014';
   const parsed = new Date(date);
   if (isNaN(parsed.getTime())) return '\u2014';
-  return parsed.toLocaleDateString('en-US', {
+  return parsed.toLocaleDateString('ro-RO', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -21,7 +21,7 @@ export function formatDateTime(date: string | null | undefined): string {
   if (!date) return '\u2014';
   const parsed = new Date(date);
   if (isNaN(parsed.getTime())) return '\u2014';
-  return parsed.toLocaleDateString('en-US', {
+  return parsed.toLocaleDateString('ro-RO', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',

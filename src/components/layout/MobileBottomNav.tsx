@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const tabs = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, activeColor: 'text-gray-900' },
+  { href: '/dashboard', label: 'Acasa', icon: LayoutDashboard, activeColor: 'text-gray-900' },
   { href: '/comenzi', label: 'Comenzi', icon: ShoppingBag, activeColor: 'text-gray-900' },
   { href: '/adrese', label: 'Adrese', icon: MapPin, activeColor: 'text-gray-900' },
   { href: '/profile', label: 'Profil', icon: User, activeColor: 'text-gray-900' },

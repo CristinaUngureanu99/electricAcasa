@@ -23,10 +23,10 @@ export default function NotFound() {
 
           {/* Message */}
           <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3">
-            Page not found
+            Pagina negasita
           </h1>
           <p className="text-gray-500 leading-relaxed mb-10">
-            The page you are looking for does not exist or has been moved.
+            Pagina pe care o cauti nu exista sau a fost mutata.
           </p>
 
           {/* Action buttons */}
@@ -35,13 +35,13 @@ export default function NotFound() {
               href="/"
               className="px-8 py-3.5 bg-gray-900 text-white font-bold rounded-full text-sm hover:bg-gray-800 transition-colors"
             >
-              Home Page
+              Acasa
             </Link>
             <Link
               href="/dashboard"
               className="bg-gray-100 px-8 py-3.5 text-gray-900 font-semibold rounded-full text-sm hover:bg-gray-200 transition-colors"
             >
-              Dashboard
+              Contul meu
             </Link>
           </div>
         </div>

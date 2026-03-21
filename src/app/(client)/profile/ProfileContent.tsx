@@ -33,6 +33,8 @@ export default function ProfileContent({ initialProfile }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  const isSuccess = (msg: string) => msg.includes('succes');
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -40,14 +42,14 @@ export default function ProfileContent({ initialProfile }: Props) {
 
     const trimmedName = fullName.trim();
     if (!trimmedName) {
-      setMessage('Name cannot be empty.');
+      setMessage('Numele nu poate fi gol.');
       setLoading(false);
       return;
     }
 
     const trimmedPhone = phone.trim();
     if (trimmedPhone && !/^(\+?[0-9\s-]{7,20})$/.test(trimmedPhone)) {
-      setMessage('Phone number is not valid.');
+      setMessage('Numarul de telefon nu este valid.');
       setLoading(false);
       return;
     }
@@ -59,10 +61,10 @@ export default function ProfileContent({ initialProfile }: Props) {
       .eq('id', profile.id);
 
     if (error) {
-      setMessage('Error saving. Please try again.');
+      setMessage('Eroare la salvare. Incearca din nou.');
     } else {
       setProfile(prev => ({ ...prev, full_name: trimmedName, phone }));
-      setMessage('Profile updated successfully!');
+      setMessage('Profil actualizat cu succes!');
       setEditing(false);
       setTimeout(() => setMessage(''), 3000);
     }
@@ -72,14 +74,12 @@ export default function ProfileContent({ initialProfile }: Props) {
   return (
     <div className="max-w-2xl mx-auto space-y-6 bg-slate-50 -m-4 md:-m-8 lg:-m-10 p-4 md:p-8 lg:p-10 min-h-screen">
       <div className="mb-2">
-        <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-        <p className="text-gray-500 mt-1">Your personal details</p>
+        <h1 className="text-3xl font-bold text-gray-900">Profilul meu</h1>
+        <p className="text-gray-500 mt-1">Datele tale personale</p>
       </div>
 
       {message && (
-        <div className={`text-sm px-4 py-3 rounded-xl ${
-          message.includes('success') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'
-        }`}>
+        <div className={`text-sm px-4 py-3 rounded-xl ${isSuccess(message) ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'}`}>
           {message}
         </div>
       )}
@@ -95,7 +95,7 @@ export default function ProfileContent({ initialProfile }: Props) {
               {profile.created_at && (
                 <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
                   <CalendarDays size={12} />
-                  Member since {formatDate(profile.created_at)}
+                  Membru din {formatDate(profile.created_at)}
                 </p>
               )}
 
@@ -110,8 +110,8 @@ export default function ProfileContent({ initialProfile }: Props) {
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                   <Phone size={18} className="text-gray-500 shrink-0" />
                   <div>
-                    <p className="text-xs text-gray-500">Phone</p>
-                    <p className="text-sm font-medium text-gray-900">{profile.phone || 'Not set'}</p>
+                    <p className="text-xs text-gray-500">Telefon</p>
+                    <p className="text-sm font-medium text-gray-900">{profile.phone || 'Nesetat'}</p>
                   </div>
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function ProfileContent({ initialProfile }: Props) {
                 className="mt-4 flex items-center gap-1.5"
               >
                 <Pencil size={14} />
-                Edit Profile
+                Editeaza profil
               </Button>
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function ProfileContent({ initialProfile }: Props) {
         <Card>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Edit Profile</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Editeaza profil</h2>
               <button
                 type="button"
                 onClick={() => {
@@ -142,31 +142,27 @@ export default function ProfileContent({ initialProfile }: Props) {
                 }}
                 className="text-sm text-gray-500 hover:text-gray-600"
               >
-                Cancel
+                Anuleaza
               </button>
             </div>
 
+            <Input label="Email" value={profile.email || ''} disabled />
             <Input
-              label="Email"
-              value={profile.email || ''}
-              disabled
-            />
-            <Input
-              label="Full Name"
+              label="Nume complet"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               maxLength={100}
               required
             />
             <Input
-              label="Phone"
+              label="Telefon"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               maxLength={20}
-              placeholder="+1 555 123 4567"
+              placeholder="+40 700 123 456"
             />
-            <Button type="submit" loading={loading}>Save</Button>
+            <Button type="submit" loading={loading}>Salveaza</Button>
           </form>
         </Card>
       )}
@@ -178,12 +174,12 @@ export default function ProfileContent({ initialProfile }: Props) {
               <KeyRound size={18} className="text-gray-500" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Password</p>
-              <p className="text-xs text-gray-500">Change your account password</p>
+              <p className="text-sm font-medium text-gray-900">Parola</p>
+              <p className="text-xs text-gray-500">Schimba parola contului</p>
             </div>
           </div>
           <Button variant="ghost" size="sm" onClick={() => { setShowPasswordForm(!showPasswordForm); setPasswordMessage(''); }}>
-            {showPasswordForm ? 'Cancel' : 'Change'}
+            {showPasswordForm ? 'Anuleaza' : 'Schimba'}
           </Button>
         </div>
 
@@ -192,11 +188,11 @@ export default function ProfileContent({ initialProfile }: Props) {
             onSubmit={async (e) => {
               e.preventDefault();
               if (newPassword.length < 8) {
-                setPasswordMessage('Password must be at least 8 characters.');
+                setPasswordMessage('Parola trebuie sa aiba cel putin 8 caractere.');
                 return;
               }
               if (newPassword !== confirmPassword) {
-                setPasswordMessage('Passwords do not match.');
+                setPasswordMessage('Parolele nu coincid.');
                 return;
               }
               setPasswordLoading(true);
@@ -206,9 +202,9 @@ export default function ProfileContent({ initialProfile }: Props) {
               const { error } = await supabase.auth.updateUser({ password: newPassword });
               setPasswordLoading(false);
               if (error) {
-                setPasswordMessage('Error changing password. Please try again.');
+                setPasswordMessage('Eroare la schimbarea parolei. Incearca din nou.');
               } else {
-                setPasswordMessage('Password changed successfully!');
+                setPasswordMessage('Parola schimbata cu succes!');
                 await supabase.auth.signOut({ scope: 'others' });
                 setNewPassword('');
                 setConfirmPassword('');
@@ -220,55 +216,43 @@ export default function ProfileContent({ initialProfile }: Props) {
           >
             <div className="relative">
               <Input
-                label="New Password"
+                label="Parola noua"
                 type={showNewPassword ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 minLength={8}
-                placeholder="At least 8 characters"
+                placeholder="Minim 8 caractere"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-3 top-8 text-gray-500"
-              >
+              <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-8 text-gray-500">
                 {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             <div className="relative">
               <Input
-                label="Confirm Password"
+                label="Confirma parola"
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 minLength={8}
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-8 text-gray-500"
-              >
+              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-8 text-gray-500">
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             {passwordMessage && (
-              <div className={`text-sm px-4 py-3 rounded-xl ${
-                passwordMessage.includes('success') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'
-              }`}>
+              <div className={`text-sm px-4 py-3 rounded-xl ${isSuccess(passwordMessage) ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'}`}>
                 {passwordMessage}
               </div>
             )}
-            <Button type="submit" loading={passwordLoading} size="sm">Change Password</Button>
+            <Button type="submit" loading={passwordLoading} size="sm">Schimba parola</Button>
           </form>
         )}
       </Card>
 
       {passwordMessage && !showPasswordForm && (
-        <div className={`text-sm px-4 py-3 rounded-xl ${
-          passwordMessage.includes('success') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'
-        }`}>
+        <div className={`text-sm px-4 py-3 rounded-xl ${isSuccess(passwordMessage) ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'}`}>
           {passwordMessage}
         </div>
       )}
@@ -280,17 +264,12 @@ export default function ProfileContent({ initialProfile }: Props) {
               <Trash2 size={18} className="text-red-500" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900">Delete Account</p>
-              <p className="text-xs text-gray-500">All your data will be permanently deleted</p>
+              <p className="text-sm font-medium text-gray-900">Sterge contul</p>
+              <p className="text-xs text-gray-500">Toate datele tale vor fi sterse permanent</p>
             </div>
           </div>
-          <Button
-            variant="danger"
-            size="sm"
-            loading={deleteLoading}
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            Delete Account
+          <Button variant="danger" size="sm" loading={deleteLoading} onClick={() => setShowDeleteConfirm(true)}>
+            Sterge contul
           </Button>
         </div>
       </Card>
@@ -312,18 +291,18 @@ export default function ProfileContent({ initialProfile }: Props) {
               router.push('/');
               router.refresh();
             } else {
-              setMessage('Error deleting account. Please contact support.');
+              setMessage('Eroare la stergerea contului. Contacteaza suportul.');
               setDeleteLoading(false);
             }
           } catch {
-            setMessage('Error deleting account. Please contact support.');
+            setMessage('Eroare la stergerea contului. Contacteaza suportul.');
             setDeleteLoading(false);
           }
         }}
         onCancel={() => setShowDeleteConfirm(false)}
-        title="Delete Account Permanently"
-        message="Are you sure you want to delete your account? All your data will be permanently deleted. This action cannot be undone."
-        confirmText="Delete Permanently"
+        title="Sterge contul permanent"
+        message="Esti sigur ca vrei sa stergi contul? Toate datele tale vor fi sterse permanent. Aceasta actiune nu poate fi anulata."
+        confirmText="Sterge permanent"
         variant="danger"
       />
     </div>

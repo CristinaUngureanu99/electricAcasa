@@ -95,6 +95,8 @@ export function ShopFooter({ categories }: ShopFooterProps) {
           <div className="flex gap-4">
             <Link href="/terms" className="hover:text-gray-300 transition-colors">Termeni si conditii</Link>
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">Confidentialitate</Link>
+            <Link href="/politica-retur" className="hover:text-gray-300 transition-colors">Politica de retur</Link>
+            <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">ANPC SAL</a>
           </div>
         </div>
       </div>
