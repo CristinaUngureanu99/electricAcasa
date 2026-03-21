@@ -29,15 +29,15 @@ test.describe('Catalog browsing and filters', () => {
     // Verify: breadcrumb shows category
     await expect(page.getByText(catName!.trim())).toBeVisible();
 
-    // Verify: product count text changed or products visible
+    // Verify: the displayed count text reflects the filter
     const countAfter = await page.getByText(/\d+ produse?/).first().textContent();
-    const productsAfter = page.locator('a[href^="/produs/"]');
-    const afterCount = await productsAfter.count();
+    expect(countAfter).toBeTruthy();
 
-    // At least one of these must differ — filter had effect
-    const countChanged = countBefore !== countAfter;
-    const listChanged = initialCount !== afterCount;
-    expect(countChanged || listChanged || afterCount >= 0).toBeTruthy();
+    // The count text must change OR filtered count must be less than initial
+    const afterProductCount = await page.locator('a[href^="/produs/"]').count();
+    const countTextChanged = countBefore !== countAfter;
+    const productCountReduced = afterProductCount < initialCount;
+    expect(countTextChanged || productCountReduced).toBeTruthy();
   });
 
   test('sort changes product order', async ({ page }) => {
