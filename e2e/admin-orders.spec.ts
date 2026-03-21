@@ -2,51 +2,78 @@ import { test, expect } from '@playwright/test';
 import { loginAsUser, loginAsAdmin, addProductToCart, checkoutRamburs } from './helpers';
 
 test.describe('Admin order management', () => {
-  let orderNumber: string;
+  test('admin sees a new ramburs order in list', async ({ browser }) => {
+    // Create order as user
+    const userCtx = await browser.newContext();
+    const userPage = await userCtx.newPage();
+    await loginAsUser(userPage);
+    await addProductToCart(userPage);
+    const orderNumber = await checkoutRamburs(userPage);
+    await userCtx.close();
 
-  test('setup: place a ramburs order as user', async ({ page }) => {
-    await loginAsUser(page);
-    await addProductToCart(page);
-    orderNumber = await checkoutRamburs(page);
-    expect(orderNumber).toMatch(/EA-\d+/);
+    // Verify as admin
+    const adminCtx = await browser.newContext();
+    const adminPage = await adminCtx.newPage();
+    await loginAsAdmin(adminPage);
+    await adminPage.goto('/admin/comenzi');
+    await expect(adminPage.getByText(orderNumber)).toBeVisible({ timeout: 10_000 });
+    await adminCtx.close();
   });
 
-  test('admin sees the order in list', async ({ page }) => {
-    test.skip(!orderNumber, 'No order created');
-    await loginAsAdmin(page);
-    await page.goto('/admin/comenzi');
+  test('admin views order details with all sections', async ({ browser }) => {
+    // Create order as user
+    const userCtx = await browser.newContext();
+    const userPage = await userCtx.newPage();
+    await loginAsUser(userPage);
+    await addProductToCart(userPage);
+    const orderNumber = await checkoutRamburs(userPage);
+    await userCtx.close();
 
-    await expect(page.getByText(orderNumber)).toBeVisible({ timeout: 10_000 });
+    // View details as admin
+    const adminCtx = await browser.newContext();
+    const adminPage = await adminCtx.newPage();
+    await loginAsAdmin(adminPage);
+    await adminPage.goto('/admin/comenzi');
+    await adminPage.getByText(orderNumber).click();
+    await adminPage.waitForURL(/\/admin\/comenzi\/.+/);
+
+    await expect(adminPage.getByText(/comanda ea-/i)).toBeVisible();
+    await expect(adminPage.getByText(/produse/i)).toBeVisible();
+    await expect(adminPage.getByText(/adresa livrare/i)).toBeVisible();
+    await expect(adminPage.getByText(/client/i)).toBeVisible();
+    await expect(adminPage.getByText(/ramburs/i)).toBeVisible();
+    await adminCtx.close();
   });
 
-  test('admin views order details', async ({ page }) => {
-    test.skip(!orderNumber, 'No order created');
-    await loginAsAdmin(page);
-    await page.goto('/admin/comenzi');
+  test('admin changes order status from confirmed to shipped', async ({ browser }) => {
+    // Create order as user
+    const userCtx = await browser.newContext();
+    const userPage = await userCtx.newPage();
+    await loginAsUser(userPage);
+    await addProductToCart(userPage);
+    const orderNumber = await checkoutRamburs(userPage);
+    await userCtx.close();
 
-    await page.getByText(orderNumber).click();
-    await page.waitForURL(/\/admin\/comenzi\/.+/);
+    // Change status as admin
+    const adminCtx = await browser.newContext();
+    const adminPage = await adminCtx.newPage();
+    await loginAsAdmin(adminPage);
+    await adminPage.goto('/admin/comenzi');
+    await adminPage.getByText(orderNumber).click();
+    await adminPage.waitForURL(/\/admin\/comenzi\/.+/);
 
-    await expect(page.getByText(/comanda ea-/i)).toBeVisible();
-    await expect(page.getByText(/produse/i)).toBeVisible();
-    await expect(page.getByText(/adresa livrare/i)).toBeVisible();
-    await expect(page.getByText(/client/i)).toBeVisible();
-  });
+    // Ramburs order starts as confirmed
+    await expect(adminPage.getByText(/confirmata/i)).toBeVisible();
 
-  test('admin changes order status to shipped', async ({ page }) => {
-    test.skip(!orderNumber, 'No order created');
-    await loginAsAdmin(page);
-    await page.goto('/admin/comenzi');
-
-    await page.getByText(orderNumber).click();
-    await page.waitForURL(/\/admin\/comenzi\/.+/);
-
-    // Order should be confirmed (ramburs) — mark as shipped
-    const shipBtn = page.getByRole('button', { name: /marcheaza expediata/i });
+    const shipBtn = adminPage.getByRole('button', { name: /marcheaza expediata/i });
     await expect(shipBtn).toBeVisible({ timeout: 5_000 });
     await shipBtn.click();
 
-    await expect(page.getByText(/status actualizat/i)).toBeVisible({ timeout: 5_000 });
-    await expect(page.getByText(/expediata/i)).toBeVisible();
+    await expect(adminPage.getByText(/status actualizat/i)).toBeVisible({ timeout: 5_000 });
+
+    // Reload and verify persisted
+    await adminPage.reload();
+    await expect(adminPage.getByText(/expediata/i)).toBeVisible({ timeout: 5_000 });
+    await adminCtx.close();
   });
 });
