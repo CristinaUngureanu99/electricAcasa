@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { formatPrice, formatDate } from '@/lib/utils';
+import { orderStatusLabels, orderStatusVariants } from '@/lib/order-helpers';
 import { ShoppingBag, MapPin, User, Shield } from 'lucide-react';
 import type { Profile, Order, OrderStatus } from '@/types/database';
 
@@ -13,22 +14,6 @@ interface Props {
   recentOrders: Pick<Order, 'id' | 'order_number' | 'status' | 'total' | 'created_at'>[];
   addressCount: number;
 }
-
-const statusLabels: Record<OrderStatus, string> = {
-  pending: 'In asteptare',
-  confirmed: 'Confirmata',
-  shipped: 'Expediata',
-  delivered: 'Livrata',
-  cancelled: 'Anulata',
-};
-
-const statusVariants: Record<OrderStatus, 'warning' | 'info' | 'success' | 'danger' | 'neutral'> = {
-  pending: 'warning',
-  confirmed: 'info',
-  shipped: 'info',
-  delivered: 'success',
-  cancelled: 'danger',
-};
 
 export default function DashboardContent({ profile, recentOrders, addressCount }: Props) {
   const isAdmin = profile?.role === 'admin';
@@ -75,7 +60,7 @@ export default function DashboardContent({ profile, recentOrders, addressCount }
                     <span className="text-gray-400 ml-2">{formatDate(o.created_at)}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={statusVariants[o.status as OrderStatus]}>{statusLabels[o.status as OrderStatus]}</Badge>
+                    <Badge variant={orderStatusVariants[o.status as OrderStatus]}>{orderStatusLabels[o.status as OrderStatus]}</Badge>
                     <span className="font-medium text-gray-900">{formatPrice(o.total)}</span>
                   </div>
                 </Link>

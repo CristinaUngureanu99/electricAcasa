@@ -29,6 +29,23 @@ export default function CheckoutPage() {
   const [postalCode, setPostalCode] = useState('');
   const [phone, setPhone] = useState('');
 
+  // Validation errors (shown on blur)
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  function validateField(field: string, value: string) {
+    let err = '';
+    const v = value.trim();
+    switch (field) {
+      case 'name': if (v.length > 0 && v.length < 3) err = 'Minim 3 caractere'; break;
+      case 'phone': if (v.length > 0 && !/^(\+?40|0)[237]\d{8}$/.test(v.replace(/[\s\-().]/g, ''))) err = 'Format invalid (ex: 07xx xxx xxx)'; break;
+      case 'postalCode': if (v.length > 0 && !/^\d{6}$/.test(v)) err = 'Codul postal are 6 cifre'; break;
+      case 'street': if (v.length > 0 && v.length < 5) err = 'Minim 5 caractere'; break;
+      case 'city': if (v.length > 0 && v.length < 2) err = 'Minim 2 caractere'; break;
+      case 'county': if (v.length > 0 && v.length < 2) err = 'Minim 2 caractere'; break;
+    }
+    setErrors((prev) => ({ ...prev, [field]: err }));
+  }
+
   useEffect(() => {
     async function check() {
       const supabase = createClient();
@@ -155,8 +172,15 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    // Validate all fields
+    const fields = { name, street, city, county, postalCode, phone };
+    for (const [k, v] of Object.entries(fields)) validateField(k, v);
     if (!name.trim() || !street.trim() || !city.trim() || !county.trim() || !postalCode.trim() || !phone.trim()) {
       toast('Completeaza toate campurile adresei', 'error');
+      return;
+    }
+    if (Object.values(errors).some((e) => e)) {
+      toast('Corecteaza erorile din formular', 'error');
       return;
     }
 
@@ -207,14 +231,14 @@ export default function CheckoutPage() {
             <Card>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Adresa de livrare</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input label="Nume complet *" value={name} onChange={(e) => setName(e.target.value)} required />
-                <Input label="Telefon *" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                <Input label="Nume complet *" value={name} onChange={(e) => setName(e.target.value)} onBlur={() => validateField('name', name)} error={errors.name} required />
+                <Input label="Telefon *" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} onBlur={() => validateField('phone', phone)} error={errors.phone} required />
                 <div className="col-span-full">
-                  <Input label="Strada, numar, bloc, scara, apt *" value={street} onChange={(e) => setStreet(e.target.value)} required />
+                  <Input label="Strada, numar, bloc, scara, apt *" value={street} onChange={(e) => setStreet(e.target.value)} onBlur={() => validateField('street', street)} error={errors.street} required />
                 </div>
-                <Input label="Oras *" value={city} onChange={(e) => setCity(e.target.value)} required />
-                <Input label="Judet *" value={county} onChange={(e) => setCounty(e.target.value)} required />
-                <Input label="Cod postal *" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} required />
+                <Input label="Oras *" value={city} onChange={(e) => setCity(e.target.value)} onBlur={() => validateField('city', city)} error={errors.city} required />
+                <Input label="Judet *" value={county} onChange={(e) => setCounty(e.target.value)} onBlur={() => validateField('county', county)} error={errors.county} required />
+                <Input label="Cod postal *" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} onBlur={() => validateField('postalCode', postalCode)} error={errors.postalCode} required />
               </div>
             </Card>
 

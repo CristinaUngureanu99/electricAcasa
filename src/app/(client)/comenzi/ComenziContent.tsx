@@ -10,28 +10,13 @@ import { FilterSearch } from '@/components/ui/filters/FilterSearch';
 import { FilterSelect } from '@/components/ui/filters/FilterSelect';
 import { FilterReset } from '@/components/ui/filters/FilterReset';
 import { formatPrice, formatDate } from '@/lib/utils';
+import { orderStatusLabels, orderStatusVariants } from '@/lib/order-helpers';
 import { ShoppingBag, ChevronRight } from 'lucide-react';
 import type { Order, OrderStatus } from '@/types/database';
 
 interface Props {
   orders: Pick<Order, 'id' | 'order_number' | 'status' | 'payment_status' | 'payment_method' | 'total' | 'created_at'>[];
 }
-
-const statusLabels: Record<OrderStatus, string> = {
-  pending: 'In asteptare',
-  confirmed: 'Confirmata',
-  shipped: 'Expediata',
-  delivered: 'Livrata',
-  cancelled: 'Anulata',
-};
-
-const statusVariants: Record<OrderStatus, 'warning' | 'info' | 'success' | 'danger' | 'neutral'> = {
-  pending: 'warning',
-  confirmed: 'info',
-  shipped: 'info',
-  delivered: 'success',
-  cancelled: 'danger',
-};
 
 const STATUS_OPTIONS = [
   { value: 'pending', label: 'In asteptare' },
@@ -107,8 +92,8 @@ export default function ComenziContent({ orders }: Props) {
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <span className="font-semibold text-gray-900">EA-{o.order_number}</span>
-                      <Badge variant={statusVariants[o.status as OrderStatus]}>
-                        {statusLabels[o.status as OrderStatus]}
+                      <Badge variant={orderStatusVariants[o.status as OrderStatus]}>
+                        {orderStatusLabels[o.status as OrderStatus]}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-3 text-sm text-gray-500">

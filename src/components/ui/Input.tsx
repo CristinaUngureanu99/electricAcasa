@@ -12,6 +12,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export function Input({ label, error, suffix, className, ...props }: InputProps) {
   const autoId = useId();
   const inputId = props.id || autoId;
+  const errorId = error ? `${inputId}-error` : undefined;
 
   return (
     <div className="w-full">
@@ -23,6 +24,8 @@ export function Input({ label, error, suffix, className, ...props }: InputProps)
       <div className="relative">
         <input
           id={inputId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={errorId}
           className={cn(
             'w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors',
             error && 'border-red-500 focus:ring-red-500',
@@ -37,7 +40,7 @@ export function Input({ label, error, suffix, className, ...props }: InputProps)
           </span>
         )}
       </div>
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      {error && <p id={errorId} role="alert" className="mt-1 text-sm text-red-500">{error}</p>}
     </div>
   );
 }

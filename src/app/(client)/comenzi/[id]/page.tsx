@@ -3,28 +3,13 @@ import { redirect, notFound } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatPrice, formatDate } from '@/lib/utils';
+import { orderStatusLabels, orderStatusVariants } from '@/lib/order-helpers';
 import type { Order, OrderItem, OrderStatus, OrderAddress } from '@/types/database';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { CancelOrderButton } from '@/components/ui/CancelOrderButton';
 
 export const metadata = { title: 'Detalii comanda' };
-
-const statusLabels: Record<OrderStatus, string> = {
-  pending: 'In asteptare',
-  confirmed: 'Confirmata',
-  shipped: 'Expediata',
-  delivered: 'Livrata',
-  cancelled: 'Anulata',
-};
-
-const statusVariants: Record<OrderStatus, 'warning' | 'info' | 'success' | 'danger' | 'neutral'> = {
-  pending: 'warning',
-  confirmed: 'info',
-  shipped: 'info',
-  delivered: 'success',
-  cancelled: 'danger',
-};
 
 export default async function DetaliiComandaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -62,8 +47,8 @@ export default async function DetaliiComandaPage({ params }: { params: Promise<{
           <h1 className="text-2xl font-bold text-gray-900">Comanda EA-{o.order_number}</h1>
           <p className="text-sm text-gray-500 mt-1">{formatDate(o.created_at)}</p>
         </div>
-        <Badge variant={statusVariants[o.status as OrderStatus]}>
-          {statusLabels[o.status as OrderStatus]}
+        <Badge variant={orderStatusVariants[o.status as OrderStatus]}>
+          {orderStatusLabels[o.status as OrderStatus]}
         </Badge>
       </div>
 

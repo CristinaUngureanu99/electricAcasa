@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { formatPrice, formatDate } from '@/lib/utils';
+import { orderStatusLabels, orderStatusVariants } from '@/lib/order-helpers';
 import { ChevronLeft } from 'lucide-react';
 import type { Order, OrderItem, OrderStatus, OrderAddress } from '@/types/database';
 
@@ -16,13 +17,6 @@ interface Props {
   items: OrderItem[];
   client: { email: string; full_name: string; phone: string | null };
 }
-
-const statusLabels: Record<OrderStatus, string> = {
-  pending: 'In asteptare', confirmed: 'Confirmata', shipped: 'Expediata', delivered: 'Livrata', cancelled: 'Anulata',
-};
-const statusVariants: Record<OrderStatus, 'warning' | 'info' | 'success' | 'danger' | 'neutral'> = {
-  pending: 'warning', confirmed: 'info', shipped: 'info', delivered: 'success', cancelled: 'danger',
-};
 
 // Allowed transitions per current status
 const NEXT_STATUSES: Record<string, { value: string; label: string }[]> = {
@@ -55,7 +49,7 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
       const data = await res.json();
       if (res.ok) {
         setOrder((prev) => ({ ...prev, status: newStatus as OrderStatus }));
-        toast(`Status actualizat: ${statusLabels[newStatus as OrderStatus]}`, 'success');
+        toast(`Status actualizat: ${orderStatusLabels[newStatus as OrderStatus]}`, 'success');
       } else {
         toast(data.error || 'Eroare la actualizare', 'error');
       }
@@ -77,8 +71,8 @@ export default function OrderAdminContent({ order: initialOrder, items, client }
             <h1 className="text-2xl font-bold text-gray-900">Comanda EA-{order.order_number}</h1>
             <p className="text-sm text-gray-500 mt-1">{formatDate(order.created_at)}</p>
           </div>
-          <Badge variant={statusVariants[order.status as OrderStatus]}>
-            {statusLabels[order.status as OrderStatus]}
+          <Badge variant={orderStatusVariants[order.status as OrderStatus]}>
+            {orderStatusLabels[order.status as OrderStatus]}
           </Badge>
         </div>
       </div>

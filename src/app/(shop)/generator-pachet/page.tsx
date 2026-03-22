@@ -48,7 +48,19 @@ export default function GeneratorPachetPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
+
+  function validatePackageField(field: string, value: string) {
+    let err = '';
+    const v = value.trim();
+    switch (field) {
+      case 'name': if (v.length > 0 && v.length < 3) err = 'Minim 3 caractere'; break;
+      case 'email': if (v.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) err = 'Adresa de email invalida'; break;
+      case 'phone': if (v.length > 0 && !/^(\+?40|0)[237]\d{8}$/.test(v.replace(/[\s\-().]/g, ''))) err = 'Format invalid'; break;
+    }
+    setFieldErrors((prev) => ({ ...prev, [field]: err }));
+  }
 
   useEffect(() => {
     async function checkAuth() {
@@ -184,9 +196,9 @@ export default function GeneratorPachetPage() {
         <Card>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Date de contact</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Nume *" value={name} onChange={(e) => setName(e.target.value)} required />
-            <Input label="Email *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <Input label="Telefon" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Optional" />
+            <Input label="Nume *" value={name} onChange={(e) => setName(e.target.value)} onBlur={() => validatePackageField('name', name)} error={fieldErrors.name} required />
+            <Input label="Email *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => validatePackageField('email', email)} error={fieldErrors.email} required />
+            <Input label="Telefon" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} onBlur={() => validatePackageField('phone', phone)} error={fieldErrors.phone} placeholder="Optional" />
           </div>
         </Card>
 
