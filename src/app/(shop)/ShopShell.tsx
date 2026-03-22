@@ -4,6 +4,7 @@ import { ToastProvider } from '@/components/ui/Toast';
 import { CartProvider } from '@/lib/cart';
 import { ShopNav } from '@/components/layout/ShopNav';
 import { ShopFooter } from '@/components/layout/ShopFooter';
+import { BackToTop } from '@/components/ui/BackToTop';
 
 interface ShopShellProps {
   categories: { id: string; name: string; slug: string }[];
@@ -21,6 +22,7 @@ export function ShopShell({ categories, categoryCounts, children }: ShopShellPro
             {children}
           </main>
           <ShopFooter categories={categories} />
+          <BackToTop />
         </div>
       </CartProvider>
     </ToastProvider>

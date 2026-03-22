@@ -17,8 +17,8 @@ export default function AuthError({
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="text-center max-w-md">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Ceva nu a mers bine</h2>
-        <p className="text-gray-500 mb-6">A apărut o eroare. Încearcă din nou.</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Eroare de autentificare</h2>
+        <p className="text-gray-500 mb-6">Nu am putut procesa cererea. Verifica conexiunea si incearca din nou.</p>
         <div className="flex gap-3 justify-center">
           <button onClick={reset} className="px-6 py-2.5 bg-navy text-white font-semibold rounded-full">
             Încearcă din nou

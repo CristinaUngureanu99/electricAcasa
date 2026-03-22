@@ -23,13 +23,11 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: site.nameFull,
     description: site.tagline,
-    images: [],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: site.nameFull,
     description: site.tagline,
-    images: [],
   },
   robots: {
     index: true,

@@ -3,6 +3,8 @@ import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductGallery } from '@/components/ui/ProductGallery';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { AddToCartButton } from '@/components/ui/AddToCartButton';
+import { RecentlyViewed } from '@/components/ui/RecentlyViewed';
+import { TrackView } from '@/components/ui/TrackView';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
@@ -229,6 +231,9 @@ export default async function ProdusPage({ params }: Props) {
           </div>
         </section>
       )}
+
+      <TrackView slug={p.slug} />
+      <RecentlyViewed currentSlug={p.slug} />
     </div>
   );
 }
