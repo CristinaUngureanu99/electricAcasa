@@ -2,21 +2,13 @@ import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { getStripe } from '@/lib/stripe';
 import { sendEmail } from '@/lib/email';
-import { site } from '@/config/site';
-// OrderStatus type used in TRANSITIONS keys
+import { orderStatusUpdateEmail } from '@/lib/email-templates';
 
 // Transition matrix: current status → allowed next statuses
 const TRANSITIONS: Record<string, string[]> = {
   pending: ['cancelled'],
   confirmed: ['shipped', 'cancelled'],
   shipped: ['delivered'],
-};
-
-const STATUS_EMAIL: Record<string, { subject: string; body: string }> = {
-  confirmed: { subject: 'Comanda ta a fost confirmata', body: 'Comanda ta a fost confirmata si urmeaza sa fie pregatita pentru expediere.' },
-  shipped: { subject: 'Comanda ta a fost expediata', body: 'Comanda ta a fost expediata! O vei primi in curand.' },
-  delivered: { subject: 'Comanda ta a fost livrata', body: 'Comanda ta a fost livrata cu succes. Multumim ca ai cumparat de la electricAcasa!' },
-  cancelled: { subject: 'Comanda ta a fost anulata', body: 'Comanda ta a fost anulata.' },
 };
 
 export async function POST(request: Request) {
@@ -97,19 +89,13 @@ export async function POST(request: Request) {
     }
 
     // Send email (best-effort)
-    const emailTemplate = STATUS_EMAIL[newStatus as string];
-    if (emailTemplate) {
-      try {
-        const { data: profile } = await supabase.from('profiles').select('email').eq('id', order.user_id).single();
-        if (profile?.email) {
-          await sendEmail(
-            profile.email,
-            `${emailTemplate.subject} - EA-${order.order_number}`,
-            `<h2>${emailTemplate.subject}</h2><p>${emailTemplate.body}</p><p>Comanda #EA-${order.order_number}</p><p>${site.team}</p>`
-          );
-        }
-      } catch { /* best-effort */ }
-    }
+    try {
+      const { data: profile } = await supabase.from('profiles').select('email').eq('id', order.user_id).single();
+      if (profile?.email) {
+        const emailData = orderStatusUpdateEmail(order.order_number, newStatus);
+        await sendEmail(profile.email, emailData.subject, emailData.html);
+      }
+    } catch { /* best-effort */ }
 
     return NextResponse.json({ success: true, newStatus });
   } catch {

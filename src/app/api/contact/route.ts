@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
+import { contactFormEmail } from '@/lib/email-templates';
 import { rateLimit } from '@/lib/rate-limit';
 import { site } from '@/config/site';
 
@@ -41,22 +42,11 @@ export async function POST(request: Request) {
       );
     }
 
-    await sendEmail(
-      site.contact.email,
-      `Mesaj de contact de la ${name.trim()}`,
-      `<h2>Mesaj nou de pe ${site.name}</h2>
-       <p><strong>Nume:</strong> ${escapeHtml(name.trim())}</p>
-       <p><strong>Email:</strong> ${escapeHtml(email.trim())}</p>
-       <hr />
-       <p>${escapeHtml(message.trim()).replace(/\n/g, '<br />')}</p>`
-    );
+    const emailData = contactFormEmail(name.trim(), email.trim(), message.trim());
+    await sendEmail(site.contact.email, emailData.subject, emailData.html);
 
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: 'Eroare la trimiterea mesajului' }, { status: 500 });
   }
-}
-
-function escapeHtml(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

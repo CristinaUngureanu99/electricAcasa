@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { sendEmail } from '@/lib/email';
+import { orderConfirmationEmail } from '@/lib/email-templates';
 import { rateLimit } from '@/lib/rate-limit';
 import { site } from '@/config/site';
 import type Stripe from 'stripe';
@@ -251,11 +252,13 @@ export async function POST(request: Request) {
 
     // Send email (best-effort)
     try {
-      await sendEmail(
-        user.email!,
-        `Comanda #EA-${order.order_number} confirmata`,
-        `<h2>Multumim pentru comanda!</h2><p>Comanda ta #EA-${order.order_number} a fost confirmata.</p><p>Total: ${total.toFixed(2)} RON</p><p>Metoda plata: Ramburs</p><p>${site.team}</p>`
-      );
+      const emailData = orderConfirmationEmail({
+        orderNumber: order.order_number,
+        total,
+        paymentMethod: 'ramburs',
+        items: lineItems.map((i) => ({ name: i.productName, quantity: i.quantity, unitPrice: i.unitPrice })),
+      });
+      await sendEmail(user.email!, emailData.subject, emailData.html);
     } catch { /* best-effort */ }
 
     return NextResponse.json({ redirectUrl: `/checkout/confirmare?order_id=${order.id}` });

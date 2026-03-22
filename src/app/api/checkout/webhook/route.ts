@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { sendEmail } from '@/lib/email';
+import { orderConfirmationEmail } from '@/lib/email-templates';
 import { site } from '@/config/site';
 import Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
@@ -83,11 +84,12 @@ export async function POST(request: Request) {
       .single();
 
     if (profile?.email) {
-      await sendEmail(
-        profile.email,
-        `Comanda #EA-${order.order_number} confirmata`,
-        `<h2>Multumim pentru comanda!</h2><p>Plata ta a fost procesata cu succes.</p><p>Comanda #EA-${order.order_number}</p><p>Total: ${order.total} RON</p><p>${site.team}</p>`
-      );
+      const emailData = orderConfirmationEmail({
+        orderNumber: order.order_number,
+        total: order.total,
+        paymentMethod: 'card',
+      });
+      await sendEmail(profile.email, emailData.subject, emailData.html);
     }
   } catch { /* best-effort */ }
 
