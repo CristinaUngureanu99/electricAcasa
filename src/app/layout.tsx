@@ -62,6 +62,12 @@ export default function RootLayout({
         <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
       </head>
       <body className={`${inter.className} antialiased bg-surface`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-lg focus:text-sm focus:font-semibold"
+        >
+          Sari la continut
+        </a>
         <AuthCookieGuard />
         {children}
         <CookieConsent />

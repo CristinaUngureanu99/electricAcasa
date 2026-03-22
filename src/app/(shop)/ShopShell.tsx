@@ -16,7 +16,7 @@ export function ShopShell({ categories, children }: ShopShellProps) {
       <CartProvider>
         <div className="min-h-screen flex flex-col bg-surface">
           <ShopNav categories={categories} />
-          <main className="flex-1">
+          <main id="main-content" className="flex-1">
             {children}
           </main>
           <ShopFooter categories={categories} />

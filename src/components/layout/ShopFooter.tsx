@@ -47,10 +47,20 @@ export function ShopFooter({ categories }: ShopFooterProps) {
             </ul>
           </div>
 
-          {/* Servicii */}
+          {/* Informatii */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Servicii</h3>
+            <h3 className="text-white font-semibold mb-4">Informatii</h3>
             <ul className="space-y-2">
+              <li>
+                <Link href="/despre" className="text-sm hover:text-white transition-colors">
+                  Despre noi
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-sm hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
               <li>
                 <Link href="/generator-pachet" className="text-sm hover:text-white transition-colors">
                   Generator pachet
@@ -96,6 +106,7 @@ export function ShopFooter({ categories }: ShopFooterProps) {
             <Link href="/terms" className="hover:text-gray-300 transition-colors">Termeni si conditii</Link>
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">Confidentialitate</Link>
             <Link href="/politica-retur" className="hover:text-gray-300 transition-colors">Politica de retur</Link>
+            <Link href="/cookies" className="hover:text-gray-300 transition-colors">Cookies</Link>
             <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">ANPC SAL</a>
           </div>
         </div>

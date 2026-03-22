@@ -27,9 +27,12 @@ export default function CookieConsent() {
     >
       <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 relative">
         <p className="text-sm text-gray-600 text-center sm:text-left pr-6 sm:pr-0">
-          Folosim cookie-uri esențiale pentru funcționarea site-ului.{' '}
+          Folosim cookie-uri esentiale pentru functionarea site-ului.{' '}
+          <Link href="/cookies" className="text-navy font-semibold hover:underline">
+            Politica de cookies
+          </Link>{' · '}
           <Link href="/privacy" className="text-navy font-semibold hover:underline">
-            Politica de confidențialitate
+            Confidentialitate
           </Link>
         </p>
         <div className="flex items-center gap-2">
