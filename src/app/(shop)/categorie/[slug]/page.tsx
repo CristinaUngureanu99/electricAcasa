@@ -3,8 +3,9 @@ import { notFound } from 'next/navigation';
 import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { getStorageUrl } from '@/lib/utils';
-import { ChevronRight, Package, SlidersHorizontal } from 'lucide-react';
+import { Package, SlidersHorizontal } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Product, Category } from '@/types/database';
 
@@ -155,18 +156,11 @@ export default async function CategoriePage({ params, searchParams }: Props) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
-        <Link href="/" className="hover:text-primary">Acasa</Link>
-        <ChevronRight size={14} />
-        {parent && (
-          <>
-            <Link href={`/categorie/${parent.slug}`} className="hover:text-primary">{parent.name}</Link>
-            <ChevronRight size={14} />
-          </>
-        )}
-        <span className="text-gray-900 font-medium">{cat.name}</span>
-      </nav>
+      <Breadcrumbs items={[
+        { label: 'Acasa', href: '/' },
+        ...(parent ? [{ label: parent.name, href: `/categorie/${parent.slug}` }] : []),
+        { label: cat.name },
+      ]} />
 
       {/* Category header */}
       <div className="mb-8">

@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { getStorageUrl } from '@/lib/utils';
+import { site } from '@/config/site';
 import { ArrowRight, Image as ImageIcon, Truck, FileText, Package, Zap } from 'lucide-react';
 import type { Product, Category } from '@/types/database';
 
@@ -42,6 +44,22 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: site.name,
+          url: site.url,
+          description: site.tagline,
+          contactPoint: {
+            '@type': 'ContactPoint',
+            email: site.contact.email,
+            telephone: site.contact.phone,
+            contactType: 'customer service',
+            availableLanguage: 'Romanian',
+          },
+        }}
+      />
       {/* Hero — 2 columns on desktop */}
       <section className="max-w-7xl mx-auto px-4 pt-10 pb-14 md:pt-16 md:pb-20">
         <div className="max-w-2xl">

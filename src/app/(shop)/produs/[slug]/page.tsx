@@ -1,11 +1,13 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductGallery } from '@/components/ui/ProductGallery';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { AddToCartButton } from '@/components/ui/AddToCartButton';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
-import { ChevronRight, Download, CheckCircle, XCircle } from 'lucide-react';
+import { site } from '@/config/site';
+import { Download, CheckCircle, XCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Product, Category, ProductSpec } from '@/types/database';
 
@@ -83,20 +85,38 @@ export default async function ProdusPage({ params }: Props) {
   const inStock = p.stock > 0;
   const specs = (p.specs as ProductSpec[]) || [];
 
+  const breadcrumbItems = [
+    { label: 'Acasa', href: '/' },
+    ...(category ? [{ label: category.name, href: `/categorie/${category.slug}` }] : []),
+    { label: p.name },
+  ];
+
+  const productImage = p.images[0] ? getStorageUrl('product-images', p.images[0]) : undefined;
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 md:py-12">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-8">
-        <Link href="/" className="hover:text-primary">Acasa</Link>
-        <ChevronRight size={14} />
-        {category && (
-          <>
-            <Link href={`/categorie/${category.slug}`} className="hover:text-primary">{category.name}</Link>
-            <ChevronRight size={14} />
-          </>
-        )}
-        <span className="text-gray-900 font-medium line-clamp-1">{p.name}</span>
-      </nav>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: p.name,
+          description: p.description || undefined,
+          sku: p.sku || undefined,
+          brand: p.brand_name ? { '@type': 'Brand', name: p.brand_name } : undefined,
+          image: productImage,
+          url: `${site.url}/produs/${p.slug}`,
+          offers: {
+            '@type': 'Offer',
+            price: displayPrice,
+            priceCurrency: 'RON',
+            availability: inStock
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+            url: `${site.url}/produs/${p.slug}`,
+          },
+        }}
+      />
+      <Breadcrumbs items={breadcrumbItems} />
 
       {/* Product layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 mb-14">

@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { ChevronRight, Package, SlidersHorizontal } from 'lucide-react';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { Package, SlidersHorizontal } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Product, Category } from '@/types/database';
 
@@ -136,18 +137,11 @@ export default async function CatalogPage({ searchParams }: Props) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
-        <Link href="/" className="hover:text-primary">Acasa</Link>
-        <ChevronRight size={14} />
-        <span className="text-gray-900 font-medium">Catalog</span>
-        {activeCategoryName && (
-          <>
-            <ChevronRight size={14} />
-            <span className="text-gray-900 font-medium">{activeCategoryName}</span>
-          </>
-        )}
-      </nav>
+      <Breadcrumbs items={[
+        { label: 'Acasa', href: '/' },
+        { label: 'Catalog', href: activeCategoryName ? '/catalog' : undefined },
+        ...(activeCategoryName ? [{ label: activeCategoryName }] : []),
+      ]} />
 
       {/* Header */}
       <div className="mb-8">
