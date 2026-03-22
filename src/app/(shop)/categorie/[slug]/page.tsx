@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
@@ -180,7 +181,7 @@ export default async function CategoriePage({ params, searchParams }: Props) {
               className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors"
             >
               {sub.image_url && (
-                <img src={getStorageUrl('product-images', sub.image_url)} alt="" className="w-6 h-6 rounded object-cover" />
+                <Image src={getStorageUrl('product-images', sub.image_url)} alt="" width={24} height={24} className="rounded object-cover" />
               )}
               {sub.name}
             </Link>

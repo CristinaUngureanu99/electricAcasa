@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { getStorageUrl } from '@/lib/utils';
 import { Image as ImageIcon } from 'lucide-react';
 
@@ -22,12 +23,16 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
 
   return (
     <div>
-      <div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden mb-3">
-        <img
+      <div className="aspect-square relative bg-gray-50 rounded-2xl overflow-hidden mb-3">
+        <Image
           key={selected}
           src={getStorageUrl('product-images', images[selected])}
           alt={productName}
-          className="w-full h-full object-cover animate-[fadeIn_0.2s_ease-out]"
+          fill
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          quality={85}
+          priority={selected === 0}
+          className="object-cover animate-[fadeIn_0.2s_ease-out]"
         />
       </div>
       {images.length > 1 && (
@@ -40,9 +45,12 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 i === selected ? 'border-primary' : 'border-transparent hover:border-gray-300'
               }`}
             >
-              <img
+              <Image
                 src={getStorageUrl('product-images', path)}
                 alt={`${productName} ${i + 1}`}
+                width={64}
+                height={64}
+                quality={60}
                 className="w-full h-full object-cover"
               />
             </button>

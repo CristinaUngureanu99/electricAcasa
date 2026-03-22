@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
 import { Image as ImageIcon } from 'lucide-react';
 import type { Product } from '@/types/database';
@@ -20,10 +21,13 @@ export function ProductCard({ product }: ProductCardProps) {
     >
       <div className="aspect-square relative bg-gray-50 overflow-hidden">
         {thumb ? (
-          <img
+          <Image
             src={getStorageUrl('product-images', thumb)}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+            fill
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            quality={80}
+            className="object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/lib/cart';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -52,7 +53,7 @@ export default function CosPage() {
                 {/* Image */}
                 <Link href={`/produs/${product.slug}`} className="shrink-0">
                   {thumb ? (
-                    <img src={getStorageUrl('product-images', thumb)} alt={product.name} className="w-20 h-20 rounded-lg object-cover" />
+                    <Image src={getStorageUrl('product-images', thumb)} alt={product.name} width={80} height={80} quality={70} className="rounded-lg object-cover" />
                   ) : (
                     <div className="w-20 h-20 rounded-lg bg-gray-100 flex items-center justify-center">
                       <ImageIcon size={24} className="text-gray-300" />

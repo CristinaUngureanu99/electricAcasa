@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import NextImage from 'next/image';
 import { AdminPageShell } from '@/components/ui/AdminPageShell';
 import { DataTable } from '@/components/ui/DataTable';
 import { Button } from '@/components/ui/Button';
@@ -295,10 +296,12 @@ export default function CategoriiContent({ initialCategories }: Props) {
       render: (r) => { const cat = c(r); return (
         <div className="flex items-center gap-2">
           {cat.image_url ? (
-            <img
+            <NextImage
               src={getStorageUrl('product-images', cat.image_url)}
               alt=""
-              className="w-8 h-8 rounded object-cover"
+              width={32}
+              height={32}
+              className="rounded object-cover"
             />
           ) : (
             <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center">
@@ -418,7 +421,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Imagine</label>
                 {form.image_url && !imageFile && (
                   <div className="mb-2 flex items-center gap-2">
-                    <img src={getStorageUrl('product-images', form.image_url)} alt="" className="w-16 h-16 rounded object-cover" />
+                    <NextImage src={getStorageUrl('product-images', form.image_url)} alt="" width={64} height={64} className="rounded object-cover" />
                     <button
                       onClick={() => {
                         setPendingImageDelete(form.image_url);

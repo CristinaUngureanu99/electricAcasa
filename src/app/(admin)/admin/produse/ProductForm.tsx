@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase';
 import { AdminPageShell } from '@/components/ui/AdminPageShell';
 import { Button } from '@/components/ui/Button';
@@ -351,7 +352,7 @@ export default function ProductForm({ initialProduct, categories, initialRelatio
           <div className="flex flex-wrap gap-3 mb-4">
             {images.map((path, i) => (
               <div key={path} className="relative group">
-                <img src={getStorageUrl('product-images', path)} alt="" className="w-24 h-24 rounded-lg object-cover" />
+                <Image src={getStorageUrl('product-images', path)} alt="" width={96} height={96} className="rounded-lg object-cover" />
                 {i === 0 && (
                   <span className="absolute top-1 left-1 bg-primary text-white text-[10px] px-1.5 py-0.5 rounded-full">Principal</span>
                 )}

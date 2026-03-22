@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { AdminPageShell } from '@/components/ui/AdminPageShell';
 import { DataTable } from '@/components/ui/DataTable';
 import { Button } from '@/components/ui/Button';
@@ -132,7 +133,7 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
       key: 'image',
       label: '',
       render: (r) => { const prod = p(r); const thumb = prod.images[0]; return thumb ? (
-          <img src={getStorageUrl('product-images', thumb)} alt="" className="w-10 h-10 rounded object-cover" />
+          <Image src={getStorageUrl('product-images', thumb)} alt="" width={40} height={40} className="rounded object-cover" />
         ) : (
           <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
             <ImageIcon size={16} className="text-gray-400" />

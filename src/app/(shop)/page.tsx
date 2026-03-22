@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { getPublicSupabase } from '@/lib/supabase-server';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -146,12 +147,15 @@ export default async function HomePage() {
                 href={`/categorie/${cat.slug}`}
                 className="group bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
               >
-                <div className="aspect-[4/3] bg-gray-50 overflow-hidden">
+                <div className="aspect-[4/3] relative bg-gray-50 overflow-hidden">
                   {cat.image_url ? (
-                    <img
+                    <NextImage
                       src={getStorageUrl('product-images', cat.image_url)}
                       alt={cat.name}
-                      className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+                      fill
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      quality={80}
+                      className="object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
