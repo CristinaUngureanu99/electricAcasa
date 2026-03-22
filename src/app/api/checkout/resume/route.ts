@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
+import { rateLimit } from '@/lib/rate-limit';
 import { site } from '@/config/site';
 import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
@@ -13,6 +14,10 @@ export async function POST(request: Request) {
     const token = authHeader.replace('Bearer ', '');
     const { data: { user } } = await supabase.auth.getUser(token);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    if (!await rateLimit(`checkout-resume:${user.id}`, 5, 60_000)) {
+      return NextResponse.json({ error: 'Prea multe incercari. Asteapta un minut.' }, { status: 429 });
+    }
 
     const { orderId } = await request.json();
     if (!orderId) return NextResponse.json({ error: 'Missing orderId' }, { status: 400 });

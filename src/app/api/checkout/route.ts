@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { sendEmail } from '@/lib/email';
+import { rateLimit } from '@/lib/rate-limit';
 import { site } from '@/config/site';
 import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
@@ -26,6 +27,10 @@ export async function POST(request: Request) {
   try {
     const user = await verifyUser(request);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    if (!await rateLimit(`checkout:${user.id}`, 5, 60_000)) {
+      return NextResponse.json({ error: 'Prea multe incercari. Asteapta un minut.' }, { status: 429 });
+    }
 
     const supabase = getServiceSupabase();
     const body: CheckoutBody = await request.json();

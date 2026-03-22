@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
+import { rateLimit } from '@/lib/rate-limit';
 import { generateSlug } from '@/lib/utils';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -16,6 +17,13 @@ export async function POST(request: Request) {
       const token = authHeader.replace('Bearer ', '');
       const { data: { user } } = await supabase.auth.getUser(token);
       userId = user?.id || null;
+    }
+
+    const rateLimitKey = userId
+      ? `pkg-req:${userId}`
+      : `pkg-req:${request.headers.get('x-forwarded-for') || 'unknown'}`;
+    if (!await rateLimit(rateLimitKey, 3, 3600_000)) {
+      return NextResponse.json({ error: 'Prea multe cereri. Incearca din nou mai tarziu.' }, { status: 429 });
     }
 
     const formData = await request.formData();
