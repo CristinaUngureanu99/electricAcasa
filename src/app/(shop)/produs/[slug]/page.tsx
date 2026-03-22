@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
 import { site } from '@/config/site';
-import { Download, CheckCircle, XCircle } from 'lucide-react';
+import { Download, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Product, Category, ProductSpec } from '@/types/database';
 
@@ -138,19 +138,29 @@ export default async function ProdusPage({ params }: Props) {
             {hasDiscount && (
               <span className="text-lg text-gray-400 line-through">{formatPrice(p.price)}</span>
             )}
+            {hasDiscount && p.price > 0 && (
+              <span className="text-sm font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                -{Math.round((1 - p.sale_price! / p.price) * 100)}%
+              </span>
+            )}
           </div>
 
           {/* Stock */}
           <div className="flex items-center gap-2 mb-6">
-            {inStock ? (
-              <>
-                <CheckCircle size={18} className="text-success" />
-                <span className="text-sm font-medium text-success">In stoc ({p.stock} buc)</span>
-              </>
-            ) : (
+            {!inStock ? (
               <>
                 <XCircle size={18} className="text-red-500" />
                 <span className="text-sm font-medium text-red-500">Stoc epuizat</span>
+              </>
+            ) : p.stock <= site.lowStockThreshold ? (
+              <>
+                <AlertTriangle size={18} className="text-orange-500" />
+                <span className="text-sm font-medium text-orange-600">Ultimele {p.stock} bucati!</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle size={18} className="text-success" />
+                <span className="text-sm font-medium text-success">In stoc ({p.stock} buc)</span>
               </>
             )}
           </div>

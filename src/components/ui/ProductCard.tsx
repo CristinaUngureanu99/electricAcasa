@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
+import { site } from '@/config/site';
 import { Image as ImageIcon } from 'lucide-react';
 import type { Product } from '@/types/database';
 
@@ -12,7 +13,11 @@ export function ProductCard({ product }: ProductCardProps) {
   const thumb = product.images[0];
   const hasDiscount = product.sale_price !== null && product.sale_price < product.price;
   const displayPrice = hasDiscount ? product.sale_price! : product.price;
+  const discountPercent = hasDiscount && product.price > 0
+    ? Math.round((1 - product.sale_price! / product.price) * 100)
+    : 0;
   const outOfStock = product.stock === 0;
+  const lowStock = !outOfStock && product.stock > 0 && product.stock <= site.lowStockThreshold;
 
   return (
     <Link
@@ -39,9 +44,14 @@ export function ProductCard({ product }: ProductCardProps) {
             Stoc epuizat
           </span>
         )}
-        {hasDiscount && !outOfStock && (
+        {hasDiscount && !outOfStock && discountPercent > 0 && (
           <span className="absolute top-2 left-2 bg-accent text-white text-xs font-semibold px-2 py-1 rounded-full">
-            Reducere
+            -{discountPercent}%
+          </span>
+        )}
+        {lowStock && (
+          <span className="absolute top-2 right-2 bg-orange-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+            Ultimele {product.stock}!
           </span>
         )}
       </div>

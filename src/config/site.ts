@@ -19,5 +19,7 @@ export const site = {
     freeThreshold: 300,
   },
 
+  lowStockThreshold: 5,
+
   currency: 'RON',
 } as const;

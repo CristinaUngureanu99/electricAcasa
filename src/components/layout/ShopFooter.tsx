@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { site } from '@/config/site';
+import { NewsletterSignup } from '@/components/ui/NewsletterSignup';
 import { Mail, Phone } from 'lucide-react';
 
 interface ShopFooterProps {
@@ -88,12 +89,13 @@ export function ShopFooter({ categories }: ShopFooterProps) {
             </ul>
           </div>
 
-          {/* Brand */}
+          {/* Newsletter */}
           <div>
-            <h3 className="text-white font-semibold mb-4">{site.name}</h3>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              {site.tagline}
+            <h3 className="text-white font-semibold mb-4">Newsletter</h3>
+            <p className="text-sm text-gray-400 leading-relaxed mb-3">
+              Primeste oferte si noutati direct pe email.
             </p>
+            <NewsletterSignup compact />
           </div>
         </div>
       </div>

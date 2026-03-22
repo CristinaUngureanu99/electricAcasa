@@ -5,7 +5,8 @@ import { ProductCard } from '@/components/ui/ProductCard';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { getStorageUrl } from '@/lib/utils';
 import { site } from '@/config/site';
-import { ArrowRight, Image as ImageIcon, Truck, FileText, Package, Zap } from 'lucide-react';
+import { NewsletterSignup } from '@/components/ui/NewsletterSignup';
+import { ArrowRight, Image as ImageIcon, Truck, FileText, Package, Zap, ShoppingCart, CreditCard } from 'lucide-react';
 import type { Product, Category } from '@/types/database';
 
 export default async function HomePage() {
@@ -213,6 +214,52 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Cum functioneaza */}
+      <section className="border-y border-gray-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 py-14 md:py-16">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Cum functioneaza?</h2>
+            <p className="text-gray-500 mt-2">3 pasi simpli pana la materialele de care ai nevoie</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <ShoppingCart size={24} className="text-primary" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">1. Alege produsele</h3>
+              <p className="text-sm text-gray-500">Navigheaza in catalog, compara specificatii si adauga in cos.</p>
+            </div>
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <CreditCard size={24} className="text-primary" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">2. Plaseaza comanda</h3>
+              <p className="text-sm text-gray-500">Plateste cu cardul sau ramburs. Rapid si sigur.</p>
+            </div>
+            <div className="text-center">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <Truck size={24} className="text-primary" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">3. Livrare rapida</h3>
+              <p className="text-sm text-gray-500">Primesti coletul acasa. Gratuit pentru comenzi peste {site.shipping.freeThreshold} RON.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="max-w-7xl mx-auto px-4 py-14 md:py-16">
+        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-white">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Fii la curent cu noutatile</h2>
+            <p className="text-white/80 mb-6">
+              Aboneaza-te si primesti primii ofertele speciale, produse noi si promotii exclusive.
+            </p>
+            <NewsletterSignup />
+          </div>
+        </div>
+      </section>
     </>
   );
 }
