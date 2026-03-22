@@ -67,6 +67,16 @@ export function ShopFooter({ categories }: ShopFooterProps) {
                   Generator pachet
                 </Link>
               </li>
+              <li>
+                <Link href="/livrare" className="text-sm hover:text-white transition-colors">
+                  Livrare
+                </Link>
+              </li>
+              <li>
+                <Link href="/intrebari-frecvente" className="text-sm hover:text-white transition-colors">
+                  Intrebari frecvente
+                </Link>
+              </li>
             </ul>
           </div>
 

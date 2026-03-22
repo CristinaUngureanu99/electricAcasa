@@ -12,7 +12,7 @@ import type { Product, Category } from '@/types/database';
 export default async function HomePage() {
   const supabase = getPublicSupabase();
 
-  const [categoriesRes, featuredRes, recentRes] = await Promise.all([
+  const [categoriesRes, featuredRes, recentRes, productCatsRes] = await Promise.all([
     supabase
       .from('categories')
       .select('*')
@@ -33,11 +33,22 @@ export default async function HomePage() {
       .eq('is_active', true)
       .order('created_at', { ascending: false })
       .limit(16),
+    supabase
+      .from('products')
+      .select('category_id')
+      .eq('is_active', true),
   ]);
 
   const categories = (categoriesRes.data as Category[]) || [];
   const featured = (featuredRes.data as Product[]) || [];
   const recent = (recentRes.data as Product[]) || [];
+
+  // Count products per category
+  const productCats = (productCatsRes.data as { category_id: string | null }[]) || [];
+  const categoryCounts = new Map<string, number>();
+  for (const p of productCats) {
+    if (p.category_id) categoryCounts.set(p.category_id, (categoryCounts.get(p.category_id) || 0) + 1);
+  }
 
   // Featured first, fill remaining slots with recent (no duplicates)
   const featuredIds = new Set(featured.map((p) => p.id));
@@ -165,9 +176,16 @@ export default async function HomePage() {
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-all">
-                    {cat.name}
-                  </h3>
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-all">
+                      {cat.name}
+                    </h3>
+                    {(categoryCounts.get(cat.id) ?? 0) > 0 && (
+                      <span className="text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                        {categoryCounts.get(cat.id)}
+                      </span>
+                    )}
+                  </div>
                   {cat.description ? (
                     <p className="text-xs text-gray-500 mt-1 line-clamp-2 group-hover:text-gray-600 transition-colors">{cat.description}</p>
                   ) : (

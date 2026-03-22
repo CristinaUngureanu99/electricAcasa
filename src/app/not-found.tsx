@@ -30,10 +30,10 @@ export default function NotFound() {
               Acasa
             </Link>
             <Link
-              href="/dashboard"
+              href="/catalog"
               className="bg-gray-100 px-8 py-3.5 text-gray-900 font-semibold rounded-full text-sm hover:bg-gray-200 transition-colors"
             >
-              Contul meu
+              Vezi catalogul
             </Link>
           </div>
         </div>

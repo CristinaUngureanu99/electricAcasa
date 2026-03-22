@@ -11,9 +11,10 @@ import { Menu, X, ShoppingCart, User, ChevronDown, Search } from 'lucide-react';
 
 interface ShopNavProps {
   categories: { id: string; name: string; slug: string }[];
+  categoryCounts?: Record<string, number>;
 }
 
-export function ShopNav({ categories }: ShopNavProps) {
+export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -81,7 +82,10 @@ export function ShopNav({ categories }: ShopNavProps) {
                         className="group/item flex items-center gap-2.5 mx-1.5 px-3 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-primary/5 hover:text-gray-900 transition-all"
                       >
                         <span className="w-1 h-4 rounded-full bg-gray-200 group-hover/item:bg-primary transition-colors" />
-                        {cat.name}
+                        <span className="flex-1">{cat.name}</span>
+                        {categoryCounts?.[cat.id] ? (
+                          <span className="text-[10px] text-gray-400 font-medium">{categoryCounts[cat.id]}</span>
+                        ) : null}
                       </Link>
                     ))}
                     {categories.length === 0 && (
