@@ -21,8 +21,8 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 let nextId = 0;
 
 const typeStyles: Record<ToastType, string> = {
-  success: 'bg-green-500',
-  error: 'bg-red-500',
+  success: 'bg-success',
+  error: 'bg-danger',
   info: 'bg-navy',
 };
 
@@ -50,7 +50,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       const timer = setTimeout(() => removeToast(id), 4000);
       timersRef.current.set(id, timer);
     },
-    [removeToast]
+    [removeToast],
   );
 
   useEffect(() => {
@@ -63,7 +63,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div role="region" aria-live="polite" aria-label="Notificări" className="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+      <div
+        role="region"
+        aria-live="polite"
+        aria-label="Notificări"
+        className="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"
+      >
         {toasts.map((t) => (
           <div
             key={t.id}
@@ -72,7 +77,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               'pointer-events-auto flex items-center gap-2 rounded-xl px-4 py-3 text-white text-sm font-medium shadow-lg transition-all duration-300',
               t.leaving
                 ? 'translate-x-[120%] opacity-0'
-                : 'translate-x-0 opacity-100 animate-[slideIn_0.3s_ease-out]'
+                : 'translate-x-0 opacity-100 animate-[slideIn_0.3s_ease-out]',
             )}
             style={{ minWidth: 260 }}
           >

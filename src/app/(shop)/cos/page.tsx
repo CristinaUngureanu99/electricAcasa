@@ -11,9 +11,23 @@ import { site } from '@/config/site';
 import { ShoppingCart, Trash2, Minus, Plus, Image as ImageIcon } from 'lucide-react';
 
 export default function CosPage() {
-  const { cartItems, cartCount, subtotal, shippingCost, total, loading, updateQuantity, removeItem } = useCart();
+  const {
+    cartItems,
+    cartCount,
+    subtotal,
+    shippingCost,
+    total,
+    loading,
+    updateQuantity,
+    removeItem,
+  } = useCart();
 
-  if (loading) return <div className="max-w-5xl mx-auto px-4 py-8"><PageSkeleton /></div>;
+  if (loading)
+    return (
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        <PageSkeleton />
+      </div>
+    );
 
   if (cartItems.length === 0) {
     return (
@@ -36,7 +50,7 @@ export default function CosPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">
         Cos de cumparaturi ({cartCount} {cartCount === 1 ? 'produs' : 'produse'})
       </h1>
 
@@ -49,11 +63,21 @@ export default function CosPage() {
             const lineTotal = unitPrice * quantity;
 
             return (
-              <div key={productId} className="flex gap-4 bg-white rounded-2xl border border-gray-100 p-4">
+              <div
+                key={productId}
+                className="flex gap-4 bg-white rounded-2xl border border-gray-100 p-4"
+              >
                 {/* Image */}
                 <Link href={`/produs/${product.slug}`} className="shrink-0">
                   {thumb ? (
-                    <Image src={getStorageUrl('product-images', thumb)} alt={product.name} width={80} height={80} quality={70} className="rounded-lg object-cover" />
+                    <Image
+                      src={getStorageUrl('product-images', thumb)}
+                      alt={product.name}
+                      width={80}
+                      height={80}
+                      quality={70}
+                      className="rounded-lg object-cover"
+                    />
                   ) : (
                     <div className="w-20 h-20 rounded-lg bg-gray-100 flex items-center justify-center">
                       <ImageIcon size={24} className="text-gray-300" />
@@ -63,13 +87,18 @@ export default function CosPage() {
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <Link href={`/produs/${product.slug}`} className="text-sm font-medium text-gray-900 hover:text-primary line-clamp-2">
+                  <Link
+                    href={`/produs/${product.slug}`}
+                    className="text-sm font-medium text-gray-900 hover:text-primary line-clamp-2"
+                  >
                     {product.name}
                   </Link>
                   {product.brand_name && (
                     <p className="text-xs text-gray-400 mt-0.5">{product.brand_name}</p>
                   )}
-                  <p className="text-sm font-semibold text-gray-900 mt-1">{formatPrice(unitPrice)}</p>
+                  <p className="text-sm font-semibold text-gray-900 mt-1">
+                    {formatPrice(unitPrice)}
+                  </p>
 
                   {/* Quantity + Remove */}
                   <div className="flex items-center gap-3 mt-2">
@@ -146,7 +175,10 @@ export default function CosPage() {
               </Button>
             </Link>
 
-            <Link href="/catalog" className="block text-sm text-center text-primary hover:underline mt-4">
+            <Link
+              href="/catalog"
+              className="block text-sm text-center text-primary hover:underline mt-4"
+            >
               Continua cumparaturile
             </Link>
           </div>

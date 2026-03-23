@@ -41,7 +41,8 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             <button
               key={path}
               onClick={() => setSelected(i)}
-              className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+              aria-label={`Imagine ${i + 1} din ${images.length}`}
+              className={`shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
                 i === selected ? 'border-primary' : 'border-transparent hover:border-gray-300'
               }`}
             >

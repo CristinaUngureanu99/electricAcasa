@@ -36,7 +36,7 @@ export function ConfirmModal({
       // Focus trap: keep Tab within modal
       if (e.key === 'Tab' && dialogRef.current) {
         const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         );
         if (focusable.length === 0) return;
         const first = focusable[0];
@@ -73,9 +73,20 @@ export function ConfirmModal({
       }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
     >
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-description" className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 animate-[modalIn_0.2s_ease-out]">
-        <h2 id="confirm-modal-title" className="text-lg font-bold text-navy">{title}</h2>
-        <p id="confirm-modal-description" className="mt-2 text-sm text-navy/70 leading-relaxed">{message}</p>
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-modal-title"
+        aria-describedby="confirm-modal-description"
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 animate-[modalIn_0.2s_ease-out]"
+      >
+        <h2 id="confirm-modal-title" className="text-lg font-bold text-navy">
+          {title}
+        </h2>
+        <p id="confirm-modal-description" className="mt-2 text-sm text-navy/70 leading-relaxed">
+          {message}
+        </p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onCancel}
@@ -88,10 +99,10 @@ export function ConfirmModal({
             className={cn(
               'rounded-xl px-4 py-2 text-sm font-medium text-white transition-colors',
               variant === 'danger'
-                ? 'bg-red-500 hover:bg-red-600'
+                ? 'bg-danger hover:bg-red-700'
                 : variant === 'primary'
-                ? 'bg-navy hover:bg-[#234b73]'
-                : 'bg-orange-500 hover:bg-orange-600'
+                  ? 'bg-navy hover:bg-navy/80'
+                  : 'bg-warning hover:bg-amber-600',
             )}
           >
             {confirmText}
