@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { rateLimit } from '@/lib/rate-limit';
+
+const setRoleSchema = z.object({
+  userId: z.string().uuid('Invalid user ID'),
+  role: z.enum(['user', 'admin']),
+});
 
 export async function POST(request: Request) {
   try {
@@ -11,12 +17,14 @@ export async function POST(request: Request) {
 
     const supabase = getServiceSupabase();
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user } } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser(token);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!await rateLimit(`set-role:${user.id}`, 10, 60_000)) {
+    if (!(await rateLimit(`set-role:${user.id}`, 10, 60_000))) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 
@@ -31,11 +39,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { userId, role } = await request.json();
-
-    if (!userId || !['user', 'admin'].includes(role)) {
+    const parsed = setRoleSchema.safeParse(await request.json());
+    if (!parsed.success) {
       return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 });
     }
+    const { userId, role } = parsed.data;
 
     // Cannot change own role or another admin's role
     if (userId === user.id) {
@@ -52,10 +60,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Cannot change admin role' }, { status: 400 });
     }
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({ role })
-      .eq('id', userId);
+    const { error } = await supabase.from('profiles').update({ role }).eq('id', userId);
 
     if (error) {
       console.error('set-role: update failed', error.message);

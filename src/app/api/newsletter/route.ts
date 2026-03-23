@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
-import { isValidEmail } from '@/lib/utils';
+
+const newsletterSchema = z.object({
+  email: z
+    .string()
+    .email('Adresa de email invalida')
+    .transform((s) => s.trim().toLowerCase()),
+});
 
 export async function POST(request: Request) {
   try {
@@ -13,20 +20,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const { email } = (await request.json()) as { email?: string };
-
-    if (!email?.trim() || !isValidEmail(email.trim())) {
+    const parsed = newsletterSchema.safeParse(await request.json());
+    if (!parsed.success) {
       return NextResponse.json({ error: 'Adresa de email invalida' }, { status: 400 });
     }
+    const { email } = parsed.data;
 
     const supabase = getServiceSupabase();
     // ON CONFLICT DO NOTHING — don't reveal if email already exists (privacy)
     await supabase
       .from('newsletter_subscriptions')
-      .upsert(
-        { email: email.trim().toLowerCase() },
-        { onConflict: 'email', ignoreDuplicates: true },
-      );
+      .upsert({ email }, { onConflict: 'email', ignoreDuplicates: true });
 
     return NextResponse.json({ success: true });
   } catch {

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { sendEmail } from '@/lib/email';
 import { orderConfirmationEmail } from '@/lib/email-templates';
@@ -8,19 +9,30 @@ import type Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 import type { Product } from '@/types/database';
 
-interface CheckoutBody {
-  shippingAddress: { name: string; street: string; city: string; county: string; postal_code: string; phone: string };
-  billingAddress: { name: string; street: string; city: string; county: string; postal_code: string; phone: string } | null;
-  paymentMethod: 'card' | 'ramburs';
-  notes?: string;
-}
+const addressSchema = z.object({
+  name: z.string().min(1),
+  street: z.string().min(1),
+  city: z.string().min(1),
+  county: z.string().min(1),
+  postal_code: z.string().regex(/^\d{6}$/, 'Codul postal are 6 cifre'),
+  phone: z.string().min(1),
+});
+
+const checkoutSchema = z.object({
+  shippingAddress: addressSchema,
+  billingAddress: addressSchema.nullable(),
+  paymentMethod: z.enum(['card', 'ramburs']),
+  notes: z.string().optional(),
+});
 
 async function verifyUser(request: Request) {
   const authHeader = request.headers.get('authorization');
   if (!authHeader) return null;
   const supabase = getServiceSupabase();
   const token = authHeader.replace('Bearer ', '');
-  const { data: { user } } = await supabase.auth.getUser(token);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser(token);
   return user;
 }
 
@@ -29,16 +41,19 @@ export async function POST(request: Request) {
     const user = await verifyUser(request);
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    if (!await rateLimit(`checkout:${user.id}`, 5, 60_000)) {
-      return NextResponse.json({ error: 'Prea multe incercari. Asteapta un minut.' }, { status: 429 });
+    if (!(await rateLimit(`checkout:${user.id}`, 5, 60_000))) {
+      return NextResponse.json(
+        { error: 'Prea multe incercari. Asteapta un minut.' },
+        { status: 429 },
+      );
     }
 
     const supabase = getServiceSupabase();
-    const body: CheckoutBody = await request.json();
-
-    if (!body.shippingAddress || !body.paymentMethod) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    const parsed = checkoutSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
+    const body = parsed.data;
 
     // Guard: check for existing pending card order
     if (body.paymentMethod === 'card') {
@@ -50,7 +65,10 @@ export async function POST(request: Request) {
         .eq('payment_method', 'card')
         .limit(1);
       if (pending && pending.length > 0) {
-        return NextResponse.json({ error: 'Ai deja o comanda card in asteptare', pendingOrderId: pending[0].id }, { status: 409 });
+        return NextResponse.json(
+          { error: 'Ai deja o comanda card in asteptare', pendingOrderId: pending[0].id },
+          { status: 409 },
+        );
       }
     }
 
@@ -71,10 +89,15 @@ export async function POST(request: Request) {
       .in('id', productIds)
       .eq('is_active', true);
 
-    const productMap = new Map((products as Product[] || []).map((p) => [p.id, p]));
+    const productMap = new Map(((products as Product[]) || []).map((p) => [p.id, p]));
 
     // Validate all products exist and build line items
-    const lineItems: { productId: string; productName: string; quantity: number; unitPrice: number }[] = [];
+    const lineItems: {
+      productId: string;
+      productName: string;
+      quantity: number;
+      unitPrice: number;
+    }[] = [];
     for (const row of cartRows) {
       const prod = productMap.get(row.product_id);
       if (!prod) {
@@ -98,9 +121,15 @@ export async function POST(request: Request) {
       if (!ok) {
         // Rollback already decremented
         for (const dec of decremented) {
-          await supabase.rpc('increment_stock', { p_product_id: dec.productId, p_quantity: dec.quantity });
+          await supabase.rpc('increment_stock', {
+            p_product_id: dec.productId,
+            p_quantity: dec.quantity,
+          });
         }
-        return NextResponse.json({ error: `Stoc insuficient pentru ${item.productName}` }, { status: 400 });
+        return NextResponse.json(
+          { error: `Stoc insuficient pentru ${item.productName}` },
+          { status: 400 },
+        );
       }
       decremented.push({ productId: item.productId, quantity: item.quantity });
     }
@@ -132,7 +161,10 @@ export async function POST(request: Request) {
     if (orderError || !order) {
       // Rollback stock
       for (const dec of decremented) {
-        await supabase.rpc('increment_stock', { p_product_id: dec.productId, p_quantity: dec.quantity });
+        await supabase.rpc('increment_stock', {
+          p_product_id: dec.productId,
+          p_quantity: dec.quantity,
+        });
       }
       return NextResponse.json({ error: 'Eroare la crearea comenzii' }, { status: 500 });
     }
@@ -151,9 +183,15 @@ export async function POST(request: Request) {
       // Rollback: delete order + restore stock
       await supabase.from('orders').delete().eq('id', order.id);
       for (const dec of decremented) {
-        await supabase.rpc('increment_stock', { p_product_id: dec.productId, p_quantity: dec.quantity });
+        await supabase.rpc('increment_stock', {
+          p_product_id: dec.productId,
+          p_quantity: dec.quantity,
+        });
       }
-      return NextResponse.json({ error: 'Eroare la salvarea produselor comenzii' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Eroare la salvarea produselor comenzii' },
+        { status: 500 },
+      );
     }
 
     // Card: create Stripe session
@@ -170,15 +208,19 @@ export async function POST(request: Request) {
             },
             quantity: i.quantity,
           })),
-          ...(shippingCost > 0 ? {
-            shipping_options: [{
-              shipping_rate_data: {
-                type: 'fixed_amount' as const,
-                fixed_amount: { amount: Math.round(shippingCost * 100), currency: 'ron' },
-                display_name: 'Transport standard',
-              },
-            }],
-          } : {}),
+          ...(shippingCost > 0
+            ? {
+                shipping_options: [
+                  {
+                    shipping_rate_data: {
+                      type: 'fixed_amount' as const,
+                      fixed_amount: { amount: Math.round(shippingCost * 100), currency: 'ron' },
+                      display_name: 'Transport standard',
+                    },
+                  },
+                ],
+              }
+            : {}),
           metadata: { order_id: order.id },
           success_url: `${site.url}/checkout/confirmare?order_id=${order.id}`,
           cancel_url: `${site.url}/checkout/anulat?order_id=${order.id}`,
@@ -188,7 +230,10 @@ export async function POST(request: Request) {
         await supabase.from('order_items').delete().eq('order_id', order.id);
         await supabase.from('orders').delete().eq('id', order.id);
         for (const dec of decremented) {
-          await supabase.rpc('increment_stock', { p_product_id: dec.productId, p_quantity: dec.quantity });
+          await supabase.rpc('increment_stock', {
+            p_product_id: dec.productId,
+            p_quantity: dec.quantity,
+          });
         }
         return NextResponse.json({ error: 'Eroare la initializarea platii' }, { status: 500 });
       }
@@ -208,11 +253,17 @@ export async function POST(request: Request) {
         } catch {
           // Expire failed: order stays pending (recoverable via resume/cancel)
         }
-        return NextResponse.json({ error: 'Eroare la salvarea sesiunii de plata' }, { status: 500 });
+        return NextResponse.json(
+          { error: 'Eroare la salvarea sesiunii de plata' },
+          { status: 500 },
+        );
       }
 
       // Atomic cart cleanup
-      const cartCleanupItems = lineItems.map((i) => ({ product_id: i.productId, quantity: i.quantity }));
+      const cartCleanupItems = lineItems.map((i) => ({
+        product_id: i.productId,
+        quantity: i.quantity,
+      }));
       const { error: cleanupError } = await supabase.rpc('subtract_cart_items', {
         p_user_id: user.id,
         p_items: cartCleanupItems,
@@ -233,7 +284,10 @@ export async function POST(request: Request) {
     }
 
     // Ramburs: cart cleanup first (fatal if fails)
-    const cartCleanupItems = lineItems.map((i) => ({ product_id: i.productId, quantity: i.quantity }));
+    const cartCleanupItems = lineItems.map((i) => ({
+      product_id: i.productId,
+      quantity: i.quantity,
+    }));
     const { error: cleanupError } = await supabase.rpc('subtract_cart_items', {
       p_user_id: user.id,
       p_items: cartCleanupItems,
@@ -245,7 +299,10 @@ export async function POST(request: Request) {
       await supabase.from('order_items').delete().eq('order_id', order.id);
       await supabase.from('orders').delete().eq('id', order.id);
       for (const dec of decremented) {
-        await supabase.rpc('increment_stock', { p_product_id: dec.productId, p_quantity: dec.quantity });
+        await supabase.rpc('increment_stock', {
+          p_product_id: dec.productId,
+          p_quantity: dec.quantity,
+        });
       }
       return NextResponse.json({ error: 'Eroare la procesarea cosului' }, { status: 500 });
     }
@@ -256,10 +313,16 @@ export async function POST(request: Request) {
         orderNumber: order.order_number,
         total,
         paymentMethod: 'ramburs',
-        items: lineItems.map((i) => ({ name: i.productName, quantity: i.quantity, unitPrice: i.unitPrice })),
+        items: lineItems.map((i) => ({
+          name: i.productName,
+          quantity: i.quantity,
+          unitPrice: i.unitPrice,
+        })),
       });
       await sendEmail(user.email!, emailData.subject, emailData.html);
-    } catch { /* best-effort */ }
+    } catch {
+      /* best-effort */
+    }
 
     return NextResponse.json({ redirectUrl: `/checkout/confirmare?order_id=${order.id}` });
   } catch {

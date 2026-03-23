@@ -1,9 +1,26 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { sendEmail } from '@/lib/email';
 import { contactFormEmail } from '@/lib/email-templates';
 import { rateLimit, getClientIp } from '@/lib/rate-limit';
-import { isValidEmail } from '@/lib/utils';
 import { site } from '@/config/site';
+
+const contactSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Numele este obligatoriu')
+    .transform((s) => s.trim()),
+  email: z
+    .string()
+    .email('Adresa de email invalida')
+    .transform((s) => s.trim()),
+  message: z
+    .string()
+    .min(1, 'Mesajul este obligatoriu')
+    .transform((s) => s.trim()),
+  website: z.string().optional(),
+  loadedAt: z.number().optional(),
+});
 
 export async function POST(request: Request) {
   try {
@@ -15,32 +32,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
-    const { name, email, message, website, loadedAt } = body as {
-      name?: string;
-      email?: string;
-      message?: string;
-      website?: string;
-      loadedAt?: number;
-    };
+    const parsed = contactSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    }
+    const { name, email, message, website, loadedAt } = parsed.data;
 
     // Honeypot: if hidden field is filled, it's a bot
     if (website) {
-      // Return success to not reveal the check
       return NextResponse.json({ success: true });
     }
 
     // Timestamp check: if submitted less than 2s after load, likely a bot
     if (loadedAt && Date.now() - loadedAt < 2000) {
       return NextResponse.json({ success: true });
-    }
-
-    if (!name?.trim() || !email?.trim() || !message?.trim()) {
-      return NextResponse.json({ error: 'Toate campurile sunt obligatorii' }, { status: 400 });
-    }
-
-    if (!isValidEmail(email.trim())) {
-      return NextResponse.json({ error: 'Adresa de email invalida' }, { status: 400 });
     }
 
     if (!process.env.RESEND_API_KEY) {
