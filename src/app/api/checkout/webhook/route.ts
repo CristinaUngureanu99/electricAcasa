@@ -2,13 +2,15 @@ import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
 import { sendEmail } from '@/lib/email';
 import { orderConfirmationEmail } from '@/lib/email-templates';
-import { site } from '@/config/site';
 import Stripe from 'stripe';
 import { getStripe } from '@/lib/stripe';
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
-
 export async function POST(request: Request) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
+  }
+
   let event: Stripe.Event;
 
   try {
@@ -91,7 +93,9 @@ export async function POST(request: Request) {
       });
       await sendEmail(profile.email, emailData.subject, emailData.html);
     }
-  } catch { /* best-effort */ }
+  } catch {
+    /* best-effort */
+  }
 
   return NextResponse.json({ received: true });
 }

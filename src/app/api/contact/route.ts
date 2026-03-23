@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
 import { contactFormEmail } from '@/lib/email-templates';
-import { rateLimit } from '@/lib/rate-limit';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import { isValidEmail } from '@/lib/utils';
 import { site } from '@/config/site';
 
 export async function POST(request: Request) {
   try {
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!await rateLimit(`contact:${ip}`, 3, 3600_000)) {
-      return NextResponse.json({ error: 'Prea multe mesaje. Incearca din nou mai tarziu.' }, { status: 429 });
+    const ip = getClientIp(request);
+    if (!(await rateLimit(`contact:${ip}`, 3, 3600_000))) {
+      return NextResponse.json(
+        { error: 'Prea multe mesaje. Incearca din nou mai tarziu.' },
+        { status: 429 },
+      );
     }
 
     const body = await request.json();
@@ -35,10 +39,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Toate campurile sunt obligatorii' }, { status: 400 });
     }
 
+    if (!isValidEmail(email.trim())) {
+      return NextResponse.json({ error: 'Adresa de email invalida' }, { status: 400 });
+    }
+
     if (!process.env.RESEND_API_KEY) {
       return NextResponse.json(
-        { error: `Mesajul nu a putut fi trimis momentan. Te rugam sa ne contactezi direct la ${site.contact.email}` },
-        { status: 503 }
+        {
+          error: `Mesajul nu a putut fi trimis momentan. Te rugam sa ne contactezi direct la ${site.contact.email}`,
+        },
+        { status: 503 },
       );
     }
 

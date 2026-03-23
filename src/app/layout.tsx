@@ -1,13 +1,13 @@
-import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import CookieConsent from "@/components/ui/CookieConsent";
-import AuthCookieGuard from "@/components/ui/AuthCookieGuard";
-import { site } from "@/config/site";
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import CookieConsent from '@/components/ui/CookieConsent';
+import AuthCookieGuard from '@/components/ui/AuthCookieGuard';
+import { site } from '@/config/site';
 
 const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
+  subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -17,15 +17,18 @@ export const metadata: Metadata = {
   },
   description: site.tagline,
   metadataBase: new URL(site.url),
+  alternates: {
+    canonical: './',
+  },
   openGraph: {
-    type: "website",
-    locale: "ro_RO",
+    type: 'website',
+    locale: 'ro_RO',
     siteName: site.name,
     title: site.nameFull,
     description: site.tagline,
   },
   twitter: {
-    card: "summary_large_image",
+    card: 'summary_large_image',
     title: site.nameFull,
     description: site.tagline,
   },
@@ -35,14 +38,14 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: 'default',
     title: site.name,
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1e40af",
-  width: "device-width",
+  themeColor: '#1e40af',
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
 };

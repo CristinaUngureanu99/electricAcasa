@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { site } from '@/config/site';
 
-export const metadata = { title: 'Politica de confidentialitate' };
+export const metadata = {
+  title: 'Politica de confidentialitate',
+  description: 'Cum colectam, folosim si protejam datele tale personale pe electricAcasa.ro.',
+};
 
 export default function PrivacyPage() {
   return (
@@ -12,18 +15,38 @@ export default function PrivacyPage() {
 
         <div className="space-y-6 text-gray-600 leading-relaxed text-sm">
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">1. Date pe care le colectam</h2>
-            <p>Colectam urmatoarele date personale: nume, adresa de email, numar de telefon, adresa de livrare si facturare. Aceste date sunt necesare pentru procesarea comenzilor si livrarea produselor.</p>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              1. Date pe care le colectam
+            </h2>
+            <p>
+              Colectam urmatoarele date personale: nume, adresa de email, numar de telefon, adresa
+              de livrare si facturare. Aceste date sunt necesare pentru procesarea comenzilor si
+              livrarea produselor.
+            </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">2. Baza legala a prelucrarii</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              2. Baza legala a prelucrarii
+            </h2>
             <p>Prelucram datele tale personale pe urmatoarele baze legale:</p>
             <ul className="list-disc list-inside space-y-1 mt-1">
-              <li><strong>Executarea contractului</strong> (art. 6 alin. 1 lit. b GDPR) — pentru procesarea comenzilor, livrare si facturare</li>
-              <li><strong>Obligatie legala</strong> (art. 6 alin. 1 lit. c GDPR) — pentru conformarea cu legislatia fiscala si protectia consumatorului</li>
-              <li><strong>Consimtamant</strong> (art. 6 alin. 1 lit. a GDPR) — pentru comunicari comerciale (newsletter)</li>
-              <li><strong>Interes legitim</strong> (art. 6 alin. 1 lit. f GDPR) — pentru imbunatatirea serviciilor si prevenirea fraudei</li>
+              <li>
+                <strong>Executarea contractului</strong> (art. 6 alin. 1 lit. b GDPR) — pentru
+                procesarea comenzilor, livrare si facturare
+              </li>
+              <li>
+                <strong>Obligatie legala</strong> (art. 6 alin. 1 lit. c GDPR) — pentru conformarea
+                cu legislatia fiscala si protectia consumatorului
+              </li>
+              <li>
+                <strong>Consimtamant</strong> (art. 6 alin. 1 lit. a GDPR) — pentru comunicari
+                comerciale (newsletter)
+              </li>
+              <li>
+                <strong>Interes legitim</strong> (art. 6 alin. 1 lit. f GDPR) — pentru imbunatatirea
+                serviciilor si prevenirea fraudei
+              </li>
             </ul>
           </section>
 
@@ -38,9 +61,20 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">5. Stocarea si perioada de pastrare</h2>
-            <p>Datele sunt stocate in sisteme securizate (Supabase, cu servere in UE). Parolele sunt criptate si nu sunt accesibile personalului. Datele de plata cu card sunt procesate de Stripe si nu sunt stocate pe serverele noastre.</p>
-            <p className="mt-2"><strong>Perioada de pastrare:</strong> Datele contului sunt pastrate cat timp contul este activ. Datele comenzilor sunt pastrate conform obligatiilor fiscale (minim 5 ani). La stergerea contului, datele personale sunt eliminate, cu exceptia celor necesare din punct de vedere legal.</p>
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              5. Stocarea si perioada de pastrare
+            </h2>
+            <p>
+              Datele sunt stocate in sisteme securizate (Supabase, cu servere in UE). Parolele sunt
+              criptate si nu sunt accesibile personalului. Datele de plata cu card sunt procesate de
+              Stripe si nu sunt stocate pe serverele noastre.
+            </p>
+            <p className="mt-2">
+              <strong>Perioada de pastrare:</strong> Datele contului sunt pastrate cat timp contul
+              este activ. Datele comenzilor sunt pastrate conform obligatiilor fiscale (minim 5
+              ani). La stergerea contului, datele personale sunt eliminate, cu exceptia celor
+              necesare din punct de vedere legal.
+            </p>
           </section>
 
           <section>
@@ -65,23 +99,46 @@ export default function PrivacyPage() {
               <li>Opozitia la prelucrare</li>
               <li>Retragerea consimtamantului (pentru comunicari comerciale)</li>
             </ul>
-            <p className="mt-2">Pentru exercitarea acestor drepturi, contacteaza-ne la {site.contact.email}.</p>
-            <p className="mt-2"><strong>Dreptul de plangere:</strong> Ai dreptul de a depune o plangere la Autoritatea Nationala de Supraveghere a Prelucrarii Datelor cu Caracter Personal (ANSPDCP) — <a href="https://www.dataprotection.ro" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">dataprotection.ro</a>.</p>
+            <p className="mt-2">
+              Pentru exercitarea acestor drepturi, contacteaza-ne la {site.contact.email}.
+            </p>
+            <p className="mt-2">
+              <strong>Dreptul de plangere:</strong> Ai dreptul de a depune o plangere la Autoritatea
+              Nationala de Supraveghere a Prelucrarii Datelor cu Caracter Personal (ANSPDCP) —{' '}
+              <a
+                href="https://www.dataprotection.ro"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                dataprotection.ro
+              </a>
+              .
+            </p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-gray-900 mb-2">8. Furnizarea datelor</h2>
-            <p>Furnizarea numelui, emailului si adresei de livrare este o cerinta contractuala necesara pentru procesarea comenzii. Fara aceste date, nu putem finaliza comanda. Furnizarea numarului de telefon este optionala dar recomandata pentru livrare.</p>
+            <p>
+              Furnizarea numelui, emailului si adresei de livrare este o cerinta contractuala
+              necesara pentru procesarea comenzii. Fara aceste date, nu putem finaliza comanda.
+              Furnizarea numarului de telefon este optionala dar recomandata pentru livrare.
+            </p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-gray-900 mb-2">9. Cookie-uri</h2>
-            <p>Site-ul foloseste cookie-uri necesare pentru functionarea corecta (autentificare, sesiune). Nu folosim cookie-uri de tracking sau publicitate.</p>
+            <p>
+              Site-ul foloseste cookie-uri necesare pentru functionarea corecta (autentificare,
+              sesiune). Nu folosim cookie-uri de tracking sau publicitate.
+            </p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-gray-900 mb-2">10. Contact</h2>
-            <p>Pentru intrebari despre protectia datelor: {site.contact.email} | {site.contact.phone}</p>
+            <p>
+              Pentru intrebari despre protectia datelor: {site.contact.email} | {site.contact.phone}
+            </p>
           </section>
         </div>
 

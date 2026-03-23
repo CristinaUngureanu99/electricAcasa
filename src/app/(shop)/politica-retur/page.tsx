@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { site } from '@/config/site';
 
-export const metadata = { title: 'Politica de retur' };
+export const metadata = {
+  title: 'Politica de retur',
+  description:
+    'Conditii de returnare a produselor comandate de pe electricAcasa.ro — termen, procedura si exceptii.',
+};
 
 export default function PoliticaReturPage() {
   return (
@@ -12,7 +16,11 @@ export default function PoliticaReturPage() {
       <div className="space-y-6 text-gray-600 leading-relaxed text-sm">
         <section>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">1. Dreptul de retragere</h2>
-          <p>Conform OUG 34/2014, ai dreptul de a te retrage din contractul de vanzare in termen de <strong>14 zile calendaristice</strong> de la data primirii produsului, fara a fi nevoit sa justifici decizia si fara penalitati.</p>
+          <p>
+            Conform OUG 34/2014, ai dreptul de a te retrage din contractul de vanzare in termen de{' '}
+            <strong>14 zile calendaristice</strong> de la data primirii produsului, fara a fi nevoit
+            sa justifici decizia si fara penalitati.
+          </p>
         </section>
 
         <section>
@@ -37,22 +45,48 @@ export default function PoliticaReturPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">4. Rambursarea</h2>
-          <p>Rambursarea se efectueaza in termen de maximum 14 zile de la primirea produsului returnat, folosind aceeasi metoda de plata utilizata la achizitie. In cazul platii ramburs, rambursarea se face prin transfer bancar.</p>
+          <p>
+            Rambursarea se efectueaza in termen de maximum 14 zile de la primirea produsului
+            returnat, folosind aceeasi metoda de plata utilizata la achizitie. In cazul platii
+            ramburs, rambursarea se face prin transfer bancar.
+          </p>
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">5. Produse defecte sau gresite</h2>
-          <p>Daca ai primit un produs defect sau diferit de cel comandat, contacteaza-ne in termen de 48 de ore de la primire. Costul de retur va fi suportat de {site.name} si vei primi un produs nou sau rambursarea integrala.</p>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            5. Produse defecte sau gresite
+          </h2>
+          <p>
+            Daca ai primit un produs defect sau diferit de cel comandat, contacteaza-ne in termen de
+            48 de ore de la primire. Costul de retur va fi suportat de {site.name} si vei primi un
+            produs nou sau rambursarea integrala.
+          </p>
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">6. Solutionarea alternativa a litigiilor</h2>
-          <p>In cazul unui litigiu legat de un retur, poti apela la solutionarea alternativa a litigiilor (SAL) prin intermediul ANPC. Mai multe informatii: <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">anpc.ro/ce-este-sal</a>.</p>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            6. Solutionarea alternativa a litigiilor
+          </h2>
+          <p>
+            In cazul unui litigiu legat de un retur, poti apela la solutionarea alternativa a
+            litigiilor (SAL) prin intermediul ANPC. Mai multe informatii:{' '}
+            <a
+              href="https://anpc.ro/ce-este-sal/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              anpc.ro/ce-este-sal
+            </a>
+            .
+          </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">7. Contact</h2>
-          <p>{site.contact.email} | {site.contact.phone}</p>
+          <p>
+            {site.contact.email} | {site.contact.phone}
+          </p>
         </section>
       </div>
 

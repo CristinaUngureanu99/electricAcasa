@@ -1,17 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
-import { rateLimit } from '@/lib/rate-limit';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import { isValidEmail } from '@/lib/utils';
 
 export async function POST(request: Request) {
   try {
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
-    if (!await rateLimit(`newsletter:${ip}`, 5, 60_000)) {
-      return NextResponse.json({ error: 'Prea multe incercari. Asteapta un minut.' }, { status: 429 });
+    const ip = getClientIp(request);
+    if (!(await rateLimit(`newsletter:${ip}`, 5, 60_000))) {
+      return NextResponse.json(
+        { error: 'Prea multe incercari. Asteapta un minut.' },
+        { status: 429 },
+      );
     }
 
-    const { email } = await request.json() as { email?: string };
+    const { email } = (await request.json()) as { email?: string };
 
-    if (!email?.trim() || !email.includes('@')) {
+    if (!email?.trim() || !isValidEmail(email.trim())) {
       return NextResponse.json({ error: 'Adresa de email invalida' }, { status: 400 });
     }
 
@@ -19,7 +23,10 @@ export async function POST(request: Request) {
     // ON CONFLICT DO NOTHING — don't reveal if email already exists (privacy)
     await supabase
       .from('newsletter_subscriptions')
-      .upsert({ email: email.trim().toLowerCase() }, { onConflict: 'email', ignoreDuplicates: true });
+      .upsert(
+        { email: email.trim().toLowerCase() },
+        { onConflict: 'email', ignoreDuplicates: true },
+      );
 
     return NextResponse.json({ success: true });
   } catch {

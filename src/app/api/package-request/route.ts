@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
-import { rateLimit } from '@/lib/rate-limit';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 import { generateSlug } from '@/lib/utils';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -15,37 +15,49 @@ export async function POST(request: Request) {
     let userId: string | null = null;
     if (authHeader) {
       const token = authHeader.replace('Bearer ', '');
-      const { data: { user } } = await supabase.auth.getUser(token);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser(token);
       userId = user?.id || null;
     }
 
-    const rateLimitKey = userId
-      ? `pkg-req:${userId}`
-      : `pkg-req:${request.headers.get('x-forwarded-for') || 'unknown'}`;
-    if (!await rateLimit(rateLimitKey, 3, 3600_000)) {
-      return NextResponse.json({ error: 'Prea multe cereri. Incearca din nou mai tarziu.' }, { status: 429 });
+    const rateLimitKey = userId ? `pkg-req:${userId}` : `pkg-req:${getClientIp(request)}`;
+    if (!(await rateLimit(rateLimitKey, 3, 3600_000))) {
+      return NextResponse.json(
+        { error: 'Prea multe cereri. Incearca din nou mai tarziu.' },
+        { status: 429 },
+      );
     }
 
     const formData = await request.formData();
-    const name = (formData.get('name') as string || '').trim();
-    const email = (formData.get('email') as string || '').trim();
-    const phone = (formData.get('phone') as string || '').trim();
-    const description = (formData.get('description') as string || '').trim();
+    const name = ((formData.get('name') as string) || '').trim();
+    const email = ((formData.get('email') as string) || '').trim();
+    const phone = ((formData.get('phone') as string) || '').trim();
+    const description = ((formData.get('description') as string) || '').trim();
     const file = formData.get('file') as File | null;
 
     if (!name || !email || !description) {
-      return NextResponse.json({ error: 'Nume, email si descriere sunt obligatorii' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Nume, email si descriere sunt obligatorii' },
+        { status: 400 },
+      );
     }
 
     // File with no auth → 400
     if (file && !userId) {
-      return NextResponse.json({ error: 'Autentificare necesara pentru atasament' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Autentificare necesara pentru atasament' },
+        { status: 400 },
+      );
     }
 
     // Validate file server-side
     if (file) {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        return NextResponse.json({ error: 'Tip fisier nepermis. Acceptam imagini si PDF.' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'Tip fisier nepermis. Acceptam imagini si PDF.' },
+          { status: 400 },
+        );
       }
       if (file.size > MAX_FILE_SIZE) {
         return NextResponse.json({ error: 'Fisierul depaseste 10MB' }, { status: 400 });

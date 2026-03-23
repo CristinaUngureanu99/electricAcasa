@@ -44,7 +44,7 @@ function cleanup(windowMs: number) {
   lastCleanup = now;
   const cutoff = now - windowMs;
   for (const [key, timestamps] of hits) {
-    const filtered = timestamps.filter(t => t > cutoff);
+    const filtered = timestamps.filter((t) => t > cutoff);
     if (filtered.length === 0) {
       hits.delete(key);
     } else {
@@ -66,11 +66,23 @@ function rateLimitMemory(key: string, maxRequests: number, windowMs: number): bo
   cleanup(windowMs);
   const now = Date.now();
   const cutoff = now - windowMs;
-  const timestamps = (hits.get(key) || []).filter(t => t > cutoff);
+  const timestamps = (hits.get(key) || []).filter((t) => t > cutoff);
   if (timestamps.length >= maxRequests) return false;
   timestamps.push(now);
   hits.set(key, timestamps);
   return true;
+}
+
+/**
+ * Extract client IP from request headers.
+ * Prefers x-real-ip (set by Vercel), falls back to first x-forwarded-for entry.
+ */
+export function getClientIp(request: Request): string {
+  return (
+    request.headers.get('x-real-ip') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+    'unknown'
+  );
 }
 
 // --- Public API (same signature, now async-capable) ---
@@ -83,7 +95,11 @@ function rateLimitMemory(key: string, maxRequests: number, windowMs: number): bo
  * @param windowMs - Time window in milliseconds
  * @returns true if the request is allowed, false if rate-limited
  */
-export async function rateLimit(key: string, maxRequests: number, windowMs: number): Promise<boolean> {
+export async function rateLimit(
+  key: string,
+  maxRequests: number,
+  windowMs: number,
+): Promise<boolean> {
   if (redis) {
     try {
       const limiter = getUpstashLimiter(maxRequests, windowMs);

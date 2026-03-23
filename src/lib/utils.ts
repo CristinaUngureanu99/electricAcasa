@@ -62,6 +62,10 @@ export function getStorageUrl(bucket: string, path: string | null | undefined): 
   return `${base}/storage/v1/object/public/${bucket}/${path}`;
 }
 
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export function formatPrice(price: number): string {
   return (
     price.toLocaleString('ro-RO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' RON'

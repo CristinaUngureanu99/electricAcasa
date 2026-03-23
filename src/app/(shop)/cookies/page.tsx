@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { site } from '@/config/site';
 
-export const metadata = { title: 'Politica de cookies' };
+export const metadata = {
+  title: 'Politica de cookies',
+  description:
+    'Informatii despre cookie-urile utilizate pe electricAcasa.ro si cum le poti gestiona.',
+};
 
 export default function CookiesPage() {
   return (
@@ -12,12 +16,21 @@ export default function CookiesPage() {
       <div className="space-y-6 text-gray-600 leading-relaxed text-sm">
         <section>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Ce sunt cookie-urile?</h2>
-          <p>Cookie-urile sunt fisiere mici de text stocate in browserul tau atunci cand vizitezi un site web. Ele permit site-ului sa functioneze corect si sa iti ofere o experienta mai buna.</p>
+          <p>
+            Cookie-urile sunt fisiere mici de text stocate in browserul tau atunci cand vizitezi un
+            site web. Ele permit site-ului sa functioneze corect si sa iti ofere o experienta mai
+            buna.
+          </p>
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Cookie-uri utilizate pe {site.name}</h2>
-          <p className="mb-3">Folosim exclusiv cookie-uri esentiale — nu folosim cookie-uri de marketing sau de urmarire (tracking).</p>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            Cookie-uri utilizate pe {site.name}
+          </h2>
+          <p className="mb-3">
+            Folosim exclusiv cookie-uri esentiale — nu folosim cookie-uri de marketing sau de
+            urmarire (tracking).
+          </p>
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
@@ -31,7 +44,9 @@ export default function CookiesPage() {
               <tbody className="divide-y divide-gray-100">
                 <tr>
                   <td className="px-4 py-2.5 font-mono text-xs">sb-*</td>
-                  <td className="px-4 py-2.5">Autentificare — sesiunea ta de utilizator (Supabase Auth)</td>
+                  <td className="px-4 py-2.5">
+                    Autentificare — sesiunea ta de utilizator (Supabase Auth)
+                  </td>
                   <td className="px-4 py-2.5">Sesiune / 1 an</td>
                 </tr>
                 <tr className="bg-gray-50/50">
@@ -45,8 +60,13 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Date stocate local (localStorage)</h2>
-          <p className="mb-3">Pe langa cookie-uri, folosim localStorage pentru a pastra anumite preferinte local in browserul tau:</p>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            Date stocate local (localStorage)
+          </h2>
+          <p className="mb-3">
+            Pe langa cookie-uri, folosim localStorage pentru a pastra anumite preferinte local in
+            browserul tau:
+          </p>
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
@@ -59,7 +79,9 @@ export default function CookiesPage() {
               <tbody className="divide-y divide-gray-100">
                 <tr>
                   <td className="px-4 py-2.5 font-mono text-xs">ea-cart</td>
-                  <td className="px-4 py-2.5">Cosul de cumparaturi (pentru vizitatori neautentificati)</td>
+                  <td className="px-4 py-2.5">
+                    Cosul de cumparaturi (pentru vizitatori neautentificati)
+                  </td>
                 </tr>
                 <tr className="bg-gray-50/50">
                   <td className="px-4 py-2.5 font-mono text-xs">cookie-consent</td>
@@ -71,13 +93,22 @@ export default function CookiesPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Cum dezactivezi cookie-urile?</h2>
-          <p>Poti sterge sau bloca cookie-urile din setarile browserului tau. Retine ca dezactivarea cookie-urilor esentiale poate afecta functionarea site-ului (autentificare, cos de cumparaturi).</p>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            Cum dezactivezi cookie-urile?
+          </h2>
+          <p>
+            Poti sterge sau bloca cookie-urile din setarile browserului tau. Retine ca dezactivarea
+            cookie-urilor esentiale poate afecta functionarea site-ului (autentificare, cos de
+            cumparaturi).
+          </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Contact</h2>
-          <p>Pentru intrebari despre cookie-uri sau datele tale personale, contacteaza-ne la {site.contact.email}.</p>
+          <p>
+            Pentru intrebari despre cookie-uri sau datele tale personale, contacteaza-ne la{' '}
+            {site.contact.email}.
+          </p>
         </section>
       </div>
 

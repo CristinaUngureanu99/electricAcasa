@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { site } from '@/config/site';
 import { Button } from '@/components/ui/Button';
@@ -14,14 +14,10 @@ export default function ContactPage() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [website, setWebsite] = useState(''); // honeypot
-  const [loadedAt, setLoadedAt] = useState(0);
+  const [loadedAt] = useState(() => Date.now());
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    setLoadedAt(Date.now());
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -35,7 +31,13 @@ export default function ContactPage() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), message: message.trim(), website, loadedAt }),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+          website,
+          loadedAt,
+        }),
       });
 
       const data = await res.json();
@@ -60,8 +62,13 @@ export default function ContactPage() {
           <div className="text-center space-y-4">
             <CheckCircle size={48} className="mx-auto text-success" />
             <h1 className="text-xl font-bold text-gray-900">Mesaj trimis!</h1>
-            <p className="text-sm text-gray-500">Multumim ca ne-ai contactat. Vom reveni cu un raspuns cat mai curand.</p>
-            <Link href="/" className="inline-block text-sm text-primary font-semibold hover:underline">
+            <p className="text-sm text-gray-500">
+              Multumim ca ne-ai contactat. Vom reveni cu un raspuns cat mai curand.
+            </p>
+            <Link
+              href="/"
+              className="inline-block text-sm text-primary font-semibold hover:underline"
+            >
               Inapoi la magazin
             </Link>
           </div>
@@ -73,7 +80,9 @@ export default function ContactPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Contact</h1>
-      <p className="text-gray-500 text-sm mb-10">Ai o intrebare sau ai nevoie de ajutor? Scrie-ne.</p>
+      <p className="text-gray-500 text-sm mb-10">
+        Ai o intrebare sau ai nevoie de ajutor? Scrie-ne.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Contact info */}
@@ -82,7 +91,10 @@ export default function ContactPage() {
             <Mail size={20} className="text-primary shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-semibold text-gray-900">Email</p>
-              <a href={`mailto:${site.contact.email}`} className="text-sm text-gray-600 hover:text-primary">
+              <a
+                href={`mailto:${site.contact.email}`}
+                className="text-sm text-gray-600 hover:text-primary"
+              >
                 {site.contact.email}
               </a>
             </div>
@@ -91,14 +103,15 @@ export default function ContactPage() {
             <Phone size={20} className="text-primary shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-semibold text-gray-900">Telefon</p>
-              <a href={`tel:${site.contact.phone}`} className="text-sm text-gray-600 hover:text-primary">
+              <a
+                href={`tel:${site.contact.phone}`}
+                className="text-sm text-gray-600 hover:text-primary"
+              >
                 {site.contact.phone}
               </a>
             </div>
           </div>
-          <p className="text-xs text-gray-400 pt-2">
-            Program: Luni — Vineri, 09:00 — 18:00
-          </p>
+          <p className="text-xs text-gray-400 pt-2">Program: Luni — Vineri, 09:00 — 18:00</p>
         </div>
 
         {/* Contact form */}
@@ -107,11 +120,26 @@ export default function ContactPage() {
             <Card>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Input label="Nume *" value={name} onChange={(e) => setName(e.target.value)} required />
-                  <Input label="Email *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                  <Input
+                    label="Nume *"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                  <Input
+                    label="Email *"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                 </div>
                 {/* Honeypot — hidden from real users */}
-                <div className="absolute opacity-0 h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                <div
+                  className="absolute opacity-0 h-0 overflow-hidden"
+                  aria-hidden="true"
+                  tabIndex={-1}
+                >
                   <input
                     type="text"
                     name="website"
