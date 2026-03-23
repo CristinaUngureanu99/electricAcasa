@@ -106,7 +106,7 @@ export default function CosPage() {
                       <button
                         onClick={() => updateQuantity(productId, quantity - 1)}
                         disabled={quantity <= 1}
-                        className="px-2 py-1 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-30 disabled:active:bg-transparent transition-all"
+                        className="px-2 py-1 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-40 disabled:active:bg-transparent transition-all"
                       >
                         <Minus size={14} />
                       </button>
@@ -114,7 +114,7 @@ export default function CosPage() {
                       <button
                         onClick={() => updateQuantity(productId, quantity + 1)}
                         disabled={quantity >= product.stock}
-                        className="px-2 py-1 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-30 disabled:active:bg-transparent transition-all"
+                        className="px-2 py-1 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-40 disabled:active:bg-transparent transition-all"
                       >
                         <Plus size={14} />
                       </button>

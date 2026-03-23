@@ -28,9 +28,9 @@ export function Input({ label, error, suffix, className, ...props }: InputProps)
           aria-describedby={errorId}
           className={cn(
             'w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors',
-            error && 'border-red-500 focus:ring-red-500',
+            error && 'border-danger focus:ring-danger',
             suffix && 'pr-14',
-            className
+            className,
           )}
           {...props}
         />
@@ -40,7 +40,11 @@ export function Input({ label, error, suffix, className, ...props }: InputProps)
           </span>
         )}
       </div>
-      {error && <p id={errorId} role="alert" className="mt-1 text-sm text-red-500">{error}</p>}
+      {error && (
+        <p id={errorId} role="alert" className="mt-1 text-sm text-danger">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
