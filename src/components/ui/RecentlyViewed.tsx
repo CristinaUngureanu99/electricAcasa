@@ -37,7 +37,7 @@ export function RecentlyViewed({ currentSlug }: RecentlyViewedProps) {
         const supabase = createClient();
         const { data } = await supabase
           .from('products')
-          .select('*')
+          .select('id, name, slug, price, sale_price, stock, images, brand_name, is_featured')
           .in('slug', filtered)
           .eq('is_active', true);
 

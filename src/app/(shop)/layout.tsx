@@ -22,12 +22,10 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
   const cats = (catRes.data as Pick<Category, 'id' | 'name' | 'slug'>[]) || [];
 
   const countRows = (countRes.data as { category_id: string | null }[]) || [];
-  const counts = new Map<string, number>();
-  for (const r of countRows) {
-    if (r.category_id) counts.set(r.category_id, (counts.get(r.category_id) || 0) + 1);
-  }
   const categoryCounts: Record<string, number> = {};
-  for (const [k, v] of counts) categoryCounts[k] = v;
+  for (const r of countRows) {
+    if (r.category_id) categoryCounts[r.category_id] = (categoryCounts[r.category_id] || 0) + 1;
+  }
 
   return <ShopShell categories={cats} categoryCounts={categoryCounts}>{children}</ShopShell>;
 }

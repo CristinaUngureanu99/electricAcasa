@@ -45,9 +45,9 @@ export default async function HomePage() {
 
   // Count products per category
   const productCats = (productCatsRes.data as { category_id: string | null }[]) || [];
-  const categoryCounts = new Map<string, number>();
+  const categoryCounts: Record<string, number> = {};
   for (const p of productCats) {
-    if (p.category_id) categoryCounts.set(p.category_id, (categoryCounts.get(p.category_id) || 0) + 1);
+    if (p.category_id) categoryCounts[p.category_id] = (categoryCounts[p.category_id] || 0) + 1;
   }
 
   // Featured first, fill remaining slots with recent (no duplicates)
@@ -180,9 +180,9 @@ export default async function HomePage() {
                     <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-all">
                       {cat.name}
                     </h3>
-                    {(categoryCounts.get(cat.id) ?? 0) > 0 && (
+                    {categoryCounts[cat.id] > 0 && (
                       <span className="text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
-                        {categoryCounts.get(cat.id)}
+                        {categoryCounts[cat.id]}
                       </span>
                     )}
                   </div>

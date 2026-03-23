@@ -32,18 +32,21 @@ export default function CheckoutPage() {
   // Validation errors (shown on blur)
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  function validateField(field: string, value: string) {
-    let err = '';
+  function getFieldError(field: string, value: string): string {
     const v = value.trim();
     switch (field) {
-      case 'name': if (v.length > 0 && v.length < 3) err = 'Minim 3 caractere'; break;
-      case 'phone': if (v.length > 0 && !/^(\+?40|0)[237]\d{8}$/.test(v.replace(/[\s\-().]/g, ''))) err = 'Format invalid (ex: 07xx xxx xxx)'; break;
-      case 'postalCode': if (v.length > 0 && !/^\d{6}$/.test(v)) err = 'Codul postal are 6 cifre'; break;
-      case 'street': if (v.length > 0 && v.length < 5) err = 'Minim 5 caractere'; break;
-      case 'city': if (v.length > 0 && v.length < 2) err = 'Minim 2 caractere'; break;
-      case 'county': if (v.length > 0 && v.length < 2) err = 'Minim 2 caractere'; break;
+      case 'name': return v.length > 0 && v.length < 3 ? 'Minim 3 caractere' : '';
+      case 'phone': return v.length > 0 && !/^(\+?40|0)[237]\d{8}$/.test(v.replace(/[\s\-().]/g, '')) ? 'Format invalid (ex: 07xx xxx xxx)' : '';
+      case 'postalCode': return v.length > 0 && !/^\d{6}$/.test(v) ? 'Codul postal are 6 cifre' : '';
+      case 'street': return v.length > 0 && v.length < 5 ? 'Minim 5 caractere' : '';
+      case 'city': return v.length > 0 && v.length < 2 ? 'Minim 2 caractere' : '';
+      case 'county': return v.length > 0 && v.length < 2 ? 'Minim 2 caractere' : '';
+      default: return '';
     }
-    setErrors((prev) => ({ ...prev, [field]: err }));
+  }
+
+  function validateField(field: string, value: string) {
+    setErrors((prev) => ({ ...prev, [field]: getFieldError(field, value) }));
   }
 
   useEffect(() => {
@@ -172,14 +175,16 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Validate all fields
-    const fields = { name, street, city, county, postalCode, phone };
-    for (const [k, v] of Object.entries(fields)) validateField(k, v);
+    const fields: Record<string, string> = { name, street, city, county, postalCode, phone };
+    // Validate all fields synchronously
+    const freshErrors: Record<string, string> = {};
+    for (const [k, v] of Object.entries(fields)) freshErrors[k] = getFieldError(k, v);
+    setErrors(freshErrors);
     if (!name.trim() || !street.trim() || !city.trim() || !county.trim() || !postalCode.trim() || !phone.trim()) {
       toast('Completeaza toate campurile adresei', 'error');
       return;
     }
-    if (Object.values(errors).some((e) => e)) {
+    if (Object.values(freshErrors).some((e) => e)) {
       toast('Corecteaza erorile din formular', 'error');
       return;
     }
