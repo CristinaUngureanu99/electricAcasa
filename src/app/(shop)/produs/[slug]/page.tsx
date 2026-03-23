@@ -13,6 +13,8 @@ import { Download, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import type { Metadata } from 'next';
 import type { Product, Category, ProductSpec } from '@/types/database';
 
+export const revalidate = 60; // ISR: re-generate every 60s
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -57,11 +59,7 @@ export default async function ProdusPage({ params }: Props) {
   // Fetch category for breadcrumbs
   let category: Category | null = null;
   if (p.category_id) {
-    const { data } = await supabase
-      .from('categories')
-      .select('*')
-      .eq('id', p.category_id)
-      .single();
+    const { data } = await supabase.from('categories').select('*').eq('id', p.category_id).single();
     category = data as Category | null;
   }
 
@@ -111,9 +109,7 @@ export default async function ProdusPage({ params }: Props) {
             '@type': 'Offer',
             price: displayPrice,
             priceCurrency: 'RON',
-            availability: inStock
-              ? 'https://schema.org/InStock'
-              : 'https://schema.org/OutOfStock',
+            availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
             url: `${site.url}/produs/${p.slug}`,
           },
         }}
@@ -134,7 +130,9 @@ export default async function ProdusPage({ params }: Props) {
 
           {/* Price */}
           <div className="flex items-baseline gap-3 mb-5">
-            <span className={`text-3xl font-bold ${hasDiscount ? 'text-red-600' : 'text-gray-900'}`}>
+            <span
+              className={`text-3xl font-bold ${hasDiscount ? 'text-red-600' : 'text-gray-900'}`}
+            >
               {formatPrice(displayPrice)}
             </span>
             {hasDiscount && (
@@ -157,7 +155,9 @@ export default async function ProdusPage({ params }: Props) {
             ) : p.stock <= site.lowStockThreshold ? (
               <>
                 <AlertTriangle size={18} className="text-orange-500" />
-                <span className="text-sm font-medium text-orange-600">Ultimele {p.stock} bucati!</span>
+                <span className="text-sm font-medium text-orange-600">
+                  Ultimele {p.stock} bucati!
+                </span>
               </>
             ) : (
               <>
@@ -168,9 +168,7 @@ export default async function ProdusPage({ params }: Props) {
           </div>
 
           {/* SKU */}
-          {p.sku && (
-            <p className="text-xs text-gray-400 mb-6">SKU: {p.sku}</p>
-          )}
+          {p.sku && <p className="text-xs text-gray-400 mb-6">SKU: {p.sku}</p>}
 
           {/* Add to cart */}
           <div className="mb-8">
@@ -210,7 +208,9 @@ export default async function ProdusPage({ params }: Props) {
               <tbody>
                 {specs.map((spec, i) => (
                   <tr key={i} className={i % 2 === 0 ? 'bg-gray-50/50' : ''}>
-                    <td className="px-4 md:px-6 py-3 font-medium text-gray-600 w-1/3 text-sm">{spec.key}</td>
+                    <td className="px-4 md:px-6 py-3 font-medium text-gray-600 w-1/3 text-sm">
+                      {spec.key}
+                    </td>
                     <td className="px-4 md:px-6 py-3 text-gray-900 text-sm">{spec.value}</td>
                   </tr>
                 ))}
