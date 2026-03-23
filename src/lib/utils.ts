@@ -3,7 +3,12 @@ export function cn(...classes: (string | undefined | false)[]): string {
 }
 
 export function escapeHtml(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 export function formatDate(date: string | null | undefined): string {
@@ -31,8 +36,16 @@ export function formatDateTime(date: string | null | undefined): string {
 }
 
 const diacriticsMap: Record<string, string> = {
-  'ă': 'a', 'â': 'a', 'î': 'i', 'ț': 't', 'ș': 's',
-  'Ă': 'a', 'Â': 'a', 'Î': 'i', 'Ț': 't', 'Ș': 's',
+  ă: 'a',
+  â: 'a',
+  î: 'i',
+  ț: 't',
+  ș: 's',
+  Ă: 'a',
+  Â: 'a',
+  Î: 'i',
+  Ț: 't',
+  Ș: 's',
 };
 
 export function generateSlug(name: string): string {
@@ -50,5 +63,7 @@ export function getStorageUrl(bucket: string, path: string | null | undefined): 
 }
 
 export function formatPrice(price: number): string {
-  return price.toLocaleString('ro-RO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' RON';
+  return (
+    price.toLocaleString('ro-RO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' RON'
+  );
 }

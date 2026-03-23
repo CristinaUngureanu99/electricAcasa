@@ -34,5 +34,8 @@ supabase/.temp/
 # extra
 Logo/
 ~$*
-.claude/
+# claude code (personal)
+.claude/settings.local.json
+.claude/launch.json
+CLAUDE.local.md
 next-env.d.ts
