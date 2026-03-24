@@ -120,7 +120,9 @@ export default function CategoriiContent({ initialCategories }: Props) {
 
   async function uploadImage(categoryId: string, file: File): Promise<string | null> {
     const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) return null;
 
     const ext = file.name.split('.').pop() || 'jpg';
@@ -133,7 +135,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
 
     const res = await fetch('/api/admin/upload', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${session.access_token}` },
+      headers: { Authorization: `Bearer ${session.access_token}` },
       body: formData,
     });
 
@@ -144,13 +146,15 @@ export default function CategoriiContent({ initialCategories }: Props) {
 
   async function deleteStorageFile(path: string) {
     const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) return;
 
     await fetch('/api/admin/upload', {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${session.access_token}`,
+        Authorization: `Bearer ${session.access_token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ bucket: 'product-images', paths: [path] }),
@@ -178,8 +182,8 @@ export default function CategoriiContent({ initialCategories }: Props) {
         ? categories.find((c) => c.id === form.id)?.image_url || null
         : null;
 
-      const oldImageToDelete = pendingImageDelete
-        || (imageFile && originalImage ? originalImage : null);
+      const oldImageToDelete =
+        pendingImageDelete || (imageFile && originalImage ? originalImage : null);
 
       // If image was explicitly removed without replacement, clear path
       if (pendingImageDelete && !imageFile) {
@@ -215,15 +219,10 @@ export default function CategoriiContent({ initialCategories }: Props) {
       let dbError: string | null = null;
 
       if (editing) {
-        const { error } = await supabase
-          .from('categories')
-          .update(record)
-          .eq('id', form.id);
+        const { error } = await supabase.from('categories').update(record).eq('id', form.id);
         if (error) dbError = error.message;
       } else {
-        const { error } = await supabase
-          .from('categories')
-          .insert({ id: form.id, ...record });
+        const { error } = await supabase.from('categories').insert({ id: form.id, ...record });
         if (error) dbError = error.message;
       }
 
@@ -266,10 +265,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
     }
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from('categories')
-      .delete()
-      .eq('id', deleteTarget.id);
+    const { error } = await supabase.from('categories').delete().eq('id', deleteTarget.id);
 
     if (error) {
       toast(`Eroare la stergere: ${error.message}`, 'error');
@@ -293,24 +289,27 @@ export default function CategoriiContent({ initialCategories }: Props) {
     {
       key: 'name',
       label: 'Nume',
-      render: (r) => { const cat = c(r); return (
-        <div className="flex items-center gap-2">
-          {cat.image_url ? (
-            <NextImage
-              src={getStorageUrl('product-images', cat.image_url)}
-              alt=""
-              width={32}
-              height={32}
-              className="rounded object-cover"
-            />
-          ) : (
-            <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center">
-              <ImageIcon size={14} className="text-gray-400" />
-            </div>
-          )}
-          <span className="font-medium">{cat.name}</span>
-        </div>
-      ); },
+      render: (r) => {
+        const cat = c(r);
+        return (
+          <div className="flex items-center gap-2">
+            {cat.image_url ? (
+              <NextImage
+                src={getStorageUrl('product-images', cat.image_url)}
+                alt=""
+                width={32}
+                height={32}
+                className="rounded object-cover"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center">
+                <ImageIcon size={14} className="text-gray-400" />
+              </div>
+            )}
+            <span className="font-medium">{cat.name}</span>
+          </div>
+        );
+      },
     },
     { key: 'slug', label: 'Slug' },
     {
@@ -322,25 +321,41 @@ export default function CategoriiContent({ initialCategories }: Props) {
     {
       key: 'is_active',
       label: 'Status',
-      render: (r) => { const cat = c(r); return (
-        <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${cat.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-          {cat.is_active ? 'Activ' : 'Inactiv'}
-        </span>
-      ); },
+      render: (r) => {
+        const cat = c(r);
+        return (
+          <span
+            className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${cat.is_active ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'}`}
+          >
+            {cat.is_active ? 'Activ' : 'Inactiv'}
+          </span>
+        );
+      },
     },
     {
       key: 'actions',
       label: '',
-      render: (r) => { const cat = c(r); return (
-        <div className="flex gap-1">
-          <button onClick={() => startEdit(cat)} className="p-1.5 rounded-lg hover:bg-primary/5 text-gray-400 hover:text-primary transition-all" title="Editeaza">
-            <Pencil size={16} />
-          </button>
-          <button onClick={() => setDeleteTarget(cat)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600" title="Sterge">
-            <Trash2 size={16} />
-          </button>
-        </div>
-      ); },
+      render: (r) => {
+        const cat = c(r);
+        return (
+          <div className="flex gap-1">
+            <button
+              onClick={() => startEdit(cat)}
+              className="p-1.5 rounded-lg hover:bg-primary/5 text-gray-400 hover:text-primary transition-all"
+              title="Editeaza"
+            >
+              <Pencil size={16} />
+            </button>
+            <button
+              onClick={() => setDeleteTarget(cat)}
+              className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600"
+              title="Sterge"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        );
+      },
     },
   ];
 
@@ -363,7 +378,10 @@ export default function CategoriiContent({ initialCategories }: Props) {
               <h2 className="text-lg font-semibold text-gray-900">
                 {editing ? 'Editeaza categorie' : 'Categorie noua'}
               </h2>
-              <button onClick={cancelForm} className="p-1 rounded-lg hover:bg-gray-200/60 transition-colors">
+              <button
+                onClick={cancelForm}
+                className="p-1 rounded-lg hover:bg-gray-200/60 transition-colors"
+              >
                 <X size={20} className="text-gray-500" />
               </button>
             </div>
@@ -374,7 +392,7 @@ export default function CategoriiContent({ initialCategories }: Props) {
                 value={form.name}
                 onChange={(e) => {
                   const name = e.target.value;
-                  setForm((f) => f ? { ...f, name, slug: generateSlug(name) } : f);
+                  setForm((f) => (f ? { ...f, name, slug: generateSlug(name) } : f));
                 }}
                 placeholder="ex: Aparataj Electric"
               />
@@ -385,29 +403,37 @@ export default function CategoriiContent({ initialCategories }: Props) {
                 </p>
               </div>
               <div className="w-full col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descriere scurta</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Descriere scurta
+                </label>
                 <textarea
                   value={form.description}
-                  onChange={(e) => setForm((f) => f ? { ...f, description: e.target.value } : f)}
+                  onChange={(e) => setForm((f) => (f ? { ...f, description: e.target.value } : f))}
                   rows={2}
                   maxLength={200}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-y"
                   placeholder="ex: Prize, intrerupatoare, rame decorative"
                 />
-                <p className="text-xs text-gray-400 mt-1">Apare pe homepage sub numele categoriei</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Apare pe homepage sub numele categoriei
+                </p>
               </div>
               <div className="w-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Categorie parinte</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Categorie parinte
+                </label>
                 <select
                   value={form.parent_id}
-                  onChange={(e) => setForm((f) => f ? { ...f, parent_id: e.target.value } : f)}
+                  onChange={(e) => setForm((f) => (f ? { ...f, parent_id: e.target.value } : f))}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   <option value="">Niciuna (categorie principala)</option>
                   {categories
                     .filter((c) => c.id !== form.id)
                     .map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
                     ))}
                 </select>
               </div>
@@ -415,17 +441,25 @@ export default function CategoriiContent({ initialCategories }: Props) {
                 label="Ordine sortare"
                 type="number"
                 value={String(form.sort_order)}
-                onChange={(e) => setForm((f) => f ? { ...f, sort_order: parseInt(e.target.value) || 0 } : f)}
+                onChange={(e) =>
+                  setForm((f) => (f ? { ...f, sort_order: parseInt(e.target.value) || 0 } : f))
+                }
               />
               <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Imagine</label>
                 {form.image_url && !imageFile && (
                   <div className="mb-2 flex items-center gap-2">
-                    <NextImage src={getStorageUrl('product-images', form.image_url)} alt="" width={64} height={64} className="rounded object-cover" />
+                    <NextImage
+                      src={getStorageUrl('product-images', form.image_url)}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className="rounded object-cover"
+                    />
                     <button
                       onClick={() => {
                         setPendingImageDelete(form.image_url);
-                        setForm((f) => f ? { ...f, image_url: '' } : f);
+                        setForm((f) => (f ? { ...f, image_url: '' } : f));
                       }}
                       className="text-xs text-red-500 hover:underline"
                     >
@@ -445,10 +479,12 @@ export default function CategoriiContent({ initialCategories }: Props) {
                   type="checkbox"
                   id="cat-active"
                   checked={form.is_active}
-                  onChange={(e) => setForm((f) => f ? { ...f, is_active: e.target.checked } : f)}
+                  onChange={(e) => setForm((f) => (f ? { ...f, is_active: e.target.checked } : f))}
                   className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                 />
-                <label htmlFor="cat-active" className="text-sm text-gray-700">Activ</label>
+                <label htmlFor="cat-active" className="text-sm text-gray-700">
+                  Activ
+                </label>
               </div>
             </div>
 
@@ -456,29 +492,45 @@ export default function CategoriiContent({ initialCategories }: Props) {
               <Button onClick={handleSave} loading={saving}>
                 {editing ? 'Salveaza' : 'Creeaza'}
               </Button>
-              <Button variant="ghost" onClick={cancelForm}>Anuleaza</Button>
+              <Button variant="ghost" onClick={cancelForm}>
+                Anuleaza
+              </Button>
             </div>
           </Card>
         )}
 
         <FilterBar>
-          <FilterSearch value={search} onChange={setSearch} placeholder="Cauta dupa nume sau slug..." />
+          <FilterSearch
+            value={search}
+            onChange={setSearch}
+            placeholder="Cauta dupa nume sau slug..."
+          />
           <FilterSelect
             value={activeFilter}
             onChange={setActiveFilter}
-            options={[{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }]}
+            options={[
+              { value: 'active', label: 'Active' },
+              { value: 'inactive', label: 'Inactive' },
+            ]}
             allLabel="Toate statusurile"
           />
           <FilterSelect
             value={levelFilter}
             onChange={setLevelFilter}
-            options={[{ value: 'top', label: 'Top-level' }, { value: 'sub', label: 'Subcategorii' }]}
+            options={[
+              { value: 'top', label: 'Top-level' },
+              { value: 'sub', label: 'Subcategorii' },
+            ]}
             allLabel="Toate nivelurile"
           />
           <FilterReset onReset={resetFilters} visible={hasFilters} />
         </FilterBar>
 
-        {hasFilters && <p className="text-xs text-gray-500">{filteredCategories.length} din {categories.length} categorii</p>}
+        {hasFilters && (
+          <p className="text-xs text-gray-500">
+            {filteredCategories.length} din {categories.length} categorii
+          </p>
+        )}
 
         <Card>
           <DataTable

@@ -63,7 +63,7 @@ export default function ProfileContent({ initialProfile }: Props) {
     if (error) {
       setMessage('Eroare la salvare. Incearca din nou.');
     } else {
-      setProfile(prev => ({ ...prev, full_name: trimmedName, phone }));
+      setProfile((prev) => ({ ...prev, full_name: trimmedName, phone }));
       setMessage('Profil actualizat cu succes!');
       setEditing(false);
       setTimeout(() => setMessage(''), 3000);
@@ -79,7 +79,9 @@ export default function ProfileContent({ initialProfile }: Props) {
       </div>
 
       {message && (
-        <div className={`text-sm px-4 py-3 rounded-xl ${isSuccess(message) ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'}`}>
+        <div
+          className={`text-sm px-4 py-3 rounded-xl ${isSuccess(message) ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}
+        >
           {message}
         </div>
       )}
@@ -88,7 +90,12 @@ export default function ProfileContent({ initialProfile }: Props) {
         <Card>
           <div className="flex items-start gap-4">
             <div className="w-16 h-16 rounded-2xl bg-gray-900 text-white flex items-center justify-center text-xl font-bold shrink-0">
-              {(profile.full_name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}
+              {(profile.full_name || '?')
+                .split(' ')
+                .map((w) => w[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2)}
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-xl font-bold text-gray-900">{profile.full_name}</h2>
@@ -111,7 +118,9 @@ export default function ProfileContent({ initialProfile }: Props) {
                   <Phone size={18} className="text-gray-500 shrink-0" />
                   <div>
                     <p className="text-xs text-gray-500">Telefon</p>
-                    <p className="text-sm font-medium text-gray-900">{profile.phone || 'Nesetat'}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {profile.phone || 'Nesetat'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -162,7 +171,9 @@ export default function ProfileContent({ initialProfile }: Props) {
               maxLength={20}
               placeholder="+40 700 123 456"
             />
-            <Button type="submit" loading={loading}>Salveaza</Button>
+            <Button type="submit" loading={loading}>
+              Salveaza
+            </Button>
           </form>
         </Card>
       )}
@@ -178,7 +189,14 @@ export default function ProfileContent({ initialProfile }: Props) {
               <p className="text-xs text-gray-500">Schimba parola contului</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => { setShowPasswordForm(!showPasswordForm); setPasswordMessage(''); }}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setShowPasswordForm(!showPasswordForm);
+              setPasswordMessage('');
+            }}
+          >
             {showPasswordForm ? 'Anuleaza' : 'Schimba'}
           </Button>
         </div>
@@ -224,7 +242,11 @@ export default function ProfileContent({ initialProfile }: Props) {
                 placeholder="Minim 8 caractere"
                 required
               />
-              <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-8 text-gray-500">
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-8 text-gray-500"
+              >
                 {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -237,22 +259,32 @@ export default function ProfileContent({ initialProfile }: Props) {
                 minLength={8}
                 required
               />
-              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-8 text-gray-500">
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-8 text-gray-500"
+              >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             {passwordMessage && (
-              <div className={`text-sm px-4 py-3 rounded-xl ${isSuccess(passwordMessage) ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'}`}>
+              <div
+                className={`text-sm px-4 py-3 rounded-xl ${isSuccess(passwordMessage) ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}
+              >
                 {passwordMessage}
               </div>
             )}
-            <Button type="submit" loading={passwordLoading} size="sm">Schimba parola</Button>
+            <Button type="submit" loading={passwordLoading} size="sm">
+              Schimba parola
+            </Button>
           </form>
         )}
       </Card>
 
       {passwordMessage && !showPasswordForm && (
-        <div className={`text-sm px-4 py-3 rounded-xl ${isSuccess(passwordMessage) ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'}`}>
+        <div
+          className={`text-sm px-4 py-3 rounded-xl ${isSuccess(passwordMessage) ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}
+        >
           {passwordMessage}
         </div>
       )}
@@ -268,7 +300,12 @@ export default function ProfileContent({ initialProfile }: Props) {
               <p className="text-xs text-gray-500">Toate datele tale vor fi sterse permanent</p>
             </div>
           </div>
-          <Button variant="danger" size="sm" loading={deleteLoading} onClick={() => setShowDeleteConfirm(true)}>
+          <Button
+            variant="danger"
+            size="sm"
+            loading={deleteLoading}
+            onClick={() => setShowDeleteConfirm(true)}
+          >
             Sterge contul
           </Button>
         </div>
@@ -281,10 +318,12 @@ export default function ProfileContent({ initialProfile }: Props) {
           setDeleteLoading(true);
           try {
             const supabase = createClient();
-            const { data: { session } } = await supabase.auth.getSession();
+            const {
+              data: { session },
+            } = await supabase.auth.getSession();
             const res = await fetch('/api/auth/delete-account', {
               method: 'DELETE',
-              headers: { 'Authorization': `Bearer ${session?.access_token}` },
+              headers: { Authorization: `Bearer ${session?.access_token}` },
             });
             if (res.ok) {
               resetAuthState();

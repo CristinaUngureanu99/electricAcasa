@@ -54,20 +54,27 @@ export function AdminNav() {
         <Link href="/admin/dashboard" className="text-lg font-bold text-accent">
           Admin
         </Link>
-        <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-white" aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="p-2 text-white"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {menuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setMenuOpen(false)} />
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setMenuOpen(false)}
+        />
       )}
 
       <nav
         className={cn(
           'fixed z-50 top-0 left-0 h-full w-64 bg-primary-dark flex flex-col transition-transform duration-200',
           'md:translate-x-0',
-          menuOpen ? 'translate-x-0' : '-translate-x-full'
+          menuOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
         <div className="p-4">
@@ -75,7 +82,9 @@ export function AdminNav() {
             <span className="text-lg font-bold text-white">electricAcasa</span>
           </Link>
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-xs text-accent font-semibold tracking-wider uppercase">Administrare</span>
+            <span className="text-xs text-accent font-semibold tracking-wider uppercase">
+              Administrare
+            </span>
           </div>
         </div>
 
@@ -91,7 +100,7 @@ export function AdminNav() {
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
                   isActive
                     ? 'bg-accent/20 text-accent'
-                    : 'text-gray-400 hover:bg-white/10 hover:text-white'
+                    : 'text-gray-400 hover:bg-white/10 hover:text-white',
                 )}
               >
                 <link.icon size={20} />
@@ -113,7 +122,7 @@ export function AdminNav() {
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white w-full transition-colors disabled:opacity-50"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white w-full transition-colors disabled:opacity-40"
           >
             <LogOut size={20} />
             {loggingOut ? 'Se deconecteaza...' : 'Deconectare'}

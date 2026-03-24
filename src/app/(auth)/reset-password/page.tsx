@@ -55,11 +55,12 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen mesh-gradient relative flex items-center justify-center px-4">
-
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-10">
           <Link href="/">
-            <span className="text-3xl font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-lg">.ro</span></span>
+            <span className="text-3xl font-bold text-primary">
+              electricAcasa<span className="text-primary/60 font-normal text-lg">.ro</span>
+            </span>
           </Link>
         </div>
 
@@ -89,9 +90,7 @@ export default function ResetPasswordPage() {
               required
             />
 
-            {error && (
-              <p className="text-sm text-red-500 bg-red-50 p-3 rounded-xl">{error}</p>
-            )}
+            {error && <p className="text-sm text-danger bg-danger/10 p-3 rounded-xl">{error}</p>}
 
             <button
               type="submit"

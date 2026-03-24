@@ -6,20 +6,16 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase';
 
-import {
-  LayoutDashboard,
-  ShoppingBag,
-  MapPin,
-  User,
-  LogOut,
-  Menu,
-  X,
-  Shield,
-} from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, MapPin, User, LogOut, Menu, X, Shield } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const links = [
-  { href: '/dashboard', label: 'Acasa', icon: LayoutDashboard, activeClass: 'bg-gray-900 text-white' },
+  {
+    href: '/dashboard',
+    label: 'Acasa',
+    icon: LayoutDashboard,
+    activeClass: 'bg-gray-900 text-white',
+  },
   { href: '/comenzi', label: 'Comenzi', icon: ShoppingBag, activeClass: 'bg-gray-900 text-white' },
   { href: '/adrese', label: 'Adrese', icon: MapPin, activeClass: 'bg-gray-900 text-white' },
   { href: '/profile', label: 'Profil', icon: User, activeClass: 'bg-gray-900 text-white' },
@@ -35,13 +31,11 @@ export function ClientNav() {
     async function checkAdmin() {
       try {
         const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (!user) return;
-        const { data } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
+        const { data } = await supabase.from('profiles').select('role').eq('id', user.id).single();
         if (data?.role === 'admin') setAdminAccess(true);
       } catch {
         // Silently fail - admin button just won't show
@@ -69,16 +63,25 @@ export function ClientNav() {
       {/* Mobile header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 px-4 py-2 flex items-center justify-between">
         <Link href="/">
-          <span className="text-lg font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-xs">.ro</span></span>
+          <span className="text-lg font-bold text-primary">
+            electricAcasa<span className="text-primary/60 font-normal text-xs">.ro</span>
+          </span>
         </Link>
-        <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-gray-900" aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="p-2 text-gray-900"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile menu overlay */}
       {menuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/40" onClick={() => setMenuOpen(false)} />
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/40"
+          onClick={() => setMenuOpen(false)}
+        />
       )}
 
       {/* Sidebar */}
@@ -86,12 +89,14 @@ export function ClientNav() {
         className={cn(
           'fixed z-50 top-0 left-0 h-full w-64 bg-white border-r border-gray-100 flex flex-col transition-transform duration-300 ease-out',
           'md:translate-x-0',
-          menuOpen ? 'translate-x-0' : '-translate-x-full'
+          menuOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
         <div className="p-5 border-b border-gray-50">
           <Link href="/" onClick={() => setMenuOpen(false)}>
-            <span className="text-xl font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-sm">.ro</span></span>
+            <span className="text-xl font-bold text-primary">
+              electricAcasa<span className="text-primary/60 font-normal text-sm">.ro</span>
+            </span>
           </Link>
         </div>
 
@@ -107,7 +112,7 @@ export function ClientNav() {
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
                   isActive
                     ? link.activeClass
-                    : 'text-gray-500 hover:bg-primary/5 hover:text-gray-900'
+                    : 'text-gray-500 hover:bg-primary/5 hover:text-gray-900',
                 )}
               >
                 <link.icon size={20} />
@@ -131,7 +136,7 @@ export function ClientNav() {
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-50 hover:text-red-600 w-full transition-colors disabled:opacity-50"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-danger/70 hover:bg-danger/10 hover:text-danger w-full transition-colors disabled:opacity-40"
           >
             <LogOut size={20} />
             {loggingOut ? 'Se deconecteaza...' : 'Deconectare'}

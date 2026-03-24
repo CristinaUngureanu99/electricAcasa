@@ -18,7 +18,7 @@ export default function ForgotPasswordPage() {
     setCooldown(60);
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      setCooldown(prev => {
+      setCooldown((prev) => {
         if (prev <= 1) {
           if (intervalRef.current) clearInterval(intervalRef.current);
           return 0;
@@ -29,7 +29,9 @@ export default function ForgotPasswordPage() {
   }, []);
 
   useEffect(() => {
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -65,21 +67,25 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen mesh-gradient relative flex items-center justify-center px-4">
-
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-10">
           <Link href="/">
-            <span className="text-3xl font-bold text-primary">electricAcasa<span className="text-primary/60 font-normal text-lg">.ro</span></span>
+            <span className="text-3xl font-bold text-primary">
+              electricAcasa<span className="text-primary/60 font-normal text-lg">.ro</span>
+            </span>
           </Link>
         </div>
 
         <div className="bg-white rounded-3xl shadow-xl shadow-navy/5 p-8">
           <h2 className="text-2xl font-bold text-navy mb-1">Resetare parola</h2>
-          <p className="text-gray-500 text-sm mb-6">Introdu emailul pentru a primi linkul de resetare</p>
+          <p className="text-gray-500 text-sm mb-6">
+            Introdu emailul pentru a primi linkul de resetare
+          </p>
 
           {success ? (
-            <p className="text-sm text-green-700 bg-green-50 p-3 rounded-xl">
-              Verifică-ți emailul pentru linkul de resetare. Linkul expiră în 1 oră. Verifică și folderul de spam.
+            <p className="text-sm text-success bg-success/10 p-3 rounded-xl">
+              Verifică-ți emailul pentru linkul de resetare. Linkul expiră în 1 oră. Verifică și
+              folderul de spam.
             </p>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -93,16 +99,18 @@ export default function ForgotPasswordPage() {
                 required
               />
 
-              {error && (
-                <p className="text-sm text-red-500 bg-red-50 p-3 rounded-xl">{error}</p>
-              )}
+              {error && <p className="text-sm text-danger bg-danger/10 p-3 rounded-xl">{error}</p>}
 
               <button
                 type="submit"
                 disabled={loading || cooldown > 0}
                 className="shimmer-btn w-full py-3 text-white font-bold rounded-full text-base transition-all shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:-translate-y-0.5 disabled:opacity-50"
               >
-                {loading ? 'Se trimite...' : cooldown > 0 ? `Reîncearcă în ${cooldown}s` : 'Trimite link de resetare'}
+                {loading
+                  ? 'Se trimite...'
+                  : cooldown > 0
+                    ? `Reîncearcă în ${cooldown}s`
+                    : 'Trimite link de resetare'}
               </button>
             </form>
           )}

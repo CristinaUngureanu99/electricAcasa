@@ -130,16 +130,14 @@ export default async function ProdusPage({ params }: Props) {
 
           {/* Price */}
           <div className="flex items-baseline gap-3 mb-5">
-            <span
-              className={`text-3xl font-bold ${hasDiscount ? 'text-red-600' : 'text-gray-900'}`}
-            >
+            <span className={`text-3xl font-bold ${hasDiscount ? 'text-danger' : 'text-gray-900'}`}>
               {formatPrice(displayPrice)}
             </span>
             {hasDiscount && (
               <span className="text-lg text-gray-400 line-through">{formatPrice(p.price)}</span>
             )}
             {hasDiscount && p.price > 0 && (
-              <span className="text-sm font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+              <span className="text-sm font-semibold text-danger bg-danger/10 px-2 py-0.5 rounded-full">
                 -{Math.round((1 - p.sale_price! / p.price) * 100)}%
               </span>
             )}
@@ -149,15 +147,13 @@ export default async function ProdusPage({ params }: Props) {
           <div className="flex items-center gap-2 mb-6">
             {!inStock ? (
               <>
-                <XCircle size={18} className="text-red-500" />
-                <span className="text-sm font-medium text-red-500">Stoc epuizat</span>
+                <XCircle size={18} className="text-danger" />
+                <span className="text-sm font-medium text-danger">Stoc epuizat</span>
               </>
             ) : p.stock <= site.lowStockThreshold ? (
               <>
-                <AlertTriangle size={18} className="text-orange-500" />
-                <span className="text-sm font-medium text-orange-600">
-                  Ultimele {p.stock} bucati!
-                </span>
+                <AlertTriangle size={18} className="text-warning" />
+                <span className="text-sm font-medium text-warning">Ultimele {p.stock} bucati!</span>
               </>
             ) : (
               <>

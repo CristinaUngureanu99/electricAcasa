@@ -13,9 +13,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const thumb = product.images[0];
   const hasDiscount = product.sale_price !== null && product.sale_price < product.price;
   const displayPrice = hasDiscount ? product.sale_price! : product.price;
-  const discountPercent = hasDiscount && product.price > 0
-    ? Math.round((1 - product.sale_price! / product.price) * 100)
-    : 0;
+  const discountPercent =
+    hasDiscount && product.price > 0
+      ? Math.round((1 - product.sale_price! / product.price) * 100)
+      : 0;
   const outOfStock = product.stock === 0;
   const lowStock = !outOfStock && product.stock > 0 && product.stock <= site.lowStockThreshold;
 
@@ -40,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         {outOfStock && (
-          <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+          <span className="absolute top-2 left-2 bg-danger text-white text-xs font-semibold px-2 py-1 rounded-full">
             Stoc epuizat
           </span>
         )}
@@ -50,20 +51,22 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
         {lowStock && (
-          <span className="absolute top-2 right-2 bg-orange-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+          <span className="absolute top-2 right-2 bg-warning text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
             Ultimele {product.stock}!
           </span>
         )}
       </div>
       <div className="p-4">
         {product.brand_name && (
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1 group-hover:text-gray-500 transition-colors">{product.brand_name}</p>
+          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1 group-hover:text-gray-500 transition-colors">
+            {product.brand_name}
+          </p>
         )}
         <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-primary transition-all">
           {product.name}
         </h3>
         <div className="flex items-baseline gap-2">
-          <span className={`text-lg font-bold ${hasDiscount ? 'text-red-600' : 'text-gray-900'}`}>
+          <span className={`text-lg font-bold ${hasDiscount ? 'text-danger' : 'text-gray-900'}`}>
             {formatPrice(displayPrice)}
           </span>
           {hasDiscount && (

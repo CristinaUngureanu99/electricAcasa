@@ -46,11 +46,13 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
 
   async function deleteProductFiles(product: Product) {
     const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) return;
 
     const headers = {
-      'Authorization': `Bearer ${session.access_token}`,
+      Authorization: `Bearer ${session.access_token}`,
       'Content-Type': 'application/json',
     };
 
@@ -80,10 +82,7 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     await deleteProductFiles(deleteTarget);
 
     const supabase = createClient();
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', deleteTarget.id);
+    const { error } = await supabase.from('products').delete().eq('id', deleteTarget.id);
 
     if (error) {
       toast(`Eroare la stergere: ${error.message}`, 'error');
@@ -101,20 +100,32 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     return cat?.name || '\u2014';
   }
 
-  const hasFilters = search !== '' || categoryFilter !== 'all' || activeFilter !== 'all' || stockFilter !== 'all' || discountFilter !== 'all';
+  const hasFilters =
+    search !== '' ||
+    categoryFilter !== 'all' ||
+    activeFilter !== 'all' ||
+    stockFilter !== 'all' ||
+    discountFilter !== 'all';
 
   const filtered = products.filter((p) => {
     if (search) {
       const q = search.toLowerCase();
-      if (!p.name.toLowerCase().includes(q) && !(p.sku?.toLowerCase() || '').includes(q) && !p.brand_name.toLowerCase().includes(q)) return false;
+      if (
+        !p.name.toLowerCase().includes(q) &&
+        !(p.sku?.toLowerCase() || '').includes(q) &&
+        !p.brand_name.toLowerCase().includes(q)
+      )
+        return false;
     }
     if (categoryFilter !== 'all' && p.category_id !== categoryFilter) return false;
     if (activeFilter === 'active' && !p.is_active) return false;
     if (activeFilter === 'inactive' && p.is_active) return false;
     if (stockFilter === 'instock' && p.stock === 0) return false;
     if (stockFilter === 'nostock' && p.stock > 0) return false;
-    if (discountFilter === 'discount' && (p.sale_price === null || p.sale_price >= p.price)) return false;
-    if (discountFilter === 'nodiscount' && p.sale_price !== null && p.sale_price < p.price) return false;
+    if (discountFilter === 'discount' && (p.sale_price === null || p.sale_price >= p.price))
+      return false;
+    if (discountFilter === 'nodiscount' && p.sale_price !== null && p.sale_price < p.price)
+      return false;
     return true;
   });
 
@@ -132,8 +143,17 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     {
       key: 'image',
       label: '',
-      render: (r) => { const prod = p(r); const thumb = prod.images[0]; return thumb ? (
-          <Image src={getStorageUrl('product-images', thumb)} alt="" width={40} height={40} className="rounded object-cover" />
+      render: (r) => {
+        const prod = p(r);
+        const thumb = prod.images[0];
+        return thumb ? (
+          <Image
+            src={getStorageUrl('product-images', thumb)}
+            alt=""
+            width={40}
+            height={40}
+            className="rounded object-cover"
+          />
         ) : (
           <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center">
             <ImageIcon size={16} className="text-gray-400" />
@@ -144,38 +164,45 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     {
       key: 'name',
       label: 'Produs',
-      render: (r) => { const prod = p(r); return (
-        <div>
-          <p className="font-medium">{prod.name}</p>
-          {prod.brand_name && <p className="text-xs text-gray-500">{prod.brand_name}</p>}
-        </div>
-      ); },
+      render: (r) => {
+        const prod = p(r);
+        return (
+          <div>
+            <p className="font-medium">{prod.name}</p>
+            {prod.brand_name && <p className="text-xs text-gray-500">{prod.brand_name}</p>}
+          </div>
+        );
+      },
     },
     { key: 'sku', label: 'SKU' },
     {
       key: 'price',
       label: 'Pret',
-      render: (r) => { const prod = p(r); return (
-        <div>
-          {prod.sale_price !== null && prod.sale_price < prod.price ? (
-            <>
-              <p className="font-medium text-red-600">{formatPrice(prod.sale_price)}</p>
-              <p className="text-xs text-gray-400 line-through">{formatPrice(prod.price)}</p>
-            </>
-          ) : (
-            <p className="font-medium">{formatPrice(prod.price)}</p>
-          )}
-        </div>
-      ); },
+      render: (r) => {
+        const prod = p(r);
+        return (
+          <div>
+            {prod.sale_price !== null && prod.sale_price < prod.price ? (
+              <>
+                <p className="font-medium text-danger">{formatPrice(prod.sale_price)}</p>
+                <p className="text-xs text-gray-400 line-through">{formatPrice(prod.price)}</p>
+              </>
+            ) : (
+              <p className="font-medium">{formatPrice(prod.price)}</p>
+            )}
+          </div>
+        );
+      },
     },
     {
       key: 'stock',
       label: 'Stoc',
-      render: (r) => { const prod = p(r); return (
-        <span className={prod.stock === 0 ? 'text-red-600 font-medium' : ''}>
-          {prod.stock}
-        </span>
-      ); },
+      render: (r) => {
+        const prod = p(r);
+        return (
+          <span className={prod.stock === 0 ? 'text-danger font-medium' : ''}>{prod.stock}</span>
+        );
+      },
     },
     {
       key: 'category_id',
@@ -185,32 +212,48 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
     {
       key: 'is_active',
       label: 'Status',
-      render: (r) => { const prod = p(r); return (
-        <div className="flex items-center gap-1.5">
-          <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${prod.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-            {prod.is_active ? 'Activ' : 'Inactiv'}
-          </span>
-          {prod.is_featured && (
-            <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-              Recomandat
+      render: (r) => {
+        const prod = p(r);
+        return (
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${prod.is_active ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'}`}
+            >
+              {prod.is_active ? 'Activ' : 'Inactiv'}
             </span>
-          )}
-        </div>
-      ); },
+            {prod.is_featured && (
+              <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                Recomandat
+              </span>
+            )}
+          </div>
+        );
+      },
     },
     {
       key: 'actions',
       label: '',
-      render: (r) => { const prod = p(r); return (
-        <div className="flex gap-1">
-          <Link href={`/admin/produse/${prod.id}`} className="p-1.5 rounded-lg hover:bg-primary/5 text-gray-400 hover:text-primary transition-all" title="Editeaza">
-            <Pencil size={16} />
-          </Link>
-          <button onClick={() => setDeleteTarget(prod)} className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600" title="Sterge">
-            <Trash2 size={16} />
-          </button>
-        </div>
-      ); },
+      render: (r) => {
+        const prod = p(r);
+        return (
+          <div className="flex gap-1">
+            <Link
+              href={`/admin/produse/${prod.id}`}
+              className="p-1.5 rounded-lg hover:bg-primary/5 text-gray-400 hover:text-primary transition-all"
+              title="Editeaza"
+            >
+              <Pencil size={16} />
+            </Link>
+            <button
+              onClick={() => setDeleteTarget(prod)}
+              className="p-1.5 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600"
+              title="Sterge"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        );
+      },
     },
   ];
 
@@ -228,7 +271,11 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
         }
       >
         <FilterBar>
-          <FilterSearch value={search} onChange={setSearch} placeholder="Cauta nume, SKU, brand..." />
+          <FilterSearch
+            value={search}
+            onChange={setSearch}
+            placeholder="Cauta nume, SKU, brand..."
+          />
           <FilterSelect
             value={categoryFilter}
             onChange={setCategoryFilter}
@@ -238,25 +285,36 @@ export default function ProduseContent({ initialProducts, categories }: Props) {
           <FilterSelect
             value={activeFilter}
             onChange={setActiveFilter}
-            options={[{ value: 'active', label: 'Active' }, { value: 'inactive', label: 'Inactive' }]}
+            options={[
+              { value: 'active', label: 'Active' },
+              { value: 'inactive', label: 'Inactive' },
+            ]}
             allLabel="Toate statusurile"
           />
           <FilterSelect
             value={stockFilter}
             onChange={setStockFilter}
-            options={[{ value: 'instock', label: 'In stoc' }, { value: 'nostock', label: 'Stoc 0' }]}
+            options={[
+              { value: 'instock', label: 'In stoc' },
+              { value: 'nostock', label: 'Stoc 0' },
+            ]}
             allLabel="Tot stocul"
           />
           <FilterSelect
             value={discountFilter}
             onChange={setDiscountFilter}
-            options={[{ value: 'discount', label: 'Cu discount' }, { value: 'nodiscount', label: 'Fara discount' }]}
+            options={[
+              { value: 'discount', label: 'Cu discount' },
+              { value: 'nodiscount', label: 'Fara discount' },
+            ]}
             allLabel="Toate preturile"
           />
           <FilterReset onReset={resetFilters} visible={hasFilters} />
         </FilterBar>
 
-        <p className="text-xs text-gray-500">{filtered.length} din {products.length} produse</p>
+        <p className="text-xs text-gray-500">
+          {filtered.length} din {products.length} produse
+        </p>
 
         <Card>
           <DataTable

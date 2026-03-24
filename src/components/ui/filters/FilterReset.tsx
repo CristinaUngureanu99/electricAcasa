@@ -12,7 +12,7 @@ export function FilterReset({ onReset, visible }: Props) {
   return (
     <button
       onClick={onReset}
-      className="flex items-center gap-1.5 text-xs text-red-500 hover:text-red-700 px-2 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
+      className="flex items-center gap-1.5 text-xs text-danger hover:text-red-700 px-2 py-1.5 rounded-xl hover:bg-danger/10 transition-colors"
     >
       <RotateCcw size={12} /> Reseteaza filtrele
     </button>
