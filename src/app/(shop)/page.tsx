@@ -82,23 +82,23 @@ export default async function HomePage() {
         }}
       />
       {/* Hero — category buttons + description */}
-      <section className="max-w-7xl mx-auto px-4 pt-10 pb-14 md:pt-16 md:pb-20">
-        <div className="max-w-2xl">
-          {/* Category quick-access buttons */}
-          {categories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-6">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/categorie/${cat.slug}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium text-gray-700 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-colors"
-                >
-                  {cat.name}
-                </Link>
-              ))}
-            </div>
-          )}
+      <section className="max-w-7xl mx-auto pt-10 pb-14 md:pt-16 md:pb-20">
+        {/* Category quick-access — full width, horizontal scroll */}
+        {categories.length > 0 && (
+          <div className="flex gap-2 mb-8 overflow-x-auto pb-2 px-4 scrollbar-hide">
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/categorie/${cat.slug}`}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium text-gray-700 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-colors shrink-0"
+              >
+                {cat.name}
+              </Link>
+            ))}
+          </div>
+        )}
 
+        <div className="max-w-2xl px-4">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
             Aparataj, iluminat si
             <br />
