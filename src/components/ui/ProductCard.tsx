@@ -58,7 +58,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
       <div className="p-4">
         {product.brand_name && (
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1 group-hover:text-gray-500 transition-colors">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1 group-hover:text-gray-600 transition-colors">
             {product.brand_name}
           </p>
         )}

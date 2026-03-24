@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { PageSkeleton } from '@/components/ui/Skeleton';
 import { getStorageUrl, formatPrice } from '@/lib/utils';
 import { site } from '@/config/site';
-import { ShoppingCart, Trash2, Minus, Plus, Image as ImageIcon } from 'lucide-react';
+import { ShoppingCart, Trash2, Minus, Plus, Image as ImageIcon, ArrowRight } from 'lucide-react';
 
 export default function CosPage() {
   const {
@@ -37,9 +37,22 @@ export default function CosPage() {
           title="Cosul tau e gol"
           description="Exploreaza catalogul nostru si adauga produse in cos."
           action={
-            <Link href="/catalog">
-              <Button>Continua cumparaturile</Button>
-            </Link>
+            <div className="flex flex-col items-center gap-4">
+              <Link href="/catalog">
+                <Button>
+                  Vezi catalogul <ArrowRight size={16} className="ml-1" />
+                </Button>
+              </Link>
+              <div className="flex flex-wrap justify-center gap-2 mt-2">
+                <Link href="/generator-pachet" className="text-sm text-primary hover:underline">
+                  Solicita pachet personalizat
+                </Link>
+                <span className="text-gray-300">|</span>
+                <Link href="/contact" className="text-sm text-primary hover:underline">
+                  Contacteaza-ne
+                </Link>
+              </div>
+            </div>
           }
         />
       </div>
@@ -106,25 +119,27 @@ export default function CosPage() {
                       <button
                         onClick={() => updateQuantity(productId, quantity - 1)}
                         disabled={quantity <= 1}
-                        className="px-2 py-1 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-40 disabled:active:bg-transparent transition-all"
+                        className="px-3 py-2 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-40 disabled:active:bg-transparent transition-all"
+                        aria-label="Scade cantitatea"
                       >
-                        <Minus size={14} />
+                        <Minus size={16} />
                       </button>
-                      <span className="px-3 py-1 text-xs font-medium tabular-nums">{quantity}</span>
+                      <span className="px-3 py-2 text-sm font-medium tabular-nums">{quantity}</span>
                       <button
                         onClick={() => updateQuantity(productId, quantity + 1)}
                         disabled={quantity >= product.stock}
-                        className="px-2 py-1 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-40 disabled:active:bg-transparent transition-all"
+                        className="px-3 py-2 text-gray-500 hover:bg-primary/5 active:bg-primary/10 disabled:opacity-40 disabled:active:bg-transparent transition-all"
+                        aria-label="Creste cantitatea"
                       >
-                        <Plus size={14} />
+                        <Plus size={16} />
                       </button>
                     </div>
                     <button
                       onClick={() => removeItem(productId)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                      aria-label="Sterge"
+                      className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                      aria-label="Sterge produsul"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </div>
