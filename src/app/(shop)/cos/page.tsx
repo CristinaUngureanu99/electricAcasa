@@ -136,7 +136,7 @@ export default function CosPage() {
                     </div>
                     <button
                       onClick={() => removeItem(productId)}
-                      className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                       aria-label="Sterge produsul"
                     >
                       <Trash2 size={18} />

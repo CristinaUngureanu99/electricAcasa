@@ -33,7 +33,7 @@ export function ProductCard({ product }: ProductCardProps) {
             fill
             sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             quality={80}
-            className="object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+            className="object-cover group-hover:scale-[1.08] transition-transform duration-500 ease-out"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -66,7 +66,9 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </h3>
         <div className="flex items-baseline gap-2">
-          <span className={`text-lg font-bold ${hasDiscount ? 'text-danger' : 'text-gray-900'}`}>
+          <span
+            className={`text-xl font-bold tracking-tight ${hasDiscount ? 'text-danger' : 'text-gray-900'}`}
+          >
             {formatPrice(displayPrice)}
           </span>
           {hasDiscount && (

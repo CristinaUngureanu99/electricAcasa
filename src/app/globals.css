@@ -16,6 +16,10 @@
   --color-surface-dark: #ededea;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family:
     'Inter',

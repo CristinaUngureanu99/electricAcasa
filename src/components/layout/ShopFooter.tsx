@@ -11,7 +11,7 @@ export function ShopFooter({ categories }: ShopFooterProps) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-gradient-to-b from-gray-900 via-gray-950 to-black text-gray-300">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Categorii */}
@@ -20,7 +20,10 @@ export function ShopFooter({ categories }: ShopFooterProps) {
             <ul className="space-y-2">
               {categories.map((cat) => (
                 <li key={cat.id}>
-                  <Link href={`/categorie/${cat.slug}`} className="text-sm hover:text-white transition-colors">
+                  <Link
+                    href={`/categorie/${cat.slug}`}
+                    className="text-sm hover:text-white transition-colors"
+                  >
                     {cat.name}
                   </Link>
                 </li>
@@ -63,7 +66,10 @@ export function ShopFooter({ categories }: ShopFooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/generator-pachet" className="text-sm hover:text-white transition-colors">
+                <Link
+                  href="/generator-pachet"
+                  className="text-sm hover:text-white transition-colors"
+                >
                   Generator pachet
                 </Link>
               </li>
@@ -73,7 +79,10 @@ export function ShopFooter({ categories }: ShopFooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/intrebari-frecvente" className="text-sm hover:text-white transition-colors">
+                <Link
+                  href="/intrebari-frecvente"
+                  className="text-sm hover:text-white transition-colors"
+                >
                   Intrebari frecvente
                 </Link>
               </li>
@@ -86,13 +95,19 @@ export function ShopFooter({ categories }: ShopFooterProps) {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-sm">
                 <Mail size={16} className="text-gray-500" />
-                <a href={`mailto:${site.contact.email}`} className="hover:text-white transition-colors">
+                <a
+                  href={`mailto:${site.contact.email}`}
+                  className="hover:text-white transition-colors"
+                >
                   {site.contact.email}
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <Phone size={16} className="text-gray-500" />
-                <a href={`tel:${site.contact.phone}`} className="hover:text-white transition-colors">
+                <a
+                  href={`tel:${site.contact.phone}`}
+                  className="hover:text-white transition-colors"
+                >
                   {site.contact.phone}
                 </a>
               </li>
@@ -113,13 +128,30 @@ export function ShopFooter({ categories }: ShopFooterProps) {
       {/* Bottom bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
-          <p>&copy; {year} {site.name}. Toate drepturile rezervate.</p>
+          <p>
+            &copy; {year} {site.name}. Toate drepturile rezervate.
+          </p>
           <div className="flex gap-4">
-            <Link href="/terms" className="hover:text-gray-300 transition-colors">Termeni si conditii</Link>
-            <Link href="/privacy" className="hover:text-gray-300 transition-colors">Confidentialitate</Link>
-            <Link href="/politica-retur" className="hover:text-gray-300 transition-colors">Politica de retur</Link>
-            <Link href="/cookies" className="hover:text-gray-300 transition-colors">Cookies</Link>
-            <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">ANPC SAL</a>
+            <Link href="/terms" className="hover:text-gray-300 transition-colors">
+              Termeni si conditii
+            </Link>
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors">
+              Confidentialitate
+            </Link>
+            <Link href="/politica-retur" className="hover:text-gray-300 transition-colors">
+              Politica de retur
+            </Link>
+            <Link href="/cookies" className="hover:text-gray-300 transition-colors">
+              Cookies
+            </Link>
+            <a
+              href="https://anpc.ro/ce-este-sal/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-300 transition-colors"
+            >
+              ANPC SAL
+            </a>
           </div>
         </div>
       </div>

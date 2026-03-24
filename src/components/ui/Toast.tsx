@@ -21,9 +21,9 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 let nextId = 0;
 
 const typeStyles: Record<ToastType, string> = {
-  success: 'bg-success',
-  error: 'bg-danger',
-  info: 'bg-navy',
+  success: 'bg-success/90 backdrop-blur-md shadow-success/25 ring-1 ring-white/20',
+  error: 'bg-danger/90 backdrop-blur-md shadow-danger/25 ring-1 ring-white/20',
+  info: 'bg-navy/90 backdrop-blur-md shadow-navy/25 ring-1 ring-white/20',
 };
 
 const icons: Record<ToastType, string> = {
@@ -74,7 +74,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={t.id}
             className={cn(
               typeStyles[t.type],
-              'pointer-events-auto flex items-center gap-2 rounded-xl px-4 py-3 text-white text-sm font-medium shadow-lg transition-all duration-300',
+              'pointer-events-auto flex items-center gap-2 rounded-2xl px-4 py-3 text-white text-sm font-medium shadow-xl transition-all duration-300',
               t.leaving
                 ? 'translate-x-[120%] opacity-0'
                 : 'translate-x-0 opacity-100 animate-[slideIn_0.3s_ease-out]',

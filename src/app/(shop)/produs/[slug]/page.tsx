@@ -126,7 +126,9 @@ export default async function ProdusPage({ params }: Props) {
           {p.brand_name && (
             <p className="text-sm text-gray-400 uppercase tracking-wide mb-1">{p.brand_name}</p>
           )}
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-5">{p.name}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-5">
+            {p.name}
+          </h1>
 
           {/* Price */}
           <div className="flex items-baseline gap-3 mb-5">

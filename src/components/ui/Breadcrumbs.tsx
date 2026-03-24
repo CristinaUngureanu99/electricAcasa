@@ -29,16 +29,24 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
           itemListElement: jsonLdItems,
         }}
       />
-      <nav aria-label="Breadcrumbs" className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
+      <nav
+        aria-label="Breadcrumbs"
+        className="flex items-center gap-1.5 text-sm text-gray-500 mb-6"
+      >
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
             <span key={i} className="flex items-center gap-1.5">
-              {i > 0 && <ChevronRight size={14} />}
+              {i > 0 && <ChevronRight size={14} className="text-gray-400" />}
               {isLast || !item.href ? (
-                <span className="text-gray-900 font-medium line-clamp-1">{item.label}</span>
+                <span className="text-gray-900 font-semibold line-clamp-1">{item.label}</span>
               ) : (
-                <Link href={item.href} className="hover:text-primary">{item.label}</Link>
+                <Link
+                  href={item.href}
+                  className="text-primary/80 hover:text-primary hover:underline underline-offset-2"
+                >
+                  {item.label}
+                </Link>
               )}
             </span>
           );
