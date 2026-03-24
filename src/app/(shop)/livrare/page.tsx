@@ -18,9 +18,19 @@ export default function LivrarePage() {
         <div className="flex items-start gap-3 bg-white rounded-xl border border-gray-100 p-5">
           <Truck size={20} className="text-primary shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold text-gray-900 text-sm">Cost livrare</p>
+            <p className="font-semibold text-gray-900 text-sm">Curier la adresa</p>
             <p className="text-sm text-gray-500 mt-1">
               {site.shipping.fixedCost} RON — gratuit pentru comenzi peste{' '}
+              {site.shipping.freeThreshold} RON
+            </p>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 bg-white rounded-xl border border-gray-100 p-5">
+          <Package size={20} className="text-primary shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-gray-900 text-sm">EasyBox</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {site.shipping.easyboxCost} RON — ridici coletul dintr-un locker, gratuit peste{' '}
               {site.shipping.freeThreshold} RON
             </p>
           </div>

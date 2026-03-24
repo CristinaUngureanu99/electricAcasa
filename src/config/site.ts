@@ -16,6 +16,7 @@ export const site = {
 
   shipping: {
     fixedCost: 25,
+    easyboxCost: 10,
     freeThreshold: 300,
   },
 

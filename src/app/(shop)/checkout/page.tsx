@@ -9,10 +9,19 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { formatPrice } from '@/lib/utils';
-import { CreditCard, Banknote, ShieldCheck } from 'lucide-react';
+import { CreditCard, Banknote, ShieldCheck, Truck, PackageCheck } from 'lucide-react';
+import { site } from '@/config/site';
 
 export default function CheckoutPage() {
-  const { cartItems, subtotal, shippingCost, total, loading: cartLoading } = useCart();
+  const {
+    cartItems,
+    subtotal,
+    shippingMethod,
+    setShippingMethod,
+    shippingCost,
+    total,
+    loading: cartLoading,
+  } = useCart();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -242,6 +251,7 @@ export default function CheckoutPage() {
             phone: phone.trim(),
           },
           billingAddress: null,
+          shippingMethod,
           paymentMethod,
         }),
       });
@@ -299,7 +309,14 @@ export default function CheckoutPage() {
                 />
                 <div className="col-span-full">
                   <Input
-                    label="Strada, numar, bloc, scara, apt *"
+                    label={
+                      shippingMethod === 'easybox'
+                        ? 'Adresa / ID EasyBox *'
+                        : 'Strada, numar, bloc, scara, apt *'
+                    }
+                    placeholder={
+                      shippingMethod === 'easybox' ? 'Ex: EasyBox Mega Mall, Bucuresti' : undefined
+                    }
                     value={street}
                     onChange={(e) => setStreet(e.target.value)}
                     onBlur={() => validateField('street', street)}
@@ -331,6 +348,62 @@ export default function CheckoutPage() {
                   error={errors.postalCode}
                   required
                 />
+              </div>
+            </Card>
+
+            <Card>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Metoda de livrare</h2>
+              <div className="space-y-3">
+                <label
+                  className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${shippingMethod === 'curier' ? 'border-primary bg-primary/5 shadow-sm shadow-primary/10' : 'border-gray-200 hover:border-gray-300'}`}
+                >
+                  <input
+                    type="radio"
+                    name="shipping"
+                    value="curier"
+                    checked={shippingMethod === 'curier'}
+                    onChange={() => setShippingMethod('curier')}
+                    className="sr-only"
+                  />
+                  <Truck
+                    size={20}
+                    className={shippingMethod === 'curier' ? 'text-primary' : 'text-gray-400'}
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900">Curier la adresa</p>
+                    <p className="text-xs text-gray-500">Livrat de curier la adresa ta</p>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-700">
+                    {subtotal >= site.shipping.freeThreshold
+                      ? 'Gratuit'
+                      : `${site.shipping.fixedCost} RON`}
+                  </span>
+                </label>
+                <label
+                  className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${shippingMethod === 'easybox' ? 'border-primary bg-primary/5 shadow-sm shadow-primary/10' : 'border-gray-200 hover:border-gray-300'}`}
+                >
+                  <input
+                    type="radio"
+                    name="shipping"
+                    value="easybox"
+                    checked={shippingMethod === 'easybox'}
+                    onChange={() => setShippingMethod('easybox')}
+                    className="sr-only"
+                  />
+                  <PackageCheck
+                    size={20}
+                    className={shippingMethod === 'easybox' ? 'text-primary' : 'text-gray-400'}
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900">EasyBox</p>
+                    <p className="text-xs text-gray-500">Ridica coletul dintr-un locker EasyBox</p>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-700">
+                    {subtotal >= site.shipping.freeThreshold
+                      ? 'Gratuit'
+                      : `${site.shipping.easyboxCost} RON`}
+                  </span>
+                </label>
               </div>
             </Card>
 

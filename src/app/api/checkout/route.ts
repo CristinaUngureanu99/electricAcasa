@@ -21,6 +21,7 @@ const addressSchema = z.object({
 const checkoutSchema = z.object({
   shippingAddress: addressSchema,
   billingAddress: addressSchema.nullable(),
+  shippingMethod: z.enum(['curier', 'easybox']).default('curier'),
   paymentMethod: z.enum(['card', 'ramburs']),
   notes: z.string().optional(),
 });
@@ -136,7 +137,9 @@ export async function POST(request: Request) {
 
     // Calculate totals
     const subtotal = lineItems.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
-    const shippingCost = subtotal >= site.shipping.freeThreshold ? 0 : site.shipping.fixedCost;
+    const baseCost =
+      body.shippingMethod === 'easybox' ? site.shipping.easyboxCost : site.shipping.fixedCost;
+    const shippingCost = subtotal >= site.shipping.freeThreshold ? 0 : baseCost;
     const total = subtotal + shippingCost;
 
     // Insert order
@@ -151,6 +154,7 @@ export async function POST(request: Request) {
         total,
         shipping_address: body.shippingAddress,
         billing_address: body.billingAddress,
+        shipping_method: body.shippingMethod,
         payment_method: body.paymentMethod,
         payment_status: 'pending',
         notes: body.notes || null,
@@ -215,7 +219,8 @@ export async function POST(request: Request) {
                     shipping_rate_data: {
                       type: 'fixed_amount' as const,
                       fixed_amount: { amount: Math.round(shippingCost * 100), currency: 'ron' },
-                      display_name: 'Transport standard',
+                      display_name:
+                        body.shippingMethod === 'easybox' ? 'EasyBox' : 'Curier la adresa',
                     },
                   },
                 ],

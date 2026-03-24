@@ -81,6 +81,7 @@ export interface Address {
 export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 export type PaymentMethod = 'card' | 'ramburs';
+export type ShippingMethod = 'curier' | 'easybox';
 
 export interface Order {
   id: string;
@@ -92,6 +93,7 @@ export interface Order {
   total: number;
   shipping_address: OrderAddress;
   billing_address: OrderAddress | null;
+  shipping_method: ShippingMethod;
   payment_method: PaymentMethod;
   payment_status: PaymentStatus;
   stripe_session_id: string | null;
