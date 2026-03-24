@@ -17,19 +17,23 @@ interface ShopNavProps {
 export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { cartCount } = useCart();
   const closeMenus = useCallback(() => {
     setCatOpen(false);
     setMenuOpen(false);
+    setMobileSearchOpen(false);
   }, []);
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data: { user } }: { data: { user: unknown } }) => {
       setIsLoggedIn(!!user);
     });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: { user?: unknown } | null) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event: string, session: { user?: unknown } | null) => {
       setIsLoggedIn(!!session?.user);
     });
     return () => subscription.unsubscribe();
@@ -43,15 +47,19 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
 
   return (
     <>
-      <nav className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-shadow duration-200',
-        'bg-gradient-to-r from-primary via-accent to-primary-light',
-        scrolled && 'shadow-lg'
-      )}>
+      <nav
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 transition-shadow duration-200',
+          'bg-gradient-to-r from-primary via-accent to-primary-light',
+          scrolled && 'shadow-lg',
+        )}
+      >
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link href="/" className="shrink-0" onClick={closeMenus}>
-            <span className="text-xl md:text-2xl font-bold text-white">electricAcasa<span className="text-white/70 font-normal text-sm">.ro</span></span>
+            <span className="text-xl md:text-2xl font-bold text-white">
+              electricAcasa<span className="text-white/70 font-normal text-sm">.ro</span>
+            </span>
           </Link>
 
           {/* Desktop: Catalog + Categories + Pachet */}
@@ -68,7 +76,11 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
                 onClick={() => setCatOpen(!catOpen)}
                 className="nav-link flex items-center gap-1 text-sm font-medium text-white/90 hover:text-white"
               >
-                Categorii <ChevronDown size={16} className={cn('transition-transform', catOpen && 'rotate-180')} />
+                Categorii{' '}
+                <ChevronDown
+                  size={16}
+                  className={cn('transition-transform', catOpen && 'rotate-180')}
+                />
               </button>
               {catOpen && (
                 <>
@@ -84,7 +96,9 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
                         <span className="w-1 h-4 rounded-full bg-gray-200 group-hover/item:bg-primary transition-colors" />
                         <span className="flex-1">{cat.name}</span>
                         {categoryCounts?.[cat.id] ? (
-                          <span className="text-[10px] text-gray-400 font-medium">{categoryCounts[cat.id]}</span>
+                          <span className="text-[10px] text-gray-400 font-medium">
+                            {categoryCounts[cat.id]}
+                          </span>
                         ) : null}
                       </Link>
                     ))}
@@ -113,14 +127,29 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
                 placeholder="Cauta produse..."
                 className="w-full pl-4 pr-10 py-2 rounded-xl border border-white/30 bg-white/15 text-sm text-white placeholder:text-white/50 focus:outline-none focus:bg-white/25 focus:border-white/50 transition-colors"
               />
-              <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white">
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
+              >
                 <Search size={16} />
               </button>
             </form>
           </div>
 
-          {/* Right: Cart + Account */}
+          {/* Right: Cart + Search (mobile) + Account + Hamburger */}
           <div className="flex items-center gap-3">
+            {/* Mobile search toggle */}
+            <button
+              onClick={() => {
+                setMobileSearchOpen(!mobileSearchOpen);
+                setMenuOpen(false);
+              }}
+              className="lg:hidden p-2 rounded-xl text-white/90 hover:bg-white/15 hover:text-white transition-all"
+              aria-label="Cauta produse"
+            >
+              <Search size={22} />
+            </button>
+
             <Link
               href="/cos"
               onClick={closeMenus}
@@ -145,7 +174,10 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
 
             {/* Mobile hamburger */}
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
+              onClick={() => {
+                setMenuOpen(!menuOpen);
+                setMobileSearchOpen(false);
+              }}
               className="md:hidden p-2 rounded-xl text-white/90 hover:bg-white/15"
               aria-label={menuOpen ? 'Inchide meniu' : 'Deschide meniu'}
             >
@@ -161,7 +193,10 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
               {/* Mobile search */}
               <form action="/catalog" className="mb-3">
                 <div className="relative">
-                  <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Search
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  />
                   <input
                     type="text"
                     name="q"
@@ -184,7 +219,9 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
               >
                 Pachet personalizat
               </Link>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5 mt-4">Categorii</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5 mt-4">
+                Categorii
+              </p>
               {categories.map((cat) => (
                 <Link
                   key={cat.id}
@@ -209,6 +246,24 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
                 {isLoggedIn ? 'Contul meu' : 'Autentificare'}
               </Link>
             </div>
+          </div>
+        )}
+        {/* Mobile search bar (expandable) */}
+        {mobileSearchOpen && (
+          <div className="lg:hidden border-t border-white/20 bg-white/10 px-4 py-3 animate-[fadeIn_0.15s_ease-out]">
+            <form action="/catalog" className="relative">
+              <Search
+                size={16}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60"
+              />
+              <input
+                type="text"
+                name="q"
+                placeholder="Cauta produse..."
+                autoFocus
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-white/30 bg-white/15 text-sm text-white placeholder:text-white/50 focus:outline-none focus:bg-white/25 focus:border-white/50 transition-colors"
+              />
+            </form>
           </div>
         )}
       </nav>

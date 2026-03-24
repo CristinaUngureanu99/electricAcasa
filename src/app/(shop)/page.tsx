@@ -81,79 +81,41 @@ export default async function HomePage() {
           },
         }}
       />
-      {/* Hero — 2 columns on desktop */}
+      {/* Hero — category buttons + description */}
       <section className="max-w-7xl mx-auto px-4 pt-10 pb-14 md:pt-16 md:pb-20">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-accent uppercase tracking-wider mb-3">
-            electricAcasa.ro
-          </p>
+          {/* Category quick-access buttons */}
+          {categories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-6">
+              {categories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/categorie/${cat.slug}`}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium text-gray-700 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-colors"
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </div>
+          )}
+
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
             Aparataj, iluminat si
             <br />
             <span className="text-primary">protectii electrice</span>
           </h1>
-          <p className="text-lg text-gray-600 mb-8">
-            Alege usor din catalog, compara specificatii, descarca fise tehnice si comanda cu
-            livrare in toata Romania.
+          <p className="text-lg text-gray-600">
+            Alege usor din{' '}
+            <Link href="/catalog" className="text-primary font-semibold hover:underline">
+              catalogul nostru
+            </Link>
+            , compara specificatii, descarca fise tehnice si comanda cu livrare in toata Romania. Ai
+            nevoie de ajutor?{' '}
+            <Link href="/generator-pachet" className="text-primary font-semibold hover:underline">
+              Solicita un pachet personalizat
+            </Link>
+            .
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link
-              href="/catalog"
-              className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors"
-            >
-              Vezi catalogul <ArrowRight size={18} />
-            </Link>
-            <Link
-              href="/generator-pachet"
-              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl border-2 border-primary/20 hover:border-primary/40 transition-colors"
-            >
-              Solicita pachet personalizat
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust bar */}
-      <section className="border-y border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            <div className="flex items-start gap-3">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <FileText size={20} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">Fise tehnice</p>
-                <p className="text-xs text-gray-500 mt-0.5">Descarcabile pe fiecare produs</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Zap size={20} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">Produse compatibile</p>
-                <p className="text-xs text-gray-500 mt-0.5">Recomandarile potrivite automat</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Package size={20} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">Pachet personalizat</p>
-                <p className="text-xs text-gray-500 mt-0.5">Consultanta gratuita pentru proiect</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Truck size={20} className="text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">Livrare nationala</p>
-                <p className="text-xs text-gray-500 mt-0.5">Rapid, in toata Romania</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -303,6 +265,50 @@ export default async function HomePage() {
               Aboneaza-te si primesti primii ofertele speciale, produse noi si promotii exclusive.
             </p>
             <NewsletterSignup />
+          </div>
+        </div>
+      </section>
+
+      {/* Trust bar */}
+      <section className="border-y border-gray-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <FileText size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Fise tehnice</p>
+                <p className="text-xs text-gray-500 mt-0.5">Descarcabile pe fiecare produs</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Zap size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Produse compatibile</p>
+                <p className="text-xs text-gray-500 mt-0.5">Recomandarile potrivite automat</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Package size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Pachet personalizat</p>
+                <p className="text-xs text-gray-500 mt-0.5">Consultanta gratuita pentru proiect</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Truck size={20} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Livrare nationala</p>
+                <p className="text-xs text-gray-500 mt-0.5">Rapid, in toata Romania</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
