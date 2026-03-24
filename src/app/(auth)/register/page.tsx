@@ -216,7 +216,7 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="shimmer-btn w-full py-3 text-white font-bold rounded-full text-base transition-all shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:-translate-y-0.5 disabled:opacity-50"
+                  className="shimmer-btn w-full py-3 text-white font-bold rounded-xl text-base transition-all shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:-translate-y-0.5 disabled:opacity-40"
                 >
                   {loading ? 'Se creează...' : 'Înregistrare'}
                 </button>

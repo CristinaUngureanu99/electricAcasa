@@ -20,7 +20,7 @@ export function FilterPills({ value, onChange, options, allLabel = 'Toate' }: Pr
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${
+          className={`text-xs px-3 py-1.5 rounded-xl transition-colors ${
             value === opt.value
               ? 'bg-primary text-white'
               : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-400'
