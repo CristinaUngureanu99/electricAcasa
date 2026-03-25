@@ -261,6 +261,9 @@ export default function CheckoutPage() {
       if (!res.ok) {
         if (res.status === 409 && data.pendingOrderId) {
           setPendingOrderId(data.pendingOrderId);
+        } else if (res.status === 400 && data.error === 'Cosul e gol') {
+          toast('Cosul a fost golit intre timp. Te redirectionam...', 'error');
+          setTimeout(() => router.push('/cos'), 2000);
         } else {
           toast(data.error || 'Eroare la procesarea comenzii', 'error');
         }

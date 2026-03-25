@@ -199,6 +199,21 @@ export default function CosPage() {
           </div>
         </div>
       </div>
+
+      {/* Mobile fixed checkout bar */}
+      <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 px-4 py-3 z-40 safe-bottom">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs text-gray-500">Total</p>
+            <p className="text-lg font-bold text-gray-900">{formatPrice(total)}</p>
+          </div>
+          <Link href="/checkout">
+            <Button size="lg">Spre checkout</Button>
+          </Link>
+        </div>
+      </div>
+      {/* Spacer for fixed bar on mobile */}
+      <div className="h-20 lg:hidden" />
     </div>
   );
 }

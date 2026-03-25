@@ -36,7 +36,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         />
       </div>
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
           {images.map((path, i) => (
             <button
               key={path}

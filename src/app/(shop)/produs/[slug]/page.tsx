@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${p.name} | electricAcasa`,
     description: p.description?.slice(0, 160) || `${p.name} - electricAcasa.ro`,
     openGraph: ogImage ? { images: [{ url: ogImage }] } : undefined,
+    alternates: { canonical: `/produs/${slug}` },
   };
 }
 

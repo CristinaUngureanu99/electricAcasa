@@ -318,6 +318,7 @@ export async function POST(request: Request) {
         orderNumber: order.order_number,
         total,
         paymentMethod: 'ramburs',
+        shippingMethod: body.shippingMethod,
         items: lineItems.map((i) => ({
           name: i.productName,
           quantity: i.quantity,

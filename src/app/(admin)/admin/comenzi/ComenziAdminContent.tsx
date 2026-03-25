@@ -11,7 +11,7 @@ import { FilterSelect } from '@/components/ui/filters/FilterSelect';
 import { FilterReset } from '@/components/ui/filters/FilterReset';
 import { formatPrice, formatDate } from '@/lib/utils';
 import { orderStatusLabels, orderStatusVariants } from '@/lib/order-helpers';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Download } from 'lucide-react';
 import type { OrderStatus } from '@/types/database';
 
 interface OrderRow {
@@ -56,7 +56,11 @@ export default function ComenziAdminContent({ orders }: Props) {
   const [methodFilter, setMethodFilter] = useState('all');
   const [paymentStatusFilter, setPaymentStatusFilter] = useState('all');
 
-  const hasFilters = search !== '' || statusFilter !== 'all' || methodFilter !== 'all' || paymentStatusFilter !== 'all';
+  const hasFilters =
+    search !== '' ||
+    statusFilter !== 'all' ||
+    methodFilter !== 'all' ||
+    paymentStatusFilter !== 'all';
 
   const filtered = orders.filter((o) => {
     if (search) {
@@ -80,24 +84,79 @@ export default function ComenziAdminContent({ orders }: Props) {
     setPaymentStatusFilter('all');
   }
 
+  function exportCsv() {
+    const header = 'Numar comanda,Client,Email,Status,Metoda plata,Status plata,Total,Data\n';
+    const rows = filtered
+      .map((o) =>
+        [
+          `EA-${o.order_number}`,
+          `"${o.client_name.replace(/"/g, '""')}"`,
+          o.client_email,
+          o.status,
+          o.payment_method,
+          o.payment_status,
+          o.total,
+          o.created_at.slice(0, 10),
+        ].join(','),
+      )
+      .join('\n');
+    const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `comenzi-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
-    <AdminPageShell
-      title="Comenzi"
-      description={`${orders.length} comenzi total`}
-    >
+    <AdminPageShell title="Comenzi" description={`${orders.length} comenzi total`}>
       <FilterBar>
-        <FilterSearch value={search} onChange={setSearch} placeholder="Cauta nr comanda, email, nume..." />
-        <FilterSelect value={statusFilter} onChange={setStatusFilter} options={STATUS_OPTIONS} allLabel="Toate statusurile" />
-        <FilterSelect value={methodFilter} onChange={setMethodFilter} options={PAYMENT_METHOD_OPTIONS} allLabel="Toate metodele" />
-        <FilterSelect value={paymentStatusFilter} onChange={setPaymentStatusFilter} options={PAYMENT_STATUS_OPTIONS} allLabel="Toate platile" />
+        <FilterSearch
+          value={search}
+          onChange={setSearch}
+          placeholder="Cauta nr comanda, email, nume..."
+        />
+        <FilterSelect
+          value={statusFilter}
+          onChange={setStatusFilter}
+          options={STATUS_OPTIONS}
+          allLabel="Toate statusurile"
+        />
+        <FilterSelect
+          value={methodFilter}
+          onChange={setMethodFilter}
+          options={PAYMENT_METHOD_OPTIONS}
+          allLabel="Toate metodele"
+        />
+        <FilterSelect
+          value={paymentStatusFilter}
+          onChange={setPaymentStatusFilter}
+          options={PAYMENT_STATUS_OPTIONS}
+          allLabel="Toate platile"
+        />
         <FilterReset onReset={resetFilters} visible={hasFilters} />
       </FilterBar>
 
-      <p className="text-xs text-gray-500">{filtered.length} din {orders.length} comenzi</p>
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-gray-500">
+          {filtered.length} din {orders.length} comenzi
+        </p>
+        {filtered.length > 0 && (
+          <button
+            onClick={exportCsv}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+          >
+            <Download size={14} /> Export CSV
+          </button>
+        )}
+      </div>
 
       <div className="space-y-2">
         {filtered.length === 0 ? (
-          <Card><p className="text-center text-gray-500 py-4">Nicio comanda gasita</p></Card>
+          <Card>
+            <p className="text-center text-gray-500 py-4">Nicio comanda gasita</p>
+          </Card>
         ) : (
           filtered.map((o) => (
             <Link key={o.id} href={`/admin/comenzi/${o.id}`}>
@@ -106,11 +165,16 @@ export default function ComenziAdminContent({ orders }: Props) {
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <span className="font-semibold text-gray-900">EA-{o.order_number}</span>
-                      <Badge variant={orderStatusVariants[o.status as OrderStatus]}>{orderStatusLabels[o.status as OrderStatus]}</Badge>
+                      <Badge variant={orderStatusVariants[o.status as OrderStatus]}>
+                        {orderStatusLabels[o.status as OrderStatus]}
+                      </Badge>
                     </div>
                     <div className="text-sm text-gray-500">
-                      {o.client_name || o.client_email} &middot; {formatDate(o.created_at)} &middot; {o.payment_method === 'card' ? 'Card' : 'Ramburs'}
-                      {o.payment_status === 'paid' && <span className="text-green-600 ml-1">&middot; Platita</span>}
+                      {o.client_name || o.client_email} &middot; {formatDate(o.created_at)} &middot;{' '}
+                      {o.payment_method === 'card' ? 'Card' : 'Ramburs'}
+                      {o.payment_status === 'paid' && (
+                        <span className="text-green-600 ml-1">&middot; Platita</span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

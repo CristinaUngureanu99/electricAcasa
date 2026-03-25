@@ -50,7 +50,7 @@ export default function ContactPage() {
 
       setSubmitted(true);
     } catch {
-      toast('Eroare neasteptata', 'error');
+      toast('Eroare de retea. Verifica conexiunea si incearca din nou.', 'error');
     }
     setSubmitting(false);
   }

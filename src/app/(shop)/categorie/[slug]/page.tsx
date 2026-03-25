@@ -24,13 +24,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = getPublicSupabase();
   const { data: category } = await supabase
     .from('categories')
-    .select('name')
+    .select('name, image_url, description')
     .eq('slug', slug)
     .eq('is_active', true)
     .single();
 
+  if (!category) return { title: 'Categorie' };
+
+  const ogImage = category.image_url
+    ? getStorageUrl('product-images', category.image_url)
+    : undefined;
+
   return {
-    title: category ? `${category.name} | electricAcasa` : 'Categorie',
+    title: `${category.name} | electricAcasa`,
+    description: category.description || `${category.name} — electricAcasa.ro`,
+    openGraph: ogImage ? { images: [{ url: ogImage }] } : undefined,
+    alternates: { canonical: `/categorie/${slug}` },
   };
 }
 
@@ -106,8 +115,10 @@ export default async function CategoriePage({ params, searchParams }: Props) {
   const page = Math.max(1, parseInt(sp.page || '1'));
   const sort = sp.sort || 'newest';
   const brandFilter = sp.brand || '';
-  const minPrice = sp.min ? parseFloat(sp.min) : undefined;
-  const maxPrice = sp.max ? parseFloat(sp.max) : undefined;
+  const minPriceRaw = sp.min ? parseFloat(sp.min) : undefined;
+  const maxPriceRaw = sp.max ? parseFloat(sp.max) : undefined;
+  const minPrice = minPriceRaw !== undefined && minPriceRaw >= 0 ? minPriceRaw : undefined;
+  const maxPrice = maxPriceRaw !== undefined && maxPriceRaw >= 0 ? maxPriceRaw : undefined;
   const inStockOnly = sp.stoc === '1';
 
   if (isLeaf) {
