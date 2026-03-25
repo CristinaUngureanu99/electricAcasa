@@ -27,14 +27,17 @@ export function ProductCard({ product }: ProductCardProps) {
     >
       <div className="aspect-square relative bg-gray-50 overflow-hidden">
         {thumb ? (
-          <Image
-            src={getStorageUrl('product-images', thumb)}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            quality={80}
-            className="object-cover group-hover:scale-[1.08] transition-transform duration-500 ease-out"
-          />
+          <>
+            <Image
+              src={getStorageUrl('product-images', thumb)}
+              alt={product.name}
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              quality={80}
+              className="object-cover group-hover:scale-[1.08] transition-transform duration-500 ease-out"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <ImageIcon size={48} className="text-gray-300" />

@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useCart } from '@/lib/cart';
 
@@ -15,12 +16,25 @@ interface ShopNavProps {
 }
 
 export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { cartCount } = useCart();
+  const [cartPop, setCartPop] = useState(false);
+  const prevCartCount = useRef(cartCount);
+
+  useEffect(() => {
+    if (cartCount > prevCartCount.current) {
+      setCartPop(true);
+      const t = setTimeout(() => setCartPop(false), 400);
+      return () => clearTimeout(t);
+    }
+    prevCartCount.current = cartCount;
+  }, [cartCount]);
+
   const closeMenus = useCallback(() => {
     setCatOpen(false);
     setMenuOpen(false);
@@ -79,14 +93,20 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
             <Link
               href="/catalog"
               onClick={closeMenus}
-              className="nav-link text-sm font-medium text-white/90 hover:text-white"
+              className={cn(
+                'nav-link text-sm font-medium hover:text-white',
+                pathname === '/catalog' ? 'text-white' : 'text-white/90',
+              )}
             >
               Catalog
             </Link>
             <div className="relative">
               <button
                 onClick={() => setCatOpen(!catOpen)}
-                className="nav-link flex items-center gap-1 text-sm font-medium text-white/90 hover:text-white"
+                className={cn(
+                  'nav-link flex items-center gap-1 text-sm font-medium hover:text-white',
+                  pathname.startsWith('/categorie') ? 'text-white' : 'text-white/90',
+                )}
               >
                 Categorii{' '}
                 <ChevronDown
@@ -124,7 +144,10 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
             <Link
               href="/generator-pachet"
               onClick={closeMenus}
-              className="nav-link text-sm font-medium text-white/90 hover:text-white"
+              className={cn(
+                'nav-link text-sm font-medium hover:text-white',
+                pathname === '/generator-pachet' ? 'text-white' : 'text-white/90',
+              )}
             >
               Pachet personalizat
             </Link>
@@ -170,7 +193,9 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
             >
               <ShoppingCart size={22} />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-white text-primary text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full">
+                <span
+                  className={`absolute -top-0.5 -right-0.5 bg-white text-primary text-[10px] font-bold w-4.5 h-4.5 flex items-center justify-center rounded-full ${cartPop ? 'cart-pop' : ''}`}
+                >
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
               )}

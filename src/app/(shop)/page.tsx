@@ -16,6 +16,7 @@ import {
   ShoppingCart,
   CreditCard,
 } from 'lucide-react';
+import { FadeIn } from '@/components/ui/FadeIn';
 import type { Product, Category } from '@/types/database';
 
 export const revalidate = 60; // ISR: re-generate every 60s
@@ -127,50 +128,51 @@ export default async function HomePage() {
             <p className="text-gray-500 mt-2">Alege categoria potrivita pentru proiectul tau</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/categorie/${cat.slug}`}
-                className="group bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
-              >
-                <div className="aspect-[4/3] relative bg-gray-50 overflow-hidden">
-                  {cat.image_url ? (
-                    <NextImage
-                      src={getStorageUrl('product-images', cat.image_url)}
-                      alt={cat.name}
-                      fill
-                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      quality={80}
-                      className="object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <ImageIcon size={32} className="text-gray-300" />
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-all">
-                      {cat.name}
-                    </h3>
-                    {categoryCounts[cat.id] > 0 && (
-                      <span className="text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
-                        {categoryCounts[cat.id]}
-                      </span>
+            {categories.map((cat, i) => (
+              <FadeIn key={cat.id} delay={i * 60}>
+                <Link
+                  href={`/categorie/${cat.slug}`}
+                  className="group block bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
+                >
+                  <div className="aspect-[4/3] relative bg-gray-50 overflow-hidden">
+                    {cat.image_url ? (
+                      <NextImage
+                        src={getStorageUrl('product-images', cat.image_url)}
+                        alt={cat.name}
+                        fill
+                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        quality={80}
+                        className="object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ImageIcon size={32} className="text-gray-300" />
+                      </div>
                     )}
                   </div>
-                  {cat.description ? (
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2 group-hover:text-gray-600 transition-colors">
-                      {cat.description}
-                    </p>
-                  ) : (
-                    <p className="text-xs text-gray-400 mt-1 group-hover:text-primary/60 transition-colors">
-                      Vezi produsele →
-                    </p>
-                  )}
-                </div>
-              </Link>
+                  <div className="p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-all">
+                        {cat.name}
+                      </h3>
+                      {categoryCounts[cat.id] > 0 && (
+                        <span className="text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                          {categoryCounts[cat.id]}
+                        </span>
+                      )}
+                    </div>
+                    {cat.description ? (
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2 group-hover:text-gray-600 transition-colors">
+                        {cat.description}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-gray-400 mt-1 group-hover:text-primary/60 transition-colors">
+                        Vezi produsele →
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              </FadeIn>
             ))}
           </div>
         </section>
@@ -178,7 +180,7 @@ export default async function HomePage() {
 
       {/* Generator pachet CTA */}
       <section className="max-w-7xl mx-auto px-4 pb-14 md:pb-16">
-        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-white">
+        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-white hover:shadow-xl hover:shadow-primary/20 transition-shadow duration-500">
           <div className="max-w-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">
               Ai nevoie de un pachet personalizat?
@@ -207,8 +209,10 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {products.map((product, i) => (
+              <FadeIn key={product.id} delay={i * 50}>
+                <ProductCard product={product} />
+              </FadeIn>
             ))}
           </div>
         </section>
@@ -258,7 +262,7 @@ export default async function HomePage() {
 
       {/* Newsletter */}
       <section className="max-w-7xl mx-auto px-4 py-14 md:py-16">
-        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-white">
+        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 md:p-12 text-white hover:shadow-xl hover:shadow-primary/20 transition-shadow duration-500">
           <div className="max-w-2xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Fii la curent cu noutatile</h2>
             <p className="text-white/80 mb-6">
