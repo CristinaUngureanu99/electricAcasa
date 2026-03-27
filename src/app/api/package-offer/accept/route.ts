@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { createServerSupabaseClient, getServiceSupabase } from '@/lib/supabase-server';
 
 export async function POST(request: NextRequest) {
   const supabase = await createServerSupabaseClient();
@@ -70,15 +70,18 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Use service role for order creation (no INSERT RLS policy on orders)
+  const serviceSupabase = getServiceSupabase();
+
   const decremented: { productId: string; quantity: number }[] = [];
   for (const item of catalogItems) {
-    const { data: ok } = await supabase.rpc('decrement_stock', {
+    const { data: ok } = await serviceSupabase.rpc('decrement_stock', {
       p_product_id: item.product_id!,
       p_quantity: item.quantity,
     });
     if (!ok) {
       for (const dec of decremented) {
-        await supabase.rpc('increment_stock', {
+        await serviceSupabase.rpc('increment_stock', {
           p_product_id: dec.productId,
           p_quantity: dec.quantity,
         });
@@ -91,7 +94,7 @@ export async function POST(request: NextRequest) {
     decremented.push({ productId: item.product_id!, quantity: item.quantity });
   }
 
-  const { data: order, error: orderError } = await supabase
+  const { data: order, error: orderError } = await serviceSupabase
     .from('orders')
     .insert({
       user_id: user.id,
@@ -111,7 +114,7 @@ export async function POST(request: NextRequest) {
 
   if (orderError || !order) {
     for (const dec of decremented) {
-      await supabase.rpc('increment_stock', {
+      await serviceSupabase.rpc('increment_stock', {
         p_product_id: dec.productId,
         p_quantity: dec.quantity,
       });
@@ -127,12 +130,12 @@ export async function POST(request: NextRequest) {
     unit_price: i.unit_price,
   }));
 
-  const { error: orderItemsError } = await supabase.from('order_items').insert(orderItems);
+  const { error: orderItemsError } = await serviceSupabase.from('order_items').insert(orderItems);
 
   if (orderItemsError) {
-    await supabase.from('orders').delete().eq('id', order.id);
+    await serviceSupabase.from('orders').delete().eq('id', order.id);
     for (const dec of decremented) {
-      await supabase.rpc('increment_stock', {
+      await serviceSupabase.rpc('increment_stock', {
         p_product_id: dec.productId,
         p_quantity: dec.quantity,
       });
@@ -140,7 +143,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Eroare la salvarea produselor' }, { status: 500 });
   }
 
-  await supabase.from('package_requests').update({ offer_status: 'accepted' }).eq('id', requestId);
+  await serviceSupabase
+    .from('package_requests')
+    .update({ offer_status: 'accepted' })
+    .eq('id', requestId);
 
   return NextResponse.json({ success: true, orderId: order.id, orderNumber: order.order_number });
 }
