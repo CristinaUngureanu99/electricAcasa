@@ -84,7 +84,7 @@ export default async function HomePage() {
       />
       {/* Category quick-access pills — right below header */}
       {categories.length > 0 && (
-        <div className="max-w-7xl mx-auto pt-4 pb-2 md:pt-5 md:pb-3">
+        <div className="max-w-7xl mx-auto pt-2 pb-2 md:pt-3 md:pb-3">
           <div className="flex gap-2 overflow-x-auto pb-2 px-4 scrollbar-hide">
             {categories.map((cat) => (
               <Link
