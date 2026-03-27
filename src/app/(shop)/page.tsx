@@ -82,11 +82,10 @@ export default async function HomePage() {
           },
         }}
       />
-      {/* Hero — category buttons + description */}
-      <section className="max-w-7xl mx-auto pt-10 pb-14 md:pt-16 md:pb-20">
-        {/* Category quick-access — full width, horizontal scroll */}
-        {categories.length > 0 && (
-          <div className="flex gap-2 mb-8 overflow-x-auto pb-2 px-4 scrollbar-hide">
+      {/* Category quick-access pills */}
+      {categories.length > 0 && (
+        <div className="max-w-7xl mx-auto pt-4 pb-2 md:pt-5 md:pb-3">
+          <div className="flex gap-2 overflow-x-auto pb-2 px-4 scrollbar-hide">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
@@ -97,32 +96,12 @@ export default async function HomePage() {
               </Link>
             ))}
           </div>
-        )}
-
-        <div className="max-w-2xl px-4">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
-            Aparataj, iluminat si
-            <br />
-            <span className="text-primary">protectii electrice</span>
-          </h1>
-          <p className="text-lg text-gray-600">
-            Alege usor din{' '}
-            <Link href="/catalog" className="text-primary font-semibold hover:underline">
-              catalogul nostru
-            </Link>
-            , compara specificatii, descarca fise tehnice si comanda cu livrare in toata Romania. Ai
-            nevoie de ajutor?{' '}
-            <Link href="/generator-pachet" className="text-primary font-semibold hover:underline">
-              Solicita un pachet personalizat
-            </Link>
-            .
-          </p>
         </div>
-      </section>
+      )}
 
       {/* Categorii */}
       {categories.length > 0 && (
-        <section id="categorii" className="max-w-7xl mx-auto px-4 py-14 md:py-16">
+        <section id="categorii" className="max-w-7xl mx-auto px-4 pt-4 pb-14 md:pt-6 md:pb-16">
           <div className="mb-10">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Categorii de produse</h2>
             <p className="text-gray-500 mt-2">Alege categoria potrivita pentru proiectul tau</p>
