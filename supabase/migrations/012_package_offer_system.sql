@@ -39,5 +39,5 @@ CREATE POLICY "Users can view own offer items"
 -- Admins can do everything
 CREATE POLICY "Admins full access to offer items"
   ON public.package_offer_items FOR ALL
-  USING (public.is_admin())
-  WITH CHECK (public.is_admin());
+  USING (public.is_admin(auth.uid()))
+  WITH CHECK (public.is_admin(auth.uid()));
