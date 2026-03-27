@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -48,6 +49,7 @@ export default function GeneratorPachetPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
@@ -55,9 +57,16 @@ export default function GeneratorPachetPage() {
     let err = '';
     const v = value.trim();
     switch (field) {
-      case 'name': if (v.length > 0 && v.length < 3) err = 'Minim 3 caractere'; break;
-      case 'email': if (v.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) err = 'Adresa de email invalida'; break;
-      case 'phone': if (v.length > 0 && !/^(\+?40|0)[237]\d{8}$/.test(v.replace(/[\s\-().]/g, ''))) err = 'Format invalid'; break;
+      case 'name':
+        if (v.length > 0 && v.length < 3) err = 'Minim 3 caractere';
+        break;
+      case 'email':
+        if (v.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) err = 'Adresa de email invalida';
+        break;
+      case 'phone':
+        if (v.length > 0 && !/^(\+?40|0)[237]\d{8}$/.test(v.replace(/[\s\-().]/g, '')))
+          err = 'Format invalid';
+        break;
     }
     setFieldErrors((prev) => ({ ...prev, [field]: err }));
   }
@@ -65,23 +74,30 @@ export default function GeneratorPachetPage() {
   useEffect(() => {
     async function checkAuth() {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
       if (user) {
-        const { data: profile } = await supabase.from('profiles').select('full_name, email, phone').eq('id', user.id).single();
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name, email, phone')
+          .eq('id', user.id)
+          .single();
         if (profile) {
           setName(profile.full_name || '');
           setEmail(profile.email || '');
           setPhone(profile.phone || '');
         }
       }
+      setCheckingAuth(false);
     }
     checkAuth();
   }, []);
 
   function toggleInstallation(value: string) {
     setInstallations((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
     );
   }
 
@@ -94,7 +110,9 @@ export default function GeneratorPachetPage() {
     if (area) parts.push(`Suprafata: ${area} mp`);
     if (rooms) parts.push(`Numar camere: ${rooms}`);
     if (installations.length > 0) {
-      const labels = installations.map((v) => INSTALLATION_TYPES.find((t) => t.value === v)?.label).filter(Boolean);
+      const labels = installations
+        .map((v) => INSTALLATION_TYPES.find((t) => t.value === v)?.label)
+        .filter(Boolean);
       parts.push(`Instalatii: ${labels.join(', ')}`);
     }
     if (budget) {
@@ -123,7 +141,9 @@ export default function GeneratorPachetPage() {
     setSubmitting(true);
     try {
       const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       const formData = new FormData();
       formData.append('name', name.trim());
@@ -164,6 +184,30 @@ export default function GeneratorPachetPage() {
     setSubmitting(false);
   }
 
+  if (checkingAuth) {
+    return null;
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="max-w-xl mx-auto text-center py-16 px-4">
+        <Package size={48} className="mx-auto text-gray-300 mb-4" />
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          Logheaza-te pentru a trimite o cerere
+        </h2>
+        <p className="text-gray-500 mb-6">
+          Ai nevoie de un cont pentru a trimite cereri de pachet si a urmari statusul ofertelor.
+        </p>
+        <Link
+          href="/login?redirect=/generator-pachet"
+          className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-dark transition-colors"
+        >
+          Logheaza-te
+        </Link>
+      </div>
+    );
+  }
+
   if (submitted) {
     return (
       <div className="max-w-lg mx-auto px-4 py-16">
@@ -171,8 +215,23 @@ export default function GeneratorPachetPage() {
           <div className="text-center space-y-4">
             <CheckCircle size={48} className="mx-auto text-success" />
             <h1 className="text-xl font-bold text-gray-900">Cerere trimisa!</h1>
-            <p className="text-sm text-gray-500">Vom analiza cererea ta si te vom contacta in cel mai scurt timp cu o oferta personalizata.</p>
-            <Button variant="secondary" onClick={() => { setSubmitted(false); setProjectType(''); setInstallations([]); setBudget(''); setArea(''); setRooms(''); setNotes(''); setFile(null); }}>
+            <p className="text-sm text-gray-500">
+              Vom analiza cererea ta si te vom contacta in cel mai scurt timp cu o oferta
+              personalizata.
+            </p>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setSubmitted(false);
+                setProjectType('');
+                setInstallations([]);
+                setBudget('');
+                setArea('');
+                setRooms('');
+                setNotes('');
+                setFile(null);
+              }}
+            >
               Trimite o alta cerere
             </Button>
           </div>
@@ -181,14 +240,17 @@ export default function GeneratorPachetPage() {
     );
   }
 
-  const selectClass = "w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary";
+  const selectClass =
+    'w-full px-4 py-2.5 rounded-xl border border-gray-200 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary';
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
       <div className="text-center mb-10">
         <Package size={48} className="mx-auto text-primary mb-3" />
         <h1 className="text-3xl font-bold text-gray-900">Pachet personalizat</h1>
-        <p className="text-gray-500 mt-2 max-w-md mx-auto">Spune-ne ce proiect ai si iti pregatim o oferta completa cu toate materialele necesare.</p>
+        <p className="text-gray-500 mt-2 max-w-md mx-auto">
+          Spune-ne ce proiect ai si iti pregatim o oferta completa cu toate materialele necesare.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -196,9 +258,32 @@ export default function GeneratorPachetPage() {
         <Card>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Date de contact</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input label="Nume *" value={name} onChange={(e) => setName(e.target.value)} onBlur={() => validatePackageField('name', name)} error={fieldErrors.name} required />
-            <Input label="Email *" type="email" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => validatePackageField('email', email)} error={fieldErrors.email} required />
-            <Input label="Telefon" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} onBlur={() => validatePackageField('phone', phone)} error={fieldErrors.phone} placeholder="Optional" />
+            <Input
+              label="Nume *"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={() => validatePackageField('name', name)}
+              error={fieldErrors.name}
+              required
+            />
+            <Input
+              label="Email *"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => validatePackageField('email', email)}
+              error={fieldErrors.email}
+              required
+            />
+            <Input
+              label="Telefon"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              onBlur={() => validatePackageField('phone', phone)}
+              error={fieldErrors.phone}
+              placeholder="Optional"
+            />
           </div>
         </Card>
 
@@ -208,28 +293,58 @@ export default function GeneratorPachetPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Tip proiect *</label>
-              <select value={projectType} onChange={(e) => setProjectType(e.target.value)} className={selectClass}>
+              <select
+                value={projectType}
+                onChange={(e) => setProjectType(e.target.value)}
+                className={selectClass}
+              >
                 {PROJECT_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Buget estimativ</label>
-              <select value={budget} onChange={(e) => setBudget(e.target.value)} className={selectClass}>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Buget estimativ
+              </label>
+              <select
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                className={selectClass}
+              >
                 {BUDGET_LEVELS.map((b) => (
-                  <option key={b.value} value={b.value}>{b.label}</option>
+                  <option key={b.value} value={b.value}>
+                    {b.label}
+                  </option>
                 ))}
               </select>
             </div>
-            <Input label="Suprafata (mp)" type="number" min="1" value={area} onChange={(e) => setArea(e.target.value)} placeholder="ex: 80" />
-            <Input label="Numar camere" type="number" min="1" value={rooms} onChange={(e) => setRooms(e.target.value)} placeholder="ex: 3" />
+            <Input
+              label="Suprafata (mp)"
+              type="number"
+              min="1"
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
+              placeholder="ex: 80"
+            />
+            <Input
+              label="Numar camere"
+              type="number"
+              min="1"
+              value={rooms}
+              onChange={(e) => setRooms(e.target.value)}
+              placeholder="ex: 3"
+            />
           </div>
         </Card>
 
         {/* Installation types */}
         <Card>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Ce tip de instalatie ai nevoie? *</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Ce tip de instalatie ai nevoie? *
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {INSTALLATION_TYPES.map((type) => {
               const selected = installations.includes(type.value);
@@ -256,7 +371,9 @@ export default function GeneratorPachetPage() {
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Informatii suplimentare</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Detalii sau cerinte speciale</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Detalii sau cerinte speciale
+              </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -267,7 +384,9 @@ export default function GeneratorPachetPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Plan / schita (optional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Plan / schita (optional)
+              </label>
               {isLoggedIn ? (
                 <>
                   <input

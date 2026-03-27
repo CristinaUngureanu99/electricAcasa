@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase-server';
-import { rateLimit, getClientIp } from '@/lib/rate-limit';
+import { rateLimit } from '@/lib/rate-limit';
 import { generateSlug } from '@/lib/utils';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   try {
     const supabase = getServiceSupabase();
 
-    // Optional auth
+    // Required auth
     const authHeader = request.headers.get('authorization');
     let userId: string | null = null;
     if (authHeader) {
@@ -21,7 +21,11 @@ export async function POST(request: Request) {
       userId = user?.id || null;
     }
 
-    const rateLimitKey = userId ? `pkg-req:${userId}` : `pkg-req:${getClientIp(request)}`;
+    if (!userId) {
+      return NextResponse.json({ error: 'Autentificare necesara' }, { status: 401 });
+    }
+
+    const rateLimitKey = `pkg-req:${userId}`;
     if (!(await rateLimit(rateLimitKey, 3, 3600_000))) {
       return NextResponse.json(
         { error: 'Prea multe cereri. Incearca din nou mai tarziu.' },
@@ -39,14 +43,6 @@ export async function POST(request: Request) {
     if (!name || !email || !description) {
       return NextResponse.json(
         { error: 'Nume, email si descriere sunt obligatorii' },
-        { status: 400 },
-      );
-    }
-
-    // File with no auth → 400
-    if (file && !userId) {
-      return NextResponse.json(
-        { error: 'Autentificare necesara pentru atasament' },
         { status: 400 },
       );
     }
