@@ -1,19 +1,27 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 import CereriContent from './CereriContent';
-import type { PackageRequest } from '@/types/database';
+import type { PackageRequest, PackageOfferItem } from '@/types/database';
 
 export const metadata = { title: 'Cereri pachet - Admin' };
 
 export default async function AdminCereriPage() {
   const supabase = await createServerSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
   const { data: requests } = await supabase
     .from('package_requests')
-    .select('*')
+    .select('*, package_offer_items(*)')
     .order('created_at', { ascending: false });
 
-  return <CereriContent requests={(requests as PackageRequest[]) || []} />;
+  return (
+    <CereriContent
+      requests={
+        (requests as (PackageRequest & { package_offer_items: PackageOfferItem[] })[]) || []
+      }
+    />
+  );
 }
