@@ -82,8 +82,25 @@ export default async function HomePage() {
           },
         }}
       />
+      {/* Category quick-access pills — right below header */}
+      {categories.length > 0 && (
+        <div className="max-w-7xl mx-auto pt-4 pb-2 md:pt-5 md:pb-3">
+          <div className="flex gap-2 overflow-x-auto pb-2 px-4 scrollbar-hide">
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/categorie/${cat.slug}`}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium text-gray-700 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-colors shrink-0"
+              >
+                {cat.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Hero heading */}
-      <section className="max-w-7xl mx-auto pt-10 pb-6 md:pt-16 md:pb-8 px-4">
+      <section className="max-w-7xl mx-auto pt-8 pb-6 md:pt-12 md:pb-8 px-4">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
           Aparataj, iluminat si
           <br />
@@ -103,26 +120,9 @@ export default async function HomePage() {
         </p>
       </section>
 
-      {/* Category quick-access pills */}
-      {categories.length > 0 && (
-        <div className="max-w-7xl mx-auto pt-0 pb-2 md:pb-3">
-          <div className="flex gap-2 overflow-x-auto pb-2 px-4 scrollbar-hide">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/categorie/${cat.slug}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium text-gray-700 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-colors shrink-0"
-              >
-                {cat.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Categorii */}
       {categories.length > 0 && (
-        <section id="categorii" className="max-w-7xl mx-auto px-4 pt-4 pb-14 md:pt-6 md:pb-16">
+        <section id="categorii" className="max-w-7xl mx-auto px-4 pt-0 pb-14 md:pb-16">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {categories.map((cat, i) => (
               <FadeIn key={cat.id} delay={i * 60}>
