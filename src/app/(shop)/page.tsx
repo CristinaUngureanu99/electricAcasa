@@ -100,7 +100,7 @@ export default async function HomePage() {
       )}
 
       {/* Hero heading */}
-      <section className="max-w-7xl mx-auto pt-8 pb-6 md:pt-12 md:pb-8 px-4">
+      <section className="max-w-7xl mx-auto pt-4 pb-6 md:pt-6 md:pb-8 px-4">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
           Aparataj, iluminat si
           <br />
