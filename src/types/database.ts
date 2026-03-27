@@ -98,6 +98,7 @@ export interface Order {
   payment_status: PaymentStatus;
   stripe_session_id: string | null;
   notes: string | null;
+  package_request_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -133,6 +134,7 @@ export interface CartItem {
 // -- Package Requests --
 
 export type PackageRequestStatus = 'new' | 'in_review' | 'answered' | 'closed';
+export type OfferStatus = 'pending' | 'accepted' | 'rejected' | 'closed';
 
 export interface PackageRequest {
   id: string;
@@ -144,6 +146,20 @@ export interface PackageRequest {
   attachment_url: string | null;
   status: PackageRequestStatus;
   admin_notes: string | null;
+  created_at: string;
+  offer_total: number | null;
+  offer_status: OfferStatus | null;
+  offer_created_at: string | null;
+  offer_notes: string | null;
+}
+
+export interface PackageOfferItem {
+  id: string;
+  request_id: string;
+  product_id: string | null;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
   created_at: string;
 }
 
