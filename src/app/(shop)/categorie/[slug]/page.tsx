@@ -248,7 +248,7 @@ export default async function CategoriePage({ params, searchParams }: Props) {
                 <div className="space-y-1.5">
                   <Link
                     href={buildUrl({ sub: undefined, page: undefined })}
-                    className={`block text-sm px-2 py-1 rounded-lg transition-colors ${
+                    className={`block text-sm px-3 py-2 rounded-lg transition-colors ${
                       !subFilter
                         ? 'bg-primary/10 text-primary font-medium'
                         : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'
@@ -264,7 +264,7 @@ export default async function CategoriePage({ params, searchParams }: Props) {
                         sub: subFilter === sub.slug ? undefined : sub.slug,
                         page: undefined,
                       })}
-                      className={`block text-sm px-2 py-1 rounded-lg transition-colors ${
+                      className={`block text-sm px-3 py-2 rounded-lg transition-colors ${
                         subFilter === sub.slug
                           ? 'bg-primary/10 text-primary font-medium'
                           : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'
@@ -284,7 +284,7 @@ export default async function CategoriePage({ params, searchParams }: Props) {
             {brands.length > 0 && (
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Brand</p>
-                <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                <div className="space-y-1 max-h-60 md:max-h-40 overflow-y-auto">
                   {brands.map((brand) => (
                     <Link
                       key={brand}
@@ -292,7 +292,7 @@ export default async function CategoriePage({ params, searchParams }: Props) {
                         brand: brandFilter === brand ? undefined : brand,
                         page: undefined,
                       })}
-                      className={`block text-sm px-2 py-1 rounded-lg transition-colors ${
+                      className={`block text-sm px-3 py-2 rounded-lg transition-colors ${
                         brandFilter === brand
                           ? 'bg-primary/10 text-primary font-medium'
                           : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'
@@ -308,7 +308,7 @@ export default async function CategoriePage({ params, searchParams }: Props) {
             {/* Price filter */}
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Pret (RON)</p>
-              <form action={`/categorie/${slug}`} className="flex gap-2">
+              <form action={`/categorie/${slug}`} className="flex flex-wrap gap-2">
                 {subFilter && <input type="hidden" name="sub" value={subFilter} />}
                 {brandFilter && <input type="hidden" name="brand" value={brandFilter} />}
                 {sp.stoc && <input type="hidden" name="stoc" value={sp.stoc} />}
@@ -340,7 +340,7 @@ export default async function CategoriePage({ params, searchParams }: Props) {
             <div>
               <Link
                 href={buildUrl({ stoc: inStockOnly ? undefined : '1', page: undefined })}
-                className={`text-sm px-2 py-1 rounded-lg block transition-colors ${
+                className={`text-sm px-3 py-2 rounded-lg block transition-colors ${
                   inStockOnly
                     ? 'bg-primary/10 text-primary font-medium'
                     : 'text-gray-600 hover:bg-primary/5 hover:text-gray-900'

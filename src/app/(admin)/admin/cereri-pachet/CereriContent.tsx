@@ -494,16 +494,16 @@ export default function CereriContent({ requests: initialRequests }: Props) {
                                   <th className="text-left py-2 text-xs font-semibold text-gray-500 uppercase">
                                     Produs
                                   </th>
-                                  <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase w-20">
+                                  <th className="text-center py-2 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                     Cant.
                                   </th>
-                                  <th className="text-right py-2 text-xs font-semibold text-gray-500 uppercase w-28">
+                                  <th className="text-right py-2 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                     Pret
                                   </th>
-                                  <th className="text-right py-2 text-xs font-semibold text-gray-500 uppercase w-28">
+                                  <th className="text-right py-2 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                     Subtotal
                                   </th>
-                                  <th className="w-10"></th>
+                                  <th className="whitespace-nowrap"></th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -536,7 +536,7 @@ export default function CereriContent({ requests: initialRequests }: Props) {
                                             parseInt(e.target.value) || 1,
                                           )
                                         }
-                                        className="w-16 text-center px-1 py-1 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                                        className="w-14 md:w-16 text-center px-1 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                                       />
                                     </td>
                                     <td className="py-2 text-right">
@@ -552,7 +552,7 @@ export default function CereriContent({ requests: initialRequests }: Props) {
                                             parseFloat(e.target.value) || 0,
                                           )
                                         }
-                                        className="w-24 text-right px-1 py-1 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
+                                        className="w-20 md:w-24 text-right px-1 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary"
                                       />
                                     </td>
                                     <td className="py-2 text-right font-medium text-gray-900">
@@ -561,7 +561,7 @@ export default function CereriContent({ requests: initialRequests }: Props) {
                                     <td className="py-2 text-center">
                                       <button
                                         onClick={() => removeOfferItem(idx)}
-                                        className="text-red-400 hover:text-red-600"
+                                        className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
                                       >
                                         <Trash2 size={14} />
                                       </button>

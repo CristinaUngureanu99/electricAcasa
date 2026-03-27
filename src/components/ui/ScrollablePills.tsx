@@ -50,10 +50,10 @@ export function ScrollablePills({ items }: Props) {
       {canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white/90 border border-gray-200 rounded-full shadow-sm hover:bg-white hover:shadow-md transition-all"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white/90 border border-gray-200 rounded-full shadow-sm hover:bg-white hover:shadow-md transition-all"
           aria-label="Scroll left"
         >
-          <ChevronLeft size={16} className="text-gray-600" />
+          <ChevronLeft size={18} className="text-gray-600" />
         </button>
       )}
 
@@ -66,7 +66,7 @@ export function ScrollablePills({ items }: Props) {
           <Link
             key={item.href}
             href={item.href}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-sm font-medium text-gray-700 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white text-sm font-medium text-gray-700 rounded-xl border border-gray-200 hover:border-primary hover:text-primary transition-colors shrink-0"
           >
             {item.label}
           </Link>
@@ -77,19 +77,19 @@ export function ScrollablePills({ items }: Props) {
       {canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white/90 border border-gray-200 rounded-full shadow-md hover:bg-white hover:shadow-md transition-all"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-white/90 border border-gray-200 rounded-full shadow-sm hover:bg-white hover:shadow-md transition-all"
           aria-label="Scroll right"
         >
-          <ChevronRight size={16} className="text-gray-600" />
+          <ChevronRight size={18} className="text-gray-600" />
         </button>
       )}
 
       {/* Fade hints */}
       {canScrollLeft && (
-        <div className="absolute left-0 top-0 bottom-2 w-8 bg-gradient-to-r from-[var(--color-bg-page,#f8fafc)] to-transparent pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-2 w-10 bg-gradient-to-r from-[var(--color-bg-page,#f8fafc)] to-transparent pointer-events-none" />
       )}
       {canScrollRight && (
-        <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-[var(--color-bg-page,#f8fafc)] to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-2 w-10 bg-gradient-to-l from-[var(--color-bg-page,#f8fafc)] to-transparent pointer-events-none" />
       )}
     </div>
   );

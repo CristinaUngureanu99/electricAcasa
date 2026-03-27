@@ -177,7 +177,7 @@ export default function CereriPachetContent({ requests: initialRequests }: Props
 
                   <div className="flex items-center justify-between pt-2 border-t border-gray-200">
                     <span className="font-semibold text-gray-900">Total</span>
-                    <span className="text-lg font-bold text-primary">
+                    <span className="text-base md:text-lg font-bold text-primary">
                       {formatPrice(req.offer_total ?? 0)}
                     </span>
                   </div>
@@ -193,9 +193,9 @@ export default function CereriPachetContent({ requests: initialRequests }: Props
 
                   {/* Accept/Reject buttons */}
                   {req.offer_status === 'pending' && (
-                    <div className="flex gap-3 pt-2">
+                    <div className="flex flex-col sm:flex-row gap-3 pt-2">
                       {confirmAccept === req.id ? (
-                        <div className="flex items-center gap-3 w-full flex-wrap">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full">
                           <p className="text-sm text-gray-600 flex-1">
                             Confirmi acceptarea ofertei de{' '}
                             <strong>{formatPrice(req.offer_total ?? 0)}</strong>? Se va crea o

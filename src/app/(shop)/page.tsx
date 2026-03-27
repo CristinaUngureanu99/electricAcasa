@@ -97,10 +97,8 @@ export default async function HomePage() {
 
       {/* Hero heading */}
       <section className="max-w-7xl mx-auto pt-4 pb-6 md:pt-6 md:pb-8 px-4">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
-          Aparataj, iluminat si
-          <br />
-          <span className="text-primary">protectii electrice</span>
+        <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-5">
+          Aparataj, iluminat si <span className="text-primary">protectii electrice</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl">
           Alege usor din{' '}
@@ -124,7 +122,7 @@ export default async function HomePage() {
               <FadeIn key={cat.id} delay={i * 60}>
                 <Link
                   href={`/categorie/${cat.slug}`}
-                  className="group block bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
+                  className="group flex flex-col h-full bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
                 >
                   <div className="aspect-[4/3] relative bg-gray-50 overflow-hidden">
                     {cat.image_url ? (
@@ -142,26 +140,20 @@ export default async function HomePage() {
                       </div>
                     )}
                   </div>
-                  <div className="p-4">
+                  <div className="p-3 md:p-4 flex flex-col flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-all">
+                      <h3 className="text-sm md:text-base font-semibold text-gray-900 group-hover:text-primary transition-all line-clamp-1">
                         {cat.name}
                       </h3>
                       {categoryCounts[cat.id] > 0 && (
-                        <span className="text-[10px] font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                        <span className="text-xs font-semibold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full shrink-0">
                           {categoryCounts[cat.id]}
                         </span>
                       )}
                     </div>
-                    {cat.description ? (
-                      <p className="text-xs text-gray-500 mt-1 line-clamp-2 group-hover:text-gray-600 transition-colors">
-                        {cat.description}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-gray-400 mt-1 group-hover:text-primary/60 transition-colors">
-                        Vezi produsele →
-                      </p>
-                    )}
+                    <p className="text-xs text-gray-500 mt-1 line-clamp-1 group-hover:text-gray-600 transition-colors">
+                      {cat.description || 'Vezi produsele →'}
+                    </p>
                   </div>
                 </Link>
               </FadeIn>
@@ -219,7 +211,7 @@ export default async function HomePage() {
               3 pasi simpli pana la materialele de care ai nevoie
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div className="text-center">
               <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
                 <ShoppingCart size={24} className="text-primary" />

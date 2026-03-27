@@ -26,9 +26,9 @@ export default function DashboardContent({
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 bg-slate-50 -m-4 md:-m-8 lg:-m-10 p-4 md:p-8 lg:p-10 min-h-screen">
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
             Bine ai venit, {profile?.full_name?.split(' ')[0] || 'utilizator'}!
           </h1>
           <p className="text-gray-500 mt-1">Contul tau electricAcasa</p>
@@ -65,7 +65,7 @@ export default function DashboardContent({
                 <Link
                   key={o.id}
                   href={`/comenzi/${o.id}`}
-                  className="flex items-center justify-between text-sm hover:bg-primary/[0.03] rounded-lg px-2 py-1.5 -mx-2 transition-all"
+                  className="flex items-center justify-between text-sm hover:bg-primary/[0.03] rounded-lg px-2 py-2.5 -mx-2 transition-all"
                 >
                   <div>
                     <span className="font-medium text-gray-900">EA-{o.order_number}</span>
