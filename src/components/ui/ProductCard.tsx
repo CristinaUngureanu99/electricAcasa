@@ -23,9 +23,9 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/produs/${product.slug}`}
-      className="group block bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
+      className="group flex flex-col h-full bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
     >
-      <div className="aspect-square relative bg-gray-50 overflow-hidden">
+      <div className="aspect-square relative bg-gray-50 overflow-hidden shrink-0">
         {thumb ? (
           <>
             <Image
@@ -59,13 +59,13 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
       </div>
-      <div className="p-4">
+      <div className="p-3 md:p-4 flex flex-col flex-1">
         {product.brand_name && (
           <p className="text-xs text-gray-500 uppercase tracking-wide mb-1 group-hover:text-gray-600 transition-colors">
             {product.brand_name}
           </p>
         )}
-        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-primary transition-all">
+        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-primary transition-all flex-1">
           {product.name}
         </h3>
         <div className="flex items-baseline gap-2">

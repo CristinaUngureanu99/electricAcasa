@@ -298,7 +298,7 @@ export function ShopNav({ categories, categoryCounts }: ShopNavProps) {
                 name="q"
                 placeholder="Cauta produse..."
                 autoFocus
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-white/30 bg-white/15 text-sm text-white placeholder:text-white/50 focus:outline-none focus:bg-white/25 focus:border-white/50 transition-colors"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-white/30 bg-white/15 text-base md:text-sm text-white placeholder:text-white/50 focus:outline-none focus:bg-white/25 focus:border-white/50 transition-colors"
               />
             </form>
           </div>
