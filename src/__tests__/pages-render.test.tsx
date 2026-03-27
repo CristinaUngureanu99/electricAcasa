@@ -3,11 +3,15 @@ import { render, screen } from '@testing-library/react';
 
 // Mock next modules
 vi.mock('next/link', () => ({
-  default: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
+  default: ({ children, href }: { children: React.ReactNode; href: string }) => (
+    <a href={href}>{children}</a>
+  ),
 }));
 
 vi.mock('next/image', () => ({
-  default: ({ alt, ...props }: { alt: string; [key: string]: unknown }) => <img alt={alt} {...props} />,
+  default: ({ alt, ...props }: { alt: string; [key: string]: unknown }) => (
+    <img alt={alt} {...props} />
+  ),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -51,13 +55,41 @@ describe('Not Found page', () => {
 describe('DashboardContent', () => {
   it('renders dashboard cards', async () => {
     const { default: DashboardContent } = await import('@/app/(client)/dashboard/DashboardContent');
-    render(<DashboardContent profile={{ id: '1', email: 'test@test.com', full_name: 'Test', phone: null, role: 'user', created_at: '' }} recentOrders={[]} addressCount={0} />);
+    render(
+      <DashboardContent
+        profile={{
+          id: '1',
+          email: 'test@test.com',
+          full_name: 'Test',
+          phone: null,
+          role: 'user',
+          created_at: '',
+        }}
+        recentOrders={[]}
+        addressCount={0}
+        packageRequestCount={0}
+      />,
+    );
     expect(screen.getByText(/Profilul tau/i)).toBeInTheDocument();
   });
 
   it('shows user name in greeting', async () => {
     const { default: DashboardContent } = await import('@/app/(client)/dashboard/DashboardContent');
-    render(<DashboardContent profile={{ id: '1', email: 'test@test.com', full_name: 'John Doe', phone: null, role: 'user', created_at: '' }} recentOrders={[]} addressCount={0} />);
+    render(
+      <DashboardContent
+        profile={{
+          id: '1',
+          email: 'test@test.com',
+          full_name: 'John Doe',
+          phone: null,
+          role: 'user',
+          created_at: '',
+        }}
+        recentOrders={[]}
+        addressCount={0}
+        packageRequestCount={0}
+      />,
+    );
     expect(screen.getByText(/John/)).toBeInTheDocument();
   });
 });

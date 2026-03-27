@@ -6,16 +6,22 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { formatPrice, formatDate } from '@/lib/utils';
 import { orderStatusLabels, orderStatusVariants } from '@/lib/order-helpers';
-import { ShoppingBag, MapPin, User, Shield } from 'lucide-react';
+import { ShoppingBag, MapPin, User, Shield, Package } from 'lucide-react';
 import type { Profile, Order, OrderStatus } from '@/types/database';
 
 interface Props {
   profile: Profile | null;
   recentOrders: Pick<Order, 'id' | 'order_number' | 'status' | 'total' | 'created_at'>[];
   addressCount: number;
+  packageRequestCount: number;
 }
 
-export default function DashboardContent({ profile, recentOrders, addressCount }: Props) {
+export default function DashboardContent({
+  profile,
+  recentOrders,
+  addressCount,
+  packageRequestCount,
+}: Props) {
   const isAdmin = profile?.role === 'admin';
 
   return (
@@ -37,7 +43,7 @@ export default function DashboardContent({ profile, recentOrders, addressCount }
         )}
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {/* Comenzi recente */}
         <Card>
           <div className="flex items-start gap-3 mb-4">
@@ -47,20 +53,28 @@ export default function DashboardContent({ profile, recentOrders, addressCount }
             <div>
               <h3 className="font-semibold text-gray-900">Comenzi recente</h3>
               <p className="text-sm text-gray-500">
-                {recentOrders.length === 0 ? 'Nicio comanda inca' : `${recentOrders.length} comenzi recente`}
+                {recentOrders.length === 0
+                  ? 'Nicio comanda inca'
+                  : `${recentOrders.length} comenzi recente`}
               </p>
             </div>
           </div>
           {recentOrders.length > 0 && (
             <div className="space-y-2 mb-3">
               {recentOrders.map((o) => (
-                <Link key={o.id} href={`/comenzi/${o.id}`} className="flex items-center justify-between text-sm hover:bg-primary/[0.03] rounded-lg px-2 py-1.5 -mx-2 transition-all">
+                <Link
+                  key={o.id}
+                  href={`/comenzi/${o.id}`}
+                  className="flex items-center justify-between text-sm hover:bg-primary/[0.03] rounded-lg px-2 py-1.5 -mx-2 transition-all"
+                >
                   <div>
                     <span className="font-medium text-gray-900">EA-{o.order_number}</span>
                     <span className="text-gray-400 ml-2">{formatDate(o.created_at)}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={orderStatusVariants[o.status as OrderStatus]}>{orderStatusLabels[o.status as OrderStatus]}</Badge>
+                    <Badge variant={orderStatusVariants[o.status as OrderStatus]}>
+                      {orderStatusLabels[o.status as OrderStatus]}
+                    </Badge>
                     <span className="font-medium text-gray-900">{formatPrice(o.total)}</span>
                   </div>
                 </Link>
@@ -81,10 +95,38 @@ export default function DashboardContent({ profile, recentOrders, addressCount }
             <div>
               <h3 className="font-semibold text-gray-900">Adresele mele</h3>
               <p className="text-sm text-gray-500 mt-1">
-                {addressCount === 0 ? 'Nicio adresa salvata' : `${addressCount} ${addressCount === 1 ? 'adresa salvata' : 'adrese salvate'}`}
+                {addressCount === 0
+                  ? 'Nicio adresa salvata'
+                  : `${addressCount} ${addressCount === 1 ? 'adresa salvata' : 'adrese salvate'}`}
               </p>
-              <Link href="/adrese" className="text-sm text-accent hover:underline font-medium mt-2 inline-block">
+              <Link
+                href="/adrese"
+                className="text-sm text-accent hover:underline font-medium mt-2 inline-block"
+              >
                 Gestioneaza adresele
+              </Link>
+            </div>
+          </div>
+        </Card>
+
+        {/* Cereri pachet */}
+        <Card>
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-violet-50">
+              <Package size={24} className="text-violet-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">Cereri pachet</h3>
+              <p className="text-sm text-gray-500 mt-1">
+                {packageRequestCount === 0
+                  ? 'Nicio cerere trimisa'
+                  : `${packageRequestCount} ${packageRequestCount === 1 ? 'cerere' : 'cereri'} de pachet`}
+              </p>
+              <Link
+                href="/cereri-pachet"
+                className="text-sm text-accent hover:underline font-medium mt-2 inline-block"
+              >
+                Vezi cererile
               </Link>
             </div>
           </div>
@@ -101,7 +143,10 @@ export default function DashboardContent({ profile, recentOrders, addressCount }
               <p className="text-sm text-gray-500 mt-1">
                 Actualizeaza numele, telefonul sau parola.
               </p>
-              <Link href="/profile" className="text-sm text-accent hover:underline font-medium mt-2 inline-block">
+              <Link
+                href="/profile"
+                className="text-sm text-accent hover:underline font-medium mt-2 inline-block"
+              >
                 Editeaza profil
               </Link>
             </div>

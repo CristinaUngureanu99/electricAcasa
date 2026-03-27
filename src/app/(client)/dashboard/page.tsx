@@ -10,13 +10,24 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const [profileRes, ordersRes, addressCountRes] = await Promise.all([
+  const [profileRes, ordersRes, addressCountRes, packageRequestCountRes] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
-    supabase.from('orders').select('id, order_number, status, total, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(3),
+    supabase
+      .from('orders')
+      .select('id, order_number, status, total, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(3),
     supabase.from('addresses').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+    supabase
+      .from('package_requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id),
   ]);
 
   if (profileRes.error) {
@@ -26,8 +37,14 @@ export default async function DashboardPage() {
   return (
     <DashboardContent
       profile={profileRes.data}
-      recentOrders={(ordersRes.data as Pick<Order, 'id' | 'order_number' | 'status' | 'total' | 'created_at'>[]) || []}
+      recentOrders={
+        (ordersRes.data as Pick<
+          Order,
+          'id' | 'order_number' | 'status' | 'total' | 'created_at'
+        >[]) || []
+      }
       addressCount={addressCountRes.count || 0}
+      packageRequestCount={packageRequestCountRes.count || 0}
     />
   );
 }
