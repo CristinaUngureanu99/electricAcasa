@@ -8,34 +8,12 @@ import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toast';
 import { formatDate, formatPrice } from '@/lib/utils';
 import { ChevronDown, ChevronUp, Package, CheckCircle, XCircle } from 'lucide-react';
-import type { PackageRequest, PackageOfferItem, OfferStatus } from '@/types/database';
-
-type RequestWithItems = PackageRequest & { package_offer_items: PackageOfferItem[] };
+import type { PackageRequestWithItems, OfferStatus } from '@/types/database';
+import { offerStatusLabels, offerStatusVariants, requestStatusLabels } from '@/lib/order-helpers';
 
 interface Props {
-  requests: RequestWithItems[];
+  requests: PackageRequestWithItems[];
 }
-
-const offerStatusLabels: Record<OfferStatus, string> = {
-  pending: 'Oferta primita',
-  accepted: 'Acceptata',
-  rejected: 'Refuzata',
-  closed: 'Inchisa',
-};
-
-const offerStatusVariants: Record<OfferStatus, 'warning' | 'success' | 'neutral' | 'info'> = {
-  pending: 'warning',
-  accepted: 'success',
-  rejected: 'neutral',
-  closed: 'neutral',
-};
-
-const requestStatusLabels: Record<string, string> = {
-  new: 'Noua',
-  in_review: 'In analiza',
-  answered: 'Oferta trimisa',
-  closed: 'Inchisa',
-};
 
 export default function CereriPachetContent({ requests: initialRequests }: Props) {
   const [requests, setRequests] = useState(initialRequests);

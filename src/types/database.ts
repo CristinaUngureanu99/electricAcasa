@@ -163,6 +163,10 @@ export interface PackageOfferItem {
   created_at: string;
 }
 
+export type PackageRequestWithItems = PackageRequest & {
+  package_offer_items: PackageOfferItem[];
+};
+
 // -- Newsletter --
 
 export interface NewsletterSubscription {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import { AdminPageShell } from '@/components/ui/AdminPageShell';
 import { Card } from '@/components/ui/Card';
@@ -22,20 +22,8 @@ import {
   Send,
   XCircle,
 } from 'lucide-react';
-import type {
-  PackageRequest,
-  PackageRequestStatus,
-  PackageOfferItem,
-  OfferStatus,
-} from '@/types/database';
-
-type RequestWithItems = PackageRequest & {
-  package_offer_items: PackageOfferItem[];
-  offer_total: number | null;
-  offer_status: OfferStatus | null;
-  offer_created_at: string | null;
-  offer_notes: string | null;
-};
+import type { PackageRequestStatus, PackageRequestWithItems, OfferStatus } from '@/types/database';
+import { offerStatusLabels, offerStatusVariants } from '@/lib/order-helpers';
 
 interface OfferItemDraft {
   productId: string | null;
@@ -53,7 +41,7 @@ interface ProductSearchResult {
 }
 
 interface Props {
-  requests: RequestWithItems[];
+  requests: PackageRequestWithItems[];
 }
 
 const statusLabels: Record<PackageRequestStatus, string> = {
@@ -69,13 +57,7 @@ const statusVariants: Record<PackageRequestStatus, 'warning' | 'info' | 'success
   closed: 'neutral',
 };
 const STATUS_OPTIONS: PackageRequestStatus[] = ['new', 'in_review', 'answered', 'closed'];
-
-const FILTER_OPTIONS = [
-  { value: 'new', label: 'Noua' },
-  { value: 'in_review', label: 'In analiza' },
-  { value: 'answered', label: 'Raspuns' },
-  { value: 'closed', label: 'Inchisa' },
-];
+const FILTER_OPTIONS = STATUS_OPTIONS.map((s) => ({ value: s, label: statusLabels[s] }));
 
 export default function CereriContent({ requests: initialRequests }: Props) {
   const [requests, setRequests] = useState(initialRequests);
@@ -118,7 +100,7 @@ export default function CereriContent({ requests: initialRequests }: Props) {
     setFilter('all');
   }
 
-  function expand(req: RequestWithItems) {
+  function expand(req: PackageRequestWithItems) {
     if (expandedId === req.id) {
       setExpandedId(null);
       return;
@@ -129,6 +111,8 @@ export default function CereriContent({ requests: initialRequests }: Props) {
     setShowOfferForm(false);
     setProductQuery('');
     setProductResults([]);
+    setSendingOffer(false);
+    setClosingOffer(false);
     // Load existing offer items into draft
     if (req.package_offer_items?.length > 0) {
       setOfferItemsDraft(
@@ -185,23 +169,29 @@ export default function CereriContent({ requests: initialRequests }: Props) {
     }
   }
 
-  async function searchProducts(query: string) {
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const searchProducts = useCallback((query: string) => {
     setProductQuery(query);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     if (query.length < 2) {
       setProductResults([]);
+      setSearching(false);
       return;
     }
     setSearching(true);
-    try {
-      const res = await fetch(`/api/admin/product-search?q=${encodeURIComponent(query)}`);
-      const data = await res.json();
-      setProductResults(data.products || []);
-    } catch {
-      setProductResults([]);
-    } finally {
-      setSearching(false);
-    }
-  }
+    searchTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/admin/product-search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        setProductResults(data.products || []);
+      } catch {
+        setProductResults([]);
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+  }, []);
 
   function addCatalogProduct(product: ProductSearchResult) {
     setOfferItemsDraft((prev) => [
@@ -438,22 +428,8 @@ export default function CereriContent({ requests: initialRequests }: Props) {
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-sm font-semibold text-gray-900">Oferta</p>
                       {req.offer_status && (
-                        <Badge
-                          variant={
-                            req.offer_status === 'pending'
-                              ? 'warning'
-                              : req.offer_status === 'accepted'
-                                ? 'success'
-                                : 'neutral'
-                          }
-                        >
-                          {req.offer_status === 'pending'
-                            ? 'In asteptare'
-                            : req.offer_status === 'accepted'
-                              ? 'Acceptata'
-                              : req.offer_status === 'rejected'
-                                ? 'Refuzata'
-                                : 'Inchisa'}
+                        <Badge variant={offerStatusVariants[req.offer_status]}>
+                          {offerStatusLabels[req.offer_status]}
                         </Badge>
                       )}
                     </div>

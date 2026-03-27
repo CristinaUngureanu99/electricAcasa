@@ -1,4 +1,9 @@
-import type { OrderStatus, PaymentStatus } from '@/types/database';
+import type {
+  OrderStatus,
+  PaymentStatus,
+  OfferStatus,
+  PackageRequestStatus,
+} from '@/types/database';
 
 export const orderStatusLabels: Record<OrderStatus, string> = {
   pending: 'In asteptare',
@@ -8,7 +13,10 @@ export const orderStatusLabels: Record<OrderStatus, string> = {
   cancelled: 'Anulata',
 };
 
-export const orderStatusVariants: Record<OrderStatus, 'warning' | 'info' | 'success' | 'danger' | 'neutral'> = {
+export const orderStatusVariants: Record<
+  OrderStatus,
+  'warning' | 'info' | 'success' | 'danger' | 'neutral'
+> = {
   pending: 'warning',
   confirmed: 'info',
   shipped: 'info',
@@ -21,4 +29,25 @@ export const paymentStatusLabels: Record<PaymentStatus, string> = {
   paid: 'Platita',
   failed: 'Esuata',
   refunded: 'Rambursata',
+};
+
+export const offerStatusLabels: Record<OfferStatus, string> = {
+  pending: 'In asteptare',
+  accepted: 'Acceptata',
+  rejected: 'Refuzata',
+  closed: 'Inchisa',
+};
+
+export const offerStatusVariants: Record<OfferStatus, 'warning' | 'success' | 'neutral'> = {
+  pending: 'warning',
+  accepted: 'success',
+  rejected: 'neutral',
+  closed: 'neutral',
+};
+
+export const requestStatusLabels: Record<PackageRequestStatus, string> = {
+  new: 'Noua',
+  in_review: 'In analiza',
+  answered: 'Oferta trimisa',
+  closed: 'Inchisa',
 };
