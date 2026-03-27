@@ -23,9 +23,9 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/produs/${product.slug}`}
-      className="group flex flex-col h-full bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
+      className="group block bg-white rounded-2xl border border-gray-100/80 shadow-sm overflow-hidden hover-lift hover:border-primary/20"
     >
-      <div className="aspect-square relative bg-gray-50 overflow-hidden shrink-0">
+      <div className="aspect-square relative bg-gray-50 overflow-hidden">
         {thumb ? (
           <>
             <Image
@@ -59,23 +59,23 @@ export function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
       </div>
-      <div className="p-3 md:p-4 flex flex-col flex-1">
+      <div className="p-2.5 md:p-3">
         {product.brand_name && (
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-1 group-hover:text-gray-600 transition-colors">
+          <p className="text-[11px] text-gray-500 uppercase tracking-wide mb-0.5 group-hover:text-gray-600 transition-colors">
             {product.brand_name}
           </p>
         )}
-        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 mb-2 group-hover:text-primary transition-all flex-1">
+        <h3 className="text-xs md:text-sm font-medium text-gray-900 line-clamp-2 mb-1.5 group-hover:text-primary transition-all">
           {product.name}
         </h3>
-        <div className="flex items-baseline gap-2">
+        <div className="flex items-baseline gap-1.5">
           <span
-            className={`text-xl font-bold tracking-tight ${hasDiscount ? 'text-danger' : 'text-gray-900'}`}
+            className={`text-base md:text-lg font-bold tracking-tight ${hasDiscount ? 'text-danger' : 'text-gray-900'}`}
           >
             {formatPrice(displayPrice)}
           </span>
           {hasDiscount && (
-            <span className="text-sm text-gray-400 line-through">{formatPrice(product.price)}</span>
+            <span className="text-xs text-gray-400 line-through">{formatPrice(product.price)}</span>
           )}
         </div>
       </div>
